@@ -42,12 +42,12 @@ function insert(req, res) {
   connection.query(sql, function (err, result, fields) {
     if (err) throw err;
     console.log("1 record inserted");
+
   });
 
-  connection.query("SELECT * FROM Users", function (err, result, fields) {
-    if (err) throw err;
-    console.log(result);
-  });
-
+  // connection.query("SELECT * FROM Users", function (err, result, fields) {
+  //   if (err) throw err;
+  //   console.log(result);
+  // });
 }
 
