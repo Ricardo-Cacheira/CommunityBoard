@@ -5,7 +5,8 @@ body{
     background-color: orange;
 }
 
-ul {
+#navbar ul {
+    height: 7vh;
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -14,14 +15,18 @@ ul {
     position: fixed;
     top: 0;
     width: 100%;
+    border: 0;
 }
 
 li {
     float: left;
+    height: 100%;
 }
 
 li a {
     display: block;
+    border: none;
+    height: 100%;
     color: white;
     text-align: center;
     padding: 14px 16px;
@@ -33,19 +38,15 @@ li a:hover:not(.active) {
 }
 
 a.active {
-    background-color: rgb(69, 79, 226);
+    background-color: #ffa318;
 }
 
 .right{
-    float: right;
-    width: 15vw;
-    height: 100vh;
-    background-color: orangered;
+    position: absolute;
+    right: 0;
 }
 
 .left{
-    float: left;    
-    width: 15vw;
-    height: 100vh;
-    background-color: #ff6a06;
+    position: absolute;
+    left: 0;
 }
