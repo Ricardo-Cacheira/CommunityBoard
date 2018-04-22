@@ -4,8 +4,6 @@ var express = require('express');
 
 const app = express();
 
-
-
 app.listen(3000, () => console.log("Example app listening to port 3000"));
 
 app.use(express.static('public'));
@@ -45,9 +43,9 @@ function insert(req, res) {
 
   });
 
-  // connection.query("SELECT * FROM Users", function (err, result, fields) {
-  //   if (err) throw err;
-  //   console.log(result);
-  // });
+  connection.query("SELECT * FROM Users", function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+  });
 }
 
