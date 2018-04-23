@@ -1,0 +1,14 @@
+form {
+    font-size: 16px;
+   padding-left: 5vw;
+   background-color: lightgray;
+}
+
+form input {
+    margin-bottom: 2vh;
+    padding: 1vh 3vw;
+}
+
+button {
+    padding: 1vh 2vw;
+}
