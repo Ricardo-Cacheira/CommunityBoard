@@ -8,39 +8,52 @@
     <script src="jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="calendar.css" />
     <title>Register</title>
+    <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
     <div id="navbar">
         <ul>
             <li>
-                <a class="active" href="#intro">Home</a>
+                <div class="dropdown">
+                    <button onclick="myFunction()" class="dropbtn">Communities</button>
+                    <div id="myDropdown" class="dropdown-content">
+                        <a href="community.html">Community X</a>
+                    </div>
+                </div>
+                <!-- <a class="active" href="#intro">Communities</a> -->
             </li>
             <li>
-                <a href="#desc">Description</a>
+                <a href="#calendar">Calendar</a>
             </li>
             <li>
-                <a href="#research">Research</a>
+                <a href="#profile">Profile</a>
             </li>
             <li>
-                <a href="calendar.html">Calendar</a>
+                <a href="index.html">Index</a>
             </li>
             <li style="float:right">
-                <a href="#footer">End</a>
+                <a href="register.html">Register</a>
+            </li>
+            <li style="float:right">
+                <a href="login.html">Log in</a>
             </li>
         </ul>
     </div>
 
     <section id="calendar">
-        <div class="month"> 
+        <div class="month">
             <ul>
-              <li class="prev">&#10094;</li>
-              <li class="next">&#10095;</li>
-              <li>August<br><span style="font-size:18px">2017</span></li>
+                <li class="prev">&#10094;</li>
+                <li class="next">&#10095;</li>
+                <li>August
+                    <br>
+                    <span style="font-size:18px">2017</span>
+                </li>
             </ul>
-          </div>
-          
-          <ul class="weekdays">
+        </div>
+
+        <ul class="weekdays">
             <li>Mo</li>
             <li>Tu</li>
             <li>We</li>
@@ -48,9 +61,9 @@
             <li>Fr</li>
             <li>Sa</li>
             <li>Su</li>
-          </ul>
-          
-          <ul class="days"> 
+        </ul>
+
+        <ul class="days">
             <li>1</li>
             <li>2</li>
             <li>3</li>
@@ -60,7 +73,9 @@
             <li>7</li>
             <li>8</li>
             <li>9</li>
-            <li><span class="active">10</span></li>
+            <li>
+                <span class="active">10</span>
+            </li>
             <li>11</li>
             <li>12</li>
             <li>13</li>
@@ -77,7 +92,7 @@
             <li>24</li>
             <li>25`````````</li>
             ...etc
-          </ul>
+        </ul>
     </section>
 
     <!-- <script> 
