@@ -8,8 +8,7 @@
     <script src="jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="register.css" />
-    <title>Register</title>
-    <link rel="stylesheet" href="main.css">
+    <title>Login</title>
 </head>
 
 <body>
@@ -17,7 +16,7 @@
         <ul>
             <li>
                 <div class="dropdown">
-                    <button onclick="myFunction()" class="dropbtn">Communities</button>
+                    <button onclick="myFunction()" class="dropbtn">Dropdown</button>
                     <div id="myDropdown" class="dropdown-content">
                         <a href="community.html">Community X</a>
                     </div>
@@ -43,28 +42,16 @@
     </div>
 
     <section>
-        <h2>Register</h2>
-        <form id="register" action='/main.html'>
-            Username:
+        <h2>Login</h2>
+        <form id="login" action='/main.html'>
+            Login:
             <br>
-            <input type="text" name="username" id="username" placeholder="Username">
+            <input type="text" name="username" id="username" placeholder="Username or Email">
             <br> Password:
             <br>
-            <input type="password" name="password" id="password" placeholder="Minimum 6 characters">
-            <br> Email:
+            <input type="password" name="password" id="password" placeholder="Password">
             <br>
-            <input type="email" id="email" placeholder="name@example.com">
-            <br> First name:
-            <br>
-            <input type="text" name="firstname" id="firstname" placeholder="First Name">
-            <br> Last name:
-            <br>
-            <input type="text" name="lastname" id="lastname" placeholder="Last Name">
-            <br> Birthday:
-            <br>
-            <input type="date" name="birthday" id="birthday">
-            <br>
-            <button id="submit"> Register </button>
+            <button id="submit"> Login </button>
         </form>
     </section>
 

@@ -4,9 +4,9 @@
 
 /* Month header */
 .month {
-    padding: 70px 25px;
+    padding: 8vh 2vw;
     width: 100%;
-    background: #699e94;
+    background: lightblue;
     text-align: center;
 }
 
@@ -21,6 +21,7 @@
     font-size: 20px;
     text-transform: uppercase;
     letter-spacing: 3px;
+    padding-top: 4vh;
 }
 
 /* Previous button inside month header */
