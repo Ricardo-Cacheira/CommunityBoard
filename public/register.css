@@ -1,6 +1,9 @@
 form {
+    float: left;
     font-size: 16px;
-   padding-left: 5vw;
+    width: fit-content;
+    margin-top: 3vh;
+   padding: 2vh 2vw;
    background-color: lightgray;
 }
 
@@ -11,4 +14,9 @@ form input {
 
 button {
     padding: 1vh 2vw;
+    
+}
+
+section form h2 {
+    padding-bottom: 2vh;
 }

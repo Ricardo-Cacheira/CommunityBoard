@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="register.css" />
     <title>Register</title>
@@ -42,8 +43,9 @@
     </div>
 
     <section>
-        <h2>Register</h2>
         <form id="register" action='/main.html'>
+            <br>
+            <h2>Register</h2>
             Username:
             <br>
             <input type="text" name="username" id="username" placeholder="Username">
@@ -63,8 +65,12 @@
             <br>
             <input type="date" name="birthday" id="birthday">
             <br>
-            <button id="submit"> Register </button>
+            <button type="button" class="btn btn-primary" id="submit"> Register </button>
         </form>
+    </section>
+
+    <section>
+        
     </section>
 
     <script src="main.js"></script>
