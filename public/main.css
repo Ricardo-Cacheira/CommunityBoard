@@ -18,7 +18,7 @@ body{
     border: 0;
 }
 
-li {
+#navbar ul li {
     float: left;
     height: 100%;
 }

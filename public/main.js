@@ -41,4 +41,7 @@ but.onclick = function send() {
     function end(data) {
         console.log(data);
     }
+    document.getElementById('rsubmit').onclick = function() {
+        
+    }
 }

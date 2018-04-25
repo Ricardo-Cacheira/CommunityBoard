@@ -23,6 +23,7 @@
     "ejs": "^2.5.9",
     "express": "^4.16.3",
     "express-auth-route": "^1.1.0",
+    "express-redirect": "^1.2.2",
     "express-session": "^1.15.6",
     "express-validator": "^5.1.2",
     "http": "0.0.0",

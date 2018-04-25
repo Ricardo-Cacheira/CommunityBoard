@@ -1,5 +1,3 @@
-// import { Session } from 'inspector';
-
 const mysql = require('mysql');
 const express = require('express');
 const parser = require('body-parser');
@@ -58,14 +56,16 @@ function login(req, res) {
     }
 
     if (result[0] != null) {
-      console.log("Valid login"); 
-      var activate = true; 
+      console.log("Valid login");
+       
     } 
     else  if (result[0] != "") {
       console.log("Invalid login");
+      
     }
   });
 };
+
 
 //routes
 app.post('/newp', function(req,res){
