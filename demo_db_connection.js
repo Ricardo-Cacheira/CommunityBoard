@@ -13,7 +13,7 @@ app.use(express.static('public'));
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "MreZ39lpdSql",
+  password: "RdSQL1At365d.",
   database: "bdnetwork"
 });
 
@@ -157,23 +157,29 @@ var feed_end = `
 
 app.get('/feed', function(req,res){
   var feed ="";
-  con.query("SELECT * FROM Posts", function (err, result, fields) {
+  var select_posts = `
+  select users.FirstName, users.LastName, users.UserName, posts.Content, posts.PostDate
+  FROM Posts
+  INNER JOIN  users ON posts.PosterID = users.ID;
+  `;
+  con.query(select_posts, function (err, result, fields) {
     if (err) throw err;
     
     for (let i = 0; i < result.length; i++) {
       var post ="";
-      const element = result[i];
+      var element = result[i];
 
       console.log(element);
       post = `
       <li class="post">
           <article class="post-content">
-              <p class="post-name">`+i+`</p>
-              <p class="post-text">maneli0`+i+`</p>
+              <p class="post-name">`+element.FirstName+ ` `+ element.LastName+`</p>
+              <p class="post-info">`+element.UserName+ ` `+ element.PostDate+`</p>
+              <p class="post-text">`+element.Content+`</p>
           </article>
           <section class="post-reactions">
-              <div class="accept"></div>
-              <div class="post-comment"></div>
+              <div class="accept">0 Accepts</div>
+              <div class="post-comment">0 Comments</div>
           </section>
       </li>
       <br>
