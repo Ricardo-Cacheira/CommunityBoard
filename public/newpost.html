@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <script src="jquery-3.3.1.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="register.css" />
+        <title>New Post</title>
+        <link rel="stylesheet" href="main.css">
+    </head>
+
+<body>
+
+    <div id="navbar">
+        <ul>
+            <li>
+                <div class="dropdown">
+                    <button onclick="myFunction()" class="dropbtn">Communities</button>
+                    <div id="myDropdown" class="dropdown-content">
+                        <a href="community.html">Community X</a>
+                    </div>
+                </div>
+                <!-- <a class="active" href="#intro">Communities</a> -->
+            </li>
+            <li>
+                <a href="calendar.html">Calendar</a>
+            </li>
+            <li>
+                <a href="#profile">Profile</a>
+            </li>
+            <li>
+                <a href="index.html">Index</a>
+            </li>
+            <li style="float:right">
+                <a href="register.html">Register</a>
+            </li>
+            <li style="float:right">
+                <a href="login.html">Log in</a>
+            </li>
+        </ul>
+    </div>
+
+
+    <section >
+        <form method="POST" id="postform" action='/newp'>
+            <br>
+            <h2>Create a new Post</h2>
+            <p>What do you need help with?</p>
+            <br>
+            <textarea type="content" id="content" name="content" style="resize: none;" cols="40" rows="5" placeholder="Don't give unnecessary information    Doing so might compromise your safety"></textarea>
+            <br>
+            <button type="submit" class="btn btn-primary" id="submit"> SUMBIT </button>
+        </form>
+    </section>
+
+    <script src="newpost.js"></script>
+</body>
+
+</html>

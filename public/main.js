@@ -26,7 +26,7 @@ window.onclick = function (event) {
     }
 }
 
-var but = document.getElementById("submit");
+var but = document.getElementById("rsubmit");
 
 but.onclick = function send() {
     var user = document.getElementById("username").value;
