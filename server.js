@@ -2,209 +2,36 @@ const mysql = require('mysql');
 const express = require('express');
 const parser = require('body-parser');
 
+var indexRouter = require('./routes/routes');
+
 const app = express();
+
+app.use('/', indexRouter);
+
+// // catch 404 and forward to error handler
+// app.use(function(req, res, next) {
+//   next(createError(404));
+// });
+
+// // error handler
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
 
 app.set('views', __dirname + '/views')
 app.set('view engine', 'ejs')
 
 app.use(parser.urlencoded({extended : true}));
 
-app.listen(3000, () => console.log("Example app listening to port 3000"));
-
 app.use(express.static('public'));
- 
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "RdSQL1At365d.",
-  database: "bdnetwork"
-});
 
-app.get('/insertUser/:UserName/:UserPassword/:Email/:FirstName/:LastName/:Birthday', insert);
-
-function insert(req, res) {
-
-  var reqs = req.params;
-  var userName = reqs.UserName;
-  var userPassword = reqs.UserPassword;
-  var email = reqs.Email;
-  var firstName = reqs.FirstName;
-  var lastName = reqs.LastName;
-  var birthday = reqs.Birthday;
-
-  let sql = "INSERT into Users (UserName, UserPassword, Email, FirstName, LastName, Birthday) VALUES ('" + userName + "', '" + userPassword + "', '" + email + "','" + firstName + "', '" + lastName + "', '" + birthday + "')";
-
-  con.query(sql, function (err, result, fields) {
-    if (err) throw err;
-    console.log("1 record inserted");
-
-  });
-};
-
-//login
-app.get('/selectLogin/:UserName/:UserPassword/', login);
-
-function login(req, res) {
-
-  var reqs = req.params;
-  var userName = reqs.UserName;
-  var userPassword = reqs.UserPassword;
-
-  let loginquery = "SELECT ID FROM Users WHERE (Users.userName = '" + userName + "' AND Users.userpassword = '" + userPassword + "');";
-  
-  con.query(loginquery, function (err, result, fields) {
-    if (err) {
-      console.log('Wrong Log-in');
-      return;
-    }
-
-    if (result[0] != null) {
-      console.log("Valid login");
-       
-    } 
-    else  if (result[0] != "") {
-      console.log("Invalid login");
-      
-    }
-  });
-};
-
-
-//routes
-app.post('/newp', function(req,res){
-  console.log(req.body);
-
-  let sql2 = "INSERT into Posts (PosterID, Content, PostDate) VALUES (1, '" + req.body.content + "', NOW())";
-
-  console.log("we allmost there");
-  con.query(sql2, function (err, result, fields) {
-    if (err) throw err;
-    console.log("you posted something");
-  });
-  
-  res.sendFile(__dirname + '/public/community.html');
-});
-
-var feed_header = `
-  <!DOCTYPE html>
-  <html lang="en">
-
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <title>Community feed</title>
-      <link rel="stylesheet" href="main.css">
-      <link rel="stylesheet" href="community.css">
-  </head>
-
-  <body>
-
-      <div id="navbar">
-          <ul>
-              <li>
-                  <div class="dropdown">
-                      <button onclick="myFunction()" class="dropbtn">Communities</button>
-                      <div id="myDropdown" class="dropdown-content">
-                          <a href="community.html">Community X</a>
-                      </div>
-                  </div>
-                  <!-- <a class="active" href="#intro">Communities</a> -->
-              </li>
-              <li>
-                  <a href="calendar.html">Calendar</a>
-              </li>
-              <li>
-                  <a href="#profile">Profile</a>
-              </li>
-              <li>
-                  <a href="index.html">Index</a>
-              </li>
-              <li style="float:right">
-                  <a href="register.html">Register</a>
-              </li>
-              <li style="float:right">
-                  <a href="login.html">Log in</a>
-              </li>
-          </ul>
-      </div>
-`;
-
-var feed_sidebar = `
-  <div class="left" id="sidebar">
-  <img class="profile-pic" src="buildding.png" />
-  <p class="name">Prédio azul</p>
-  <p class="bio">
-      Grupo do prédio azul Cenas e tal, dhfdsfhds kfjsdvgoj rh tgjaehg etsgubitra jrtb sthwr hrth st eht htrtwhthh hrthrthrtgurhkhfehosehvuhle
-      hug evgkjh gorhgerhg rgherghkhg4e geg et er regergerg er geg er geg ergre e
-  </p>
-
-  <form method="POST" action="/other">
-      <button id="new">NEW POST</button>
-  </form>
-  </div>
-
-  <div class="right" id="feed">
-  <ul>
-`;
-
-var feed_end = `
-  </ul>
-  </div>
-
-  <script src="main.js"></script>
-  </body>
-
-  </html>
-`;
-
-app.get('/feed', function(req,res){
-  var feed ="";
-  var select_posts = `
-  select users.FirstName, users.LastName, users.UserName, posts.Content, posts.PostDate
-  FROM Posts
-  INNER JOIN  users ON posts.PosterID = users.ID;
-  `;
-  con.query(select_posts, function (err, result, fields) {
-    if (err) throw err;
-    
-    for (let i = 0; i < result.length; i++) {
-      var post ="";
-      var element = result[i];
-
-      console.log(element);
-      post = `
-      <li class="post">
-          <article class="post-content">
-              <p class="post-name">`+element.FirstName+ ` `+ element.LastName+`</p>
-              <p class="post-info">`+element.UserName+ ` `+ element.PostDate+`</p>
-              <p class="post-text">`+element.Content+`</p>
-          </article>
-          <section class="post-reactions">
-              <div class="accept">0 Accepts</div>
-              <div class="post-comment">0 Comments</div>
-          </section>
-      </li>
-      <br>
-      <br>
-      `;
-      // console.log(result[i]);
-      // console.log(element.UserName);
-      feed += post;
-    }
-    res.send(feed_header + feed_sidebar + feed + feed_end);
-  });
-});
-
-app.post('/other', function(req,res){
-  res.sendFile(__dirname + '/public/newpost.html');
-});
-
-app.get('/view', function(req, res) {
-  var page_title = "Testing";
-  res.render("index", {page_title});
-});
-
+app.listen(3000, () => console.log("Example app listening to port 3000"));
 
 
 //------------------------ Testing code -------------------------------------------------------------------------------

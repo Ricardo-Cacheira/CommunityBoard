@@ -16,7 +16,9 @@
 
      <%- include('nav'); %>
 
-     <p><%= page_title %></p> 
+     <%- include('sidebar'); %>
+
+     <%- include('feed', {feed}); %>
 
     <script src="/js/main.js"></script>
 </body>
