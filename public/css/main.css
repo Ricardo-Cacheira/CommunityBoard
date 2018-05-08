@@ -7,6 +7,7 @@ body{
 }
 
 #navbar ul {
+    z-index: 3;
     height: 7vh;
     list-style-type: none;
     margin: 0;
@@ -90,3 +91,7 @@ a.active {
     position: absolute;
     left: 0;
 }
+
+.circular--square {
+    border-radius: 50%;
+  }

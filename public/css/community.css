@@ -36,6 +36,8 @@
   margin-top: 5vh;
   margin-bottom: 5vh; 
   display: block;
+  width: 15vw;
+  height: 15vw;
 }
 
 .name{
@@ -47,11 +49,13 @@
 }
 
 .post{
+  display: flex;
+  flex-direction: column;
   font-family: Arial, Helvetica, sans-serif;
   padding: 0;
   margin: auto;
   background-color: #e0e0e0;
-  height: 40vh;
+  min-height: 40vh;
   width: 60vw;
   margin-bottom: 5vh;
   position: relative;
@@ -65,6 +69,7 @@
 }
 
 .post-text{
+  word-wrap: break-word;
   margin-left: 0.25em;
   font-size: 1.5em;
   color: black;
@@ -76,10 +81,88 @@
   position: absolute;
   bottom: 0;
   margin: 0 0 0 0.25em; 
-  display: block;
+  display: inline-block;
 }
 
+.post-reactions div{
+  display: inline-block;
+  margin: auto;
+  height: 5vh;
+  width: 49.7%;
+  text-align: center;
+}
+/* ---------------------------POPUP NEW POST ------------------------------------ */
 
+.button {
+  background-color: #1762b5;
+  margin: auto;
+  width: 50%;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  display: block;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.3s ease-out;
+}
+.button:hover {
+  color: #ffa318;
+  Background-color: #333;
+}
+
+.overlay {
+  z-index: 3;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+    visibility:hidden;
+}
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: #06D85F;
+}
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
 
 /* ------------------------ SCROLL BAR SETUP ------------------------------------ */
 
