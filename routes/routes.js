@@ -5,8 +5,17 @@ const parser = require('body-parser');
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "RdSQL1At365d.",
+  password: "MreZ39lpdSql",
   database: "bdnetwork"
+});
+//RdSQL1At365d.
+
+con.connect((err) => {
+  if(err){
+    console.log('Error connecting to Db');
+    return;
+  }
+  console.log('Connection established');
 });
 
 router.use(parser.urlencoded({extended : true}));
@@ -18,7 +27,29 @@ router.get('/', function (req, res) {
   });
 });
 
-router.get('/insertUser/:UserName/:UserPassword/:Email/:FirstName/:LastName/:Birthday', insert);
+//router.get('/insertUser/:UserName/:UserPassword/:Email/:FirstName/:LastName/:Birthday', insert);
+router.post('/insertUser', function(req, res) {
+  var reqs = req.body;
+  var userName = reqs.username;
+  var userPassword = reqs.password;
+  var email = reqs.email;
+  var firstName = reqs.firstname;
+  var lastName = reqs.lastname;
+  var birthday = reqs.birthday;
+
+  let sql = "INSERT into Users (UserName, UserPassword, Email, FirstName, LastName, Birthday) VALUES ('" + userName + "', '" + userPassword + "', '" + email + "','" + firstName + "', '" + lastName + "', '" + birthday + "')"; 
+  
+  con.query(sql, function(err, result) {
+    if (err) {
+      console.log(err);
+      res.status(500);
+    } else {
+      console.log("1 record inserted, ID: " + result.insertId);
+      res.redirect('/login.html');
+    }
+  });
+});
+
 
 function insert(req, res) {
 

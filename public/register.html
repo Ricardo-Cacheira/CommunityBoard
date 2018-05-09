@@ -7,10 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="register.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="./css/main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="./css/register.css" />
     <title>Register</title>
-    <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
@@ -44,7 +43,7 @@
     </div>
 
     <section>
-        <form action="login.html" id="register">
+        <form method="POST" action="/insertUser" id="register">
             <br>
             <h2>Register</h2>
             Username:
@@ -66,7 +65,7 @@
             <br>
             <input type="date" name="birthday" id="birthday">
             <br>
-            <button type="button" id="rsubmit"> <a href="login.html"> Register </a></button>
+            <button type="submit" id="rsubmit">  Register </button>
         </form>
     </section>
 
@@ -74,7 +73,7 @@
         
     </section>
 
-    <script src="main.js"></script>
+    <script src="./js/main.js"></script>
 </body>
 
 </html>

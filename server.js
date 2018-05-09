@@ -2,11 +2,24 @@ const mysql = require('mysql');
 const express = require('express');
 const parser = require('body-parser');
 
+var session = require('express-session');
+
 var indexRouter = require('./routes/routes');
 
 const app = express();
 
+  //initialize session variable
+
 app.use('/', indexRouter);
+
+app.use(session({
+    secret: 'bigsecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 }
+  }))
+
+
 
 // // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
