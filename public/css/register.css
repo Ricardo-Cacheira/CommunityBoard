@@ -1,9 +1,8 @@
 form {
-    float: left;
     font-size: 16px;
+    padding: 4vh 3vw;
     width: fit-content;
-    margin-top: 3vh;
-   padding: 2vh 2vw;
+    height: fit-content;
    background-color: lightgray;
 }
 
@@ -12,6 +11,6 @@ form input {
     padding: 1vh 1vw;
 }
 
-section form h2 {
+.container form h2 {
     padding-bottom: 2vh;
 }

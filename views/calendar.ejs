@@ -12,31 +12,7 @@
 </head>
 
 <body>
-    <div id="navbar">
-        <ul>
-            <li>
-                <div class="dropdown">
-                    <button onclick="myFunction()" class="dropbtn">Communities</button>
-                    <div id="myDropdown" class="dropdown-content">
-                        <a href="community.html">Community X</a>
-                    </div>
-                </div>
-                <!-- <a class="active" href="#intro">Communities</a> -->
-            </li>
-            <li>
-                <a href="calendar.html">Calendar</a>
-            </li>
-            <li>
-                <a href="#profile">Profile</a>
-            </li>
-            <li>
-                <a href="index.html">Index</a>
-            </li>
-            <li style="float:right">
-                <a href="login.html">Log out</a>
-            </li>
-        </ul>
-    </div>
+    <%- include('nav'); %>
 
     <section id="calendar">
         <div class="month">

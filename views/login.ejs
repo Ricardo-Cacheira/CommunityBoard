@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="./css/main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="./css/register.css" />
+    <title>Register</title>
+</head>
+
+<body>
+        <%- include('nav'); %>
+
+<div class="container">
+    <div class="row">
+        <div class=".col-md-4">
+            <form method="POST" id="login" action='/selectLogin'>
+                <br>
+                <h2>Login</h2>
+                Login:
+                <br>
+                <input type="text" name="username" id="username" placeholder="Username">
+                <br> Password:
+                <br>
+                <input type="password" name="password" id="password" placeholder="Password">
+                <br>
+                <button type="submit" id="lsubmit"> Login </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<container class=".col-md-8">
+
+</container>
+
+<script src="./js/login.js"></script>
+</body>
+</html>
