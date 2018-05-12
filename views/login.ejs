@@ -13,31 +13,24 @@
 </head>
 
 <body>
-        <%- include('nav'); %>
+    <%- include('navform'); %>
 
-<div class="container">
-    <div class="row">
-        <div class=".col-md-4">
-            <form method="POST" id="login" action='/selectLogin'>
-                <br>
-                <h2>Login</h2>
-                Login:
-                <br>
-                <input type="text" name="username" id="username" placeholder="Username">
-                <br> Password:
-                <br>
-                <input type="password" name="password" id="password" placeholder="Password">
-                <br>
-                <button type="submit" id="lsubmit"> Login </button>
-            </form>
-        </div>
-    </div>
-</div>
+    <section>
+        <form method="POST" id="login" action='/selectLogin'>
+            <br>
+            <h2>Login</h2>
+            Login:
+            <br>
+            <input type="text" name="username" id="username" placeholder="Username">
+            <br> Password:
+            <br>
+            <input type="password" name="password" id="password" placeholder="Password">
+            <br>
+            <button type="submit" id="lsubmit"> Login </button>
+        </form>
+    </section>>
 
-<container class=".col-md-8">
-
-</container>
-
-<script src="./js/login.js"></script>
+    <script src="./js/login.js"></script>
 </body>
+
 </html>

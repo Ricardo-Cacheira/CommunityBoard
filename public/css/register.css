@@ -1,8 +1,10 @@
+
 form {
+    display: inline-block;
+    text-align: center;
     font-size: 16px;
     padding: 4vh 3vw;
     width: fit-content;
-    height: fit-content;
    background-color: lightgray;
 }
 
@@ -11,6 +13,6 @@ form input {
     padding: 1vh 1vw;
 }
 
-.container form h2 {
+form h2 {
     padding-bottom: 2vh;
 }

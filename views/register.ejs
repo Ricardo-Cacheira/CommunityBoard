@@ -13,46 +13,38 @@
 </head>
 
 <body>
-        <%- include('nav'); %>
-        
-<div class="container">
-    <div class="row">
-        <div class=".col-md-4">
-            <form method="POST" action="/insertUser" id="register">
-                <br>
-                <h2>Register</h2>
-                Username:
-                <br>
-                <input type="text" name="username" id="username" placeholder="Username">
-                <br> Password:
-                <br>
-                <input type="password" name="password" id="password" placeholder="Minimum 6 characters">
-                <br> Email:
-                <br>
-                <input type="email" name="email" id="email" placeholder="name@example.com">
-                <br> First name:
-                <br>
-                <input type="text" name="firstname" id="firstname" placeholder="First Name">
-                <br> Last name:
-                <br>
-                <input type="text" name="lastname" id="lastname" placeholder="Last Name">
-                <br> Birthday:
-                <br>
-                <input type="date" name="birthday" id="birthday">
-                <br>
-                <button type="submit" id="rsubmit"> Register </button>
-            </form>
-        </div>
-    </div>
-</div>
+    <%- include('navform'); %>
+    <section>
+        <form method="POST" action="/insertUser" id="register">
+            <br>
+            <h2>Register</h2>
+            Username:
+            <br>
+            <input type="text" name="username" id="username" placeholder="Username">
+            <br> Password:
+            <br>
+            <input type="password" name="password" id="password" placeholder="Minimum 6 characters">
+            <br> Confirm Password:
+            <br>
+            <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Confirm your password">
+            <br> Email:
+            <br>
+            <input type="email" name="email" id="email" placeholder="name@example.com">
+            <br> First name:
+            <br>
+            <input type="text" name="firstname" id="firstname" placeholder="First Name">
+            <br> Last name:
+            <br>
+            <input type="text" name="lastname" id="lastname" placeholder="Last Name">
+            <br> Birthday:
+            <br>
+            <input type="date" name="birthday" id="birthday">
+            <br>
+            <button type="submit" id="rsubmit"> Register </button>
+        </form>
+    </section>
 
-<div class="container">
-    <div class="row">
-        <div class=".col-md-4">
-        </div>
-    </div>
-</div>
-
-<script src="./js/main.js"></script>
+    <script src="./js/main.js"></script>
 </body>
+
 </html>

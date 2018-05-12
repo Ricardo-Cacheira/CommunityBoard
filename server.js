@@ -2,8 +2,6 @@ const mysql = require('mysql');
 const express = require('express');
 const parser = require('body-parser');
 
-var session = require('express-session');
-
 var indexRouter = require('./routes/routes');
 
 const app = express();
@@ -11,14 +9,6 @@ const app = express();
   //initialize session variable
 
 app.use('/', indexRouter);
-
-app.use(session({
-    secret: 'bigsecret',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 60000 }
-  }))
-
 
 
 // // catch 404 and forward to error handler
@@ -44,7 +34,7 @@ app.use(parser.urlencoded({extended : true}));
 
 app.use(express.static('public'));
 
-app.listen(3000, () => console.log("Example app listening to port 3000"));
+app.listen(3000, '0.0.0.0', () => console.log("Example app listening to port 3000"));
 
 
 //------------------------ Testing code -------------------------------------------------------------------------------
