@@ -125,14 +125,14 @@ router.post('/insertUser', function (req, res) {
     let sql = "INSERT into Users (UserName, UserPassword, Email, FirstName, LastName, Birthday) VALUES ('" + userName + "', '" + hash + "', '" + email + "','" + firstName + "', '" + lastName + "', '" + birthday + "')";
 
     con.query(sql, function (err, result) {
-      let sql = "SELECT LAST_INSERT_ID() as user_id";
+      let sqlid = "SELECT LAST_INSERT_ID() as user_id";
 
-      con.query(sql, (err, result) => {
+      con.query(sqlid, (err, result) => {
         if (err) throw err;
 
         var user_id = result[0];
         //need to fix this----------------------------------------------
-        console.log("Inserted used ID: " + user_id);
+        console.log("New user with ID: " + user_id);
 
         //LOGIN USER-create a session
         req.login(user_id, function (err) {
