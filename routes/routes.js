@@ -12,7 +12,7 @@ var passport = require('passport')
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "MreZ39lpdSql",
+  password: "RdSQL1At365d.",
   database: "bdnetwork"
 });
 //RdSQL1At365d.
@@ -60,7 +60,10 @@ router.get('/', authenticationMiddleware(), function (req, res) {
 
 });
 router.get('/index', authenticationMiddleware(), function (req, res) {
+  console.log("req.user " + JSON.stringify(req.user));
   let page_title = "Testing";
+  var communities = communityList(req.user);
+  console.log("communities: "+ communities);
   res.render("index", {
     page_title
   });
@@ -77,7 +80,7 @@ router.post('/newp', authenticationMiddleware(), function (req, res) {
   let community = req.body.comID;
   let page_title = "Community " + community + " Feed";
 
-  let newp = 'INSERT into Posts (`PosterID`, `Content`, `PostDate`, `CommunityID`) VALUES (1, "' + req.body.content + '", NOW(), "' + community + '")';
+  let newp = 'INSERT into Posts (`PosterID`, `Content`, `PostDate`, `CommunityID`) VALUES ("' + req.user + '", "' + req.body.content + '", NOW(), "' + community + '")';
 
   con.query(newp, function (err, result, fields) {
     if (err) throw err;
@@ -110,6 +113,21 @@ router.get('/feed/:Community', authenticationMiddleware(), function (req, res) {
 
 // #endregion 
 
+function communityList(uID)
+{
+  let comquery = "SELECT communityid FROM bdnetwork.communityuser WHERE UserID = ?;";
+  let vals = [uID];
+  let comm;
+  con.query(comquery, vals, function (sqlerr, result) {
+    if (sqlerr) {
+      res.status(500);
+    } else {
+        comm = result
+        console.log("comm: " +comm);
+        return comm; 
+    };
+  });
+}
 
 // #region Login and register
 router.post('/insertUser', function (req, res) {
@@ -122,21 +140,21 @@ router.post('/insertUser', function (req, res) {
   var birthday = reqs.birthday;
 
   bcrypt.hash(userPassword, saltRounds, function (err, hash) {
-    let sql = "INSERT into Users (UserName, UserPassword, Email, FirstName, LastName, Birthday) VALUES ('" + userName + "', '" + hash + "', '" + email + "','" + firstName + "', '" + lastName + "', '" + birthday + "')";
-
-    con.query(sql, function (err, result) {
+    let sqli = "INSERT into Users (UserName, UserPassword, Email, FirstName, LastName, Birthday) VALUES (?,?,?,?,?,?)";
+    let vals = [userName , hash , email , firstName ,lastName , birthday];
+    con.query(sqli, vals, function (err, result) {
       let sql = "SELECT LAST_INSERT_ID() as user_id";
 
       con.query(sql, (err, result) => {
         if (err) throw err;
 
-        var user_id = result[0];
+        var user_id = result[0].user_id;
         //need to fix this----------------------------------------------
         console.log("Inserted used ID: " + user_id);
 
         //LOGIN USER-create a session
         req.login(user_id, function (err) {
-
+          if (err) { return next(err); }
           res.redirect('/index');
 
         });
@@ -151,7 +169,7 @@ router.post('/selectLogin', function (req, res) {
   var userName = reqs.username;
   var userPassword = reqs.password;
 
-  let loginquery = "SELECT UserPassword FROM Users WHERE UserName = ?;";
+  let loginquery = "SELECT ID, UserPassword FROM Users WHERE UserName = ?;";
   let vals = [userName];
 
   con.query(loginquery, vals, function (sqlerr, result) {
@@ -162,7 +180,7 @@ router.post('/selectLogin', function (req, res) {
       bcrypt.compare(userPassword, hash, function (err, bres) {
         if (bres) {
           console.log("Valid login");
-          var user_id = result[0];
+          var user_id = result[0].ID;
           req.login(user_id, function (err) {
             res.redirect('/index');
           });
@@ -217,10 +235,7 @@ passport.deserializeUser(function (user_id, done) {
 
 function authenticationMiddleware() {
   return (req, res, next) => {
-    // console.log(`New session : ${JSON.stringify(req.session.passport)}`);
-    console.log(`New session : ${JSON.stringify(req.sessionID)}`);
-
-
+    // console.log(`New session : ${JSON.stringify(req.sessionID)}`);
     if (req.isAuthenticated()) return next();
     //if user not authenticated:
     res.redirect('/login')
