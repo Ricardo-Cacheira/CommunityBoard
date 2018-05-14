@@ -8,7 +8,6 @@ body{
 
 #navbar ul {
     z-index: 3;
-    height: 7vh;
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -22,9 +21,10 @@ body{
 #navbar ul li {
     float: left;
     height: 100%;
+    
 }
 
-#navbar li a {
+#navbar li a , .dropbtn{
     background-color: #333;
     display: block;
     border: none;
@@ -40,16 +40,6 @@ body{
 
 a.active {
     background-color: #ffa318;
-}
-.dropbtn { 
-    height: 7vh;
-    background-color: #333;
-    display: block;
-    border: none;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
 }
 
 .dropbtn:hover, .dropbtn:focus {
@@ -95,3 +85,53 @@ a.active {
 .circular--square {
     border-radius: 50%;
   }
+
+/* search bar */
+#navbar ul li div.bs-example {
+    padding: 6px 8vw;
+}
+
+.typeahead, .tt-query, .tt-hint {
+    align-content: center;
+	border: 2px solid #CCCCCC;
+	border-radius: 8px;
+	font-size: 16px;
+	height: 20px;
+	line-height: 10px;
+	outline: medium none;
+	padding: 1vh 1vw;
+	width: 30vw;
+}
+.typeahead {
+	background-color: #FFFFFF;
+}
+.typeahead:focus {
+	border: 2px solid #0097CF;
+}
+.tt-query {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.tt-hint {
+	color: #999999;
+}
+.tt-dropdown-menu {
+	background-color: #FFFFFF;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 8px;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	margin-top: 12px;
+	padding: 2vh 0vw;
+	width: 45vw;
+}
+.tt-suggestion {
+	font-size: 20px;
+	line-height: 20px;
+	padding: 1vh 2vw;
+}
+.tt-suggestion.tt-is-under-cursor {
+	background-color: #0097CF;
+	color: #FFFFFF;
+}
+.tt-suggestion p {
+	margin: 0;
+}
