@@ -73,6 +73,9 @@ router.get('/calendar', authenticationMiddleware(), function (req, res) {
   });
 });
 
+//create community
+
+
 router.post('/newp', authenticationMiddleware(), function (req, res) {
   let community = req.body.comID;
   let page_title = "Community " + community + " Feed";
@@ -190,11 +193,35 @@ router.get('/login', function (req, res) {
 
 router.get('/logout', function (req, res) {
   req.logOut();
+  //this works?
+  // req.clearCookie();
   req.session.destroy(function (err) {
     res.redirect('/login'); //Inside a callback… bulletproof!
   });
 
 });
+
+//search testing
+// router.get('/test', function (req, res) {
+//   let page_title = "Testing";
+//   res.render("test", {
+//     page_title
+//   });
+// });
+
+router.get('/search',function(req,res){
+  con.query('SELECT CName, Address from Communities where CName like "%'+req.query.key+'%" OR Address like "%'+req.query.key+'%"', function(err, rows, fields) {
+    console.log(req.query.key);  
+    if (err) throw err;
+      var data=[];
+      for(i=0;i<rows.length;i++)
+        {
+          data.push("Name: " + rows[i].CName + " || Address: " + rows[i].Address);
+          // console.log(data);
+        }
+        res.end(JSON.stringify(data));
+    });
+  });
 
 // //Local - for local database strategy
 // router.post('/login', passport.authenticate('local', {

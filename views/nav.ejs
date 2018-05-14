@@ -1,3 +1,13 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('input.typeahead').typeahead({
+            name: 'Communities',
+            remote: 'http://localhost:3000/search?key=%QUERY',
+            limit: 10
+        });
+    });
+</script>
+
 <div id="navbar">
     <ul>
         <li>
@@ -5,7 +15,7 @@
                 <button onclick="myFunction()" class="dropbtn">Communities</button>
                 <div id="myDropdown" class="dropdown-content">
                     <!-- <% for (let i = 0; i < 2; i++) { %> -->
-                        <a href="/feed/1">Community X</a>
+                    <a href="/feed/1">Community X</a>
                     <!-- <% } %> -->
                 </div>
             </div>
@@ -19,6 +29,11 @@
         </li>
         <li>
             <a href="/">Index</a>
+        </li>
+        <li>
+            <div class="bs-example">
+                <input type="text" name="typeahead" class="typeahead tt-query" autocomplete="off" spellcheck="false" placeholder="Search Community by name or adress">
+            </div>
         </li>
         <li style="float:right">
             <a href="/logout">Logout</a>
