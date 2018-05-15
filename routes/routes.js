@@ -54,25 +54,47 @@ router.use(parser.urlencoded({ extended: true }));
 // #region render views
 router.get('/', authenticationMiddleware(), function (req, res) {
   let page_title = "ROOT";
-  res.render("index", {
-    page_title
+  getCommunityList(req.user, function (err, result) {
+    if (err) {
+      res.send(500);
+    } else {
+      console.log(result);
+      let communityList = result;
+      res.render("index", {
+        page_title , communityList
+      });
+    }
   });
-
 });
+
 router.get('/index', authenticationMiddleware(), function (req, res) {
   console.log("req.user " + JSON.stringify(req.user));
   let page_title = "Testing";
-  var communities = communityList(req.user);
-  console.log("communities: "+ communities);
-  res.render("index", {
-    page_title
+  getCommunityList(req.user, function (err, result) {
+    if (err) {
+      res.send(500);
+    } else {
+      console.log(result);
+      let communityList = result;
+      res.render("index", {
+        page_title , communityList
+      });
+    }
   });
 });
 
 router.get('/calendar', authenticationMiddleware(), function (req, res) {
   let page_title = "Calendar";
-  res.render("calendar", {
-    page_title
+  getCommunityList(req.user, function (err, result) {
+    if (err) {
+      res.send(500);
+    } else {
+      console.log(result);
+      let communityList = result;
+      res.render("calendar", {
+        page_title , communityList
+      });
+    }
   });
 });
 
@@ -81,7 +103,6 @@ router.get('/calendar', authenticationMiddleware(), function (req, res) {
 
 router.post('/newp', authenticationMiddleware(), function (req, res) {
   let community = req.body.comID;
-  let page_title = "Community " + community + " Feed";
 
   let newp = 'INSERT into Posts (`PosterID`, `Content`, `PostDate`, `CommunityID`) VALUES ("' + req.user + '", "' + req.body.content + '", NOW(), "' + community + '")';
 
@@ -106,30 +127,39 @@ router.get('/feed/:Community', authenticationMiddleware(), function (req, res) {
     if (err) throw err;
 
     var feed = result;
-    res.render("community", {
-      page_title,
-      community,
-      feed
+    getCommunityList(req.user, function (err, result) {
+      if (err) {
+        res.send(500);
+      } else {
+        console.log(result);
+        let communityList = result;
+        res.render("community", {
+          page_title,
+          community,
+          feed,
+          communityList
+        });
+      }
     });
   });
 });
 
 // #endregion 
 
-function communityList(uID)
+function getCommunityList(uID, callback)
 {
   let comquery = "SELECT communityid FROM bdnetwork.communityuser WHERE UserID = ?;";
   let vals = [uID];
   let comm;
-  con.query(comquery, vals, function (sqlerr, result) {
+  return con.query(comquery, vals, function (sqlerr, result) {
     if (sqlerr) {
-      res.status(500);
+      return callback("Error", null);
     } else {
-        comm = result
-        console.log("comm: " +comm);
-        return comm; 
+      return callback(null, result);
     };
   });
+
+  // return comm; 
 }
 
 // #region Login and register
