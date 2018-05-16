@@ -12,7 +12,7 @@ var passport = require('passport')
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "RdSQL1At365d.",
+  password: "MreZ39lpdSql",
   database: "bdnetwork"
 });
 //RdSQL1At365d.
@@ -63,7 +63,7 @@ router.get('/index', authenticationMiddleware(), function (req, res) {
   console.log("req.user " + JSON.stringify(req.user));
   let page_title = "Testing";
   var communities = communityList(req.user);
-  console.log("communities: "+ communities);
+  // console.log("communities: " + communities);
   res.render("index", {
     page_title
   });
@@ -84,7 +84,6 @@ router.post('/newp', authenticationMiddleware(), function (req, res) {
   let page_title = "Community " + community + " Feed";
 
   let newp = 'INSERT into Posts (`PosterID`, `Content`, `PostDate`, `CommunityID`) VALUES ("' + req.user + '", "' + req.body.content + '", NOW(), "' + community + '")';
-
   con.query(newp, function (err, result, fields) {
     if (err) throw err;
     console.log("You posted something");
@@ -115,19 +114,18 @@ router.get('/feed/:Community', authenticationMiddleware(), function (req, res) {
 });
 
 // #endregion 
-
-function communityList(uID)
-{
-  let comquery = "SELECT communityid FROM bdnetwork.communityuser WHERE UserID = ?;";
+function communityList(uID) {
+  let comquery = "SELECT CommunityID FROM CommunityUser WHERE UserID = ?;";
   let vals = [uID];
   let comm;
   con.query(comquery, vals, function (sqlerr, result) {
     if (sqlerr) {
       res.status(500);
     } else {
-        comm = result
-        console.log("comm: " +comm);
-        return comm; 
+      comm = result[0];
+      console.log("comm: " + comm);
+      console.log("comm: " + vals);
+      return comm;
     };
   });
 }
@@ -144,7 +142,7 @@ router.post('/insertUser', function (req, res) {
 
   bcrypt.hash(userPassword, saltRounds, function (err, hash) {
     let sqli = "INSERT into Users (UserName, UserPassword, Email, FirstName, LastName, Birthday) VALUES (?,?,?,?,?,?)";
-    let vals = [userName , hash , email , firstName ,lastName , birthday];
+    let vals = [userName, hash, email, firstName, lastName, birthday];
     con.query(sqli, vals, function (err, result) {
       let sql = "SELECT LAST_INSERT_ID() as user_id";
 
@@ -219,27 +217,27 @@ router.get('/logout', function (req, res) {
 
 });
 
-//search testing
-// router.get('/test', function (req, res) {
-//   let page_title = "Testing";
-//   res.render("test", {
-//     page_title
-//   });
-// });
-
-router.get('/search',function(req,res){
-  con.query('SELECT CName, Address from Communities where CName like "%'+req.query.key+'%" OR Address like "%'+req.query.key+'%"', function(err, rows, fields) {
-    console.log(req.query.key);  
+router.get('/search', function (req, res) {
+  con.query('SELECT ID, CName, Address FROM Communities WHERE CName LIKE "%' + req.query.key + '%" OR Address LIKE "%' + req.query.key + '%"', function (err, rows, fields) {
+    console.log(req.query.key);
     if (err) throw err;
-      var data=[];
-      for(i=0;i<rows.length;i++)
-        {
-          data.push("Name: " + rows[i].CName + " || Address: " + rows[i].Address);
-          // console.log(data);
+    var data = [];
+    var newrows;
+    for (i = 0; i < rows.length; i++) {
+      data.push(rows[i].CName, rows[i].Address);
+
+      con.query('SELECT ID from Communities where CName like "' + req.query.key + '" OR Address like "' + req.query.key + '"',  function (err, rows, fields) {
+        if (err) return err;
+        if (rows.length != 0) {
+          newrows = JSON.stringify(rows[0].ID);
+          console.log(newrows);
+          // res.send(newrows);
         }
-        res.end(JSON.stringify(data));
-    });
+      });
+    }
+   res.render(JSON.stringify(data));
   });
+});
 
 // //Local - for local database strategy
 // router.post('/login', passport.authenticate('local', {
@@ -263,6 +261,8 @@ passport.deserializeUser(function (user_id, done) {
 function authenticationMiddleware() {
   return (req, res, next) => {
     // console.log(`New session : ${JSON.stringify(req.sessionID)}`);
+
+
     if (req.isAuthenticated()) return next();
     //if user not authenticated:
     res.redirect('/login')
