@@ -2,7 +2,8 @@
     $(document).ready(function () {
         $('input.typeahead').typeahead({
             name: 'Communities',
-            remote: 'http://localhost:3000/search?key=%QUERY',
+            remote: '/search?key=%QUERY',
+            // remote: 'https://tender-firefox-83.localtunnel.me/search?key=%QUERY',
             limit: 10
         });
     });

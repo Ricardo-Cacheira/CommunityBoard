@@ -12,7 +12,7 @@ var passport = require('passport')
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "RdSQL1At365d.",
+  password: "MreZ39lpdSql",
   database: "bdnetwork"
 });
 //RdSQL1At365d.
@@ -105,7 +105,6 @@ router.post('/newp', authenticationMiddleware(), function (req, res) {
   let community = req.body.comID;
 
   let newp = 'INSERT into Posts (`PosterID`, `Content`, `PostDate`, `CommunityID`) VALUES ("' + req.user + '", "' + req.body.content + '", NOW(), "' + community + '")';
-
   con.query(newp, function (err, result, fields) {
     if (err) throw err;
     console.log("You posted something");
@@ -246,20 +245,27 @@ router.get('/logout', function (req, res) {
 
 });
 
-
-router.get('/search',function(req,res){
-  con.query('SELECT CName, Address from Communities where CName like "%'+req.query.key+'%" OR Address like "%'+req.query.key+'%"', function(err, rows, fields) {
-    console.log(req.query.key);  
+router.get('/search', function (req, res) {
+  con.query('SELECT ID, CName, Address FROM Communities WHERE CName LIKE "%' + req.query.key + '%" OR Address LIKE "%' + req.query.key + '%"', function (err, rows, fields) {
+    console.log(req.query.key);
     if (err) throw err;
-      var data=[];
-      for(i=0;i<rows.length;i++)
-        {
-          data.push("Name: " + rows[i].CName + " || Address: " + rows[i].Address);
-          // console.log(data);
+    var data = [];
+    var newrows;
+    for (i = 0; i < rows.length; i++) {
+      data.push(rows[i].CName, rows[i].Address);
+
+      con.query('SELECT ID from Communities where CName like "' + req.query.key + '" OR Address like "' + req.query.key + '"',  function (err, rows, fields) {
+        if (err) return err;
+        if (rows.length != 0) {
+          newrows = JSON.stringify(rows[0].ID);
+          console.log(newrows);
+          // res.send(newrows);
         }
-        res.end(JSON.stringify(data));
-    });
+      });
+    }
+   res.send(JSON.stringify(data));
   });
+});
 
 
 //writing user data in the session
@@ -276,6 +282,8 @@ passport.deserializeUser(function (user_id, done) {
 function authenticationMiddleware() {
   return (req, res, next) => {
     // console.log(`New session : ${JSON.stringify(req.sessionID)}`);
+
+
     if (req.isAuthenticated()) return next();
     //if user not authenticated:
     res.redirect('/login')
