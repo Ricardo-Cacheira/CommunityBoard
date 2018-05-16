@@ -34,7 +34,7 @@ const options = {
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "MreZ39lpdSql",
+  password: "RdSQL1At365d.",
   database: "bdnetwork",
 };
 
@@ -150,7 +150,6 @@ function getCommunityList(uID, callback)
 {
   let comquery = "SELECT communityid FROM bdnetwork.communityuser WHERE UserID = ?;";
   let vals = [uID];
-  let comm;
   return con.query(comquery, vals, function (sqlerr, result) {
     if (sqlerr) {
       return callback("Error", null);
@@ -158,8 +157,6 @@ function getCommunityList(uID, callback)
       return callback(null, result);
     };
   });
-
-  // return comm; 
 }
 
 // #region Login and register
@@ -173,7 +170,7 @@ router.post('/insertUser', function (req, res) {
   var birthday = reqs.birthday;
 
   bcrypt.hash(userPassword, saltRounds, function (err, hash) {
-    let sqli = "INSERT into Users (UserName, UserPassword, Email, FirstName, LastName, Birthday) VALUES (?,?,?,?,?,?)";
+    let sqlid = "INSERT into Users (UserName, UserPassword, Email, FirstName, LastName, Birthday) VALUES (?,?,?,?,?,?)";
     let vals = [userName , hash , email , firstName ,lastName , birthday];
     con.query(sqli, vals, function (err, result) {
       let sql = "SELECT LAST_INSERT_ID() as user_id";
@@ -249,13 +246,6 @@ router.get('/logout', function (req, res) {
 
 });
 
-//search testing
-// router.get('/test', function (req, res) {
-//   let page_title = "Testing";
-//   res.render("test", {
-//     page_title
-//   });
-// });
 
 router.get('/search',function(req,res){
   con.query('SELECT CName, Address from Communities where CName like "%'+req.query.key+'%" OR Address like "%'+req.query.key+'%"', function(err, rows, fields) {
@@ -271,13 +261,6 @@ router.get('/search',function(req,res){
     });
   });
 
-// //Local - for local database strategy
-// router.post('/login', passport.authenticate('local', {
-
-//   successRedirect: '/index',
-//   failureRedirect: '/login'
-
-// }));
 
 //writing user data in the session
 passport.serializeUser(function (user_id, done) {
@@ -323,5 +306,3 @@ function authenticationMiddleware() {
 //verification END --------------------------------
 
 module.exports = router;
-
-// con.end();
