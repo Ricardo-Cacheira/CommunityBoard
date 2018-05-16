@@ -235,7 +235,7 @@ router.get('/search', function (req, res) {
         }
       });
     }
-   res.render(JSON.stringify(data));
+   res.send(JSON.stringify(data));
   });
 });
 
