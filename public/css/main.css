@@ -75,11 +75,13 @@ a.active {
 .right{
     position: absolute;
     right: 0;
+    bottom: 0;
 }
 
 .left{
     position: absolute;
     left: 0;
+    bottom: 0;
 }
 
 .circular--square {

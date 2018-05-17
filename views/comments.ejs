@@ -1,0 +1,39 @@
+<div class="right" id="feed">
+    <div class="post">
+        <article class="post-content">
+            <p class="post-name">
+                <%= post.FirstName+ ` `+ post.LastName %>
+            </p>
+            <p class="post-info">
+                <%= post.UserName+ ` `+ post.PostDate %>
+            </p>
+            <p class="post-text">
+                <%= post.Content %>
+            </p>
+        </article>
+        <br>
+    </div>
+
+
+    <form method="POST" id="commform" action='/newc'>
+        <textarea required type="content" id="content" name="content" style="resize: none;" cols="40" rows="5" placeholder="Ask Something"></textarea>
+        <input style="visibility:hidden;" type="text" name="postID" id="postID" value="<%- postId %>">
+
+        <button type="submit" class="btn btn-primary" id="submit"> SUBMIT </button>
+    </form>
+    <ul>
+        <% for (let i = 0; i < comments.length; i++) { %>
+            <% var element = comments[i]%>
+            <li class="comment">
+                <article class="comment-content">
+                    <p class="comment-info">
+                        <%= element.UserName+ ` `+ element.date %>
+                    </p>
+                    <p class="comment-text">
+                        <%= element.text %>
+                    </p>
+                </article>
+            </li>
+        <% } %>
+    </ul>
+</div>

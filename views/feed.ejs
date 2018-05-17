@@ -11,8 +11,8 @@
                 </article>
                 <br>
                 <section class="post-reactions">
-                    <div class="accept">0 Accepts</div>
-                    <div class="post-comment">0 Comments</div>
+                    <div onclick="console.log('accepted');" class="accept">0 Accepts</div>
+                    <div onclick="window.location.replace('/post/<%= element.PostID %>');" class="post-comment">Comments</div>
                 </section>
             </li>
             <br>
@@ -33,7 +33,7 @@
                 <textarea required type="content" id="content" name="content" style="resize: none;" cols="40" rows="5" placeholder="Don't give unnecessary information    Doing so might compromise your safety"></textarea>
                 <input style="visibility:hidden;" type="text" name="comID" id="comID" value="<%-community %>">
                 <br>
-                <button type="submit" class="btn btn-primary" id="submit"> SUMBIT </button>
+                <button type="submit" class="btn btn-primary" id="submit"> SUBMIT </button>
             </form>
         </div>
     </div>

@@ -21,7 +21,7 @@
   background-color: #696868;
   color: black;
   bottom: 0;
-  min-height: 95%;
+  min-height: 93vh;
   max-height: 93vh;
   padding: 0;
   margin: 0;
@@ -29,6 +29,7 @@
 
 #feed ul{
   list-style: none;
+  padding: 0;
 }
 
 .profile-pic{
@@ -90,6 +91,64 @@
   height: 5vh;
   width: 49.7%;
   text-align: center;
+}
+
+.comment{
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 0;
+  margin: auto;
+  margin-top: 1vh;
+  background-color: #e0e0e0;
+  min-height: 2vh;
+  width: 60vw;
+}
+.comment-info{
+  margin: 0.25em;
+  font-size: 14px;
+  font-style: bold;
+  color: black;
+}
+
+.comment-text{
+  word-wrap: break-word;
+  margin-left: 0.25em;
+  font-size: 12px;
+  color: black;
+  bottom: 0;
+}
+
+#commform{
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 0;
+  margin: auto;
+  background-color: #e0e0e0;    
+  min-height: 2vh;
+  height: 10vh;
+  width: 60vw;
+  margin-top: 5vh;
+  margin-bottom: 2vh;
+  position: relative;
+}
+
+#commform button{
+  width: 20%;
+  margin: auto;
+}
+
+#commform textarea{
+  width: 80%;
+  height: 30%;
+  margin: auto;
+}
+
+#postID{
+  width: 0;
+  height: 0;
+  display: none;
 }
 /* ---------------------------POPUP NEW POST ------------------------------------ */
 
