@@ -6,22 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script  type="text/javascript" src="/js/typeahead.min.js"></script>
+    <script type="text/javascript" src="/js/typeahead.min.js"></script>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/community.css">
 
-    <title><%= page_title %></title>
+    <title>
+        <%= page_title %>
+    </title>
 </head>
 
 <body>
 
-     <%- include('nav'); %>
+<%- include('nav'); %>
 
-     <%- include('sidebar', community); %>
+<%- include('sidebar', community); %>
 
-     <%- include('feed', {feed, community}); %>
+<%- include('feed', {feed, community}); %>
 
-    <script src="/js/main.js"></script>
+<script src="/js/main.js"></script>
+<script>
+    function accept(postid)
+    {
+        $.post('/accept', {idpost: postid}).done( function(response) {
+            if (response) {
+                document.getElementById(postid).classList.add("accepted");    
+            }else
+            {
+                document.getElementById(postid).classList.remove("accepted");    
+            }
+            
+        })
+        .fail( function(response){
+            alert("Couldn't complete your action, Try Again!");
+        })
+        .always( function(response){});
+    }
+
+</script>
 </body>
 
 </html>

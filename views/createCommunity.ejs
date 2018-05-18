@@ -13,24 +13,25 @@
 </head>
 
 <body>
-    <%- include('navform'); %>
-
+        
+    <%- include('nav'); %>
+    
     <section>
-        <form method="POST" id="login" action='/selectLogin'>
+        <form method="POST" action="/insertCommunity" id="register">
             <br>
-            <h2>Login</h2>
-            Login:
+            <h2>Create a new Community</h2>
+            Community Name:
             <br>
-            <input type="text" name="username" id="username" placeholder="Username">
-            <br> Password:
+            <input type="text" required name="CName" id="CName" placeholder="Community Name">
+            <br> Address (Optional):
             <br>
-            <input type="password" name="password" id="password" placeholder="Password">
+            <input type="text" name="Address" id="Address" placeholder="Community Address">
             <br>
-            <button type="submit" id="lsubmit"> Login </button>
+            <button type="submit" id="rsubmit"> Register </button>
         </form>
     </section>
 
-    <script src="/js/login.js"></script>
+    <script src="/js/main.js"></script>
 </body>
 
 </html>
