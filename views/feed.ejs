@@ -2,7 +2,7 @@
     <ul>
         <% for (let i = 0; i < feed.length; i++) { %>
             <% var element = feed[i]%>
-            
+            <%= element.accepted %>
             <li class="post">
                 <article class="post-content">
                     <p class="post-name"><%= element.FirstName+ ` `+ element.LastName %></p>
@@ -11,8 +11,7 @@
                 </article>
                 <br>
                 <section class="post-reactions">
-                    <div onclick="console.log('accepted');" class="accept">0 Accepts</div>
-                    <div onclick="window.location.replace('/post/<%= element.PostID %>');" class="post-comment">Comments</div>
+                    <div onclick="accept(this.id);" id="<%= element.PostID %>" class="accept <% if(element.accepted != null){ %> accepted <% } %>">Accept Request</div><div onclick="window.location.replace('/post/<%= element.PostID %>');" class="post-comment">Comments</div>
                 </section>
             </li>
             <br>

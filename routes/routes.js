@@ -62,7 +62,7 @@ router.get("/", authenticationMiddleware(), function (req, res) {
     if (err) {
       res.send(500);
     } else {
-      console.log(result);
+
       let communityList = result;
       res.render("index", {
         page_title,
@@ -79,7 +79,7 @@ router.get("/index", authenticationMiddleware(), function (req, res) {
     if (err) {
       res.send(500);
     } else {
-      console.log(result);
+
       let communityList = result;
       res.render("index", {
         page_title,
@@ -95,7 +95,7 @@ router.get("/calendar", authenticationMiddleware(), function (req, res) {
     if (err) {
       res.send(500);
     } else {
-      console.log(result);
+
       let communityList = result;
       res.render("calendar", {
         page_title,
@@ -147,12 +147,14 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
   let page_title = "Community " + community + " Feed";
   let select_posts =
     `
-    select users.FirstName, users.LastName, users.UserName, posts.Content, posts.PostDate, posts.PostID
+    select users.FirstName, users.LastName, users.UserName, posts.Content, posts.PostDate, posts.PostID,
+    (Select accepts.UserID from Accepts where userID = ? AND PostID = posts.PostID) as accepted
     FROM Posts
-    INNER JOIN  users ON posts.PosterID = users.ID
-    Where CommunityID = ` + community + `;
+    INNER JOIN  users ON Posts.PosterID = users.ID
+    Where CommunityID = ?;
     `;
-  con.query(select_posts, function (err, result, fields) {
+  let vals = [req.user, community]
+  con.query(select_posts, vals, function (err, result, fields) {
     if (err) throw err;
 
     var feed = result;
@@ -160,7 +162,7 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
       if (err) {
         res.send(500);
       } else {
-        console.log(result);
+
         let communityList = result;
         res.render("community", {
           page_title,
@@ -203,7 +205,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
         if (err) {
           res.send(500);
         } else {
-          console.log(result);
+
           let communityList = result;
           res.render("post", {
             page_title,
@@ -230,6 +232,71 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
     console.log("You commented something");
   });
   res.redirect("/post/" + post);
+});
+
+router.post("/accept", function (req, res) {
+  let post = req.body.idpost;
+  let check = "Select * from Accepts where userID = ? AND PostID = ?;"
+  let newa = 'INSERT into Accepts (UserID, PostID) VALUES (?, ?);';
+  let newr = 'DELETE FROM Accepts where userID = ? AND PostID = ?;';
+  let vals = [req.user, post];
+
+  con.query(check, vals, function (err, result, fields) {
+    if (result.length > 0) {
+      con.query(newr, vals, function (err, result, fields) {
+        if (err) throw err;
+        console.log("You rejected something");
+        res.send(false);
+      });
+    } else {
+      con.query(newa, vals, function (err, result, fields) {
+        if (err) throw err;
+        console.log("You accepted something");
+        res.send(true);
+      });
+    }
+  });
+});
+
+router.get("/createCommunity", authenticationMiddleware(), function (req, res) {
+  let page_title = "Create YOUR Community"
+  getCommunityList(req.user, function (err, result) {
+    if (err) {
+      res.send(500);
+    } else {
+      let communityList = result;
+      res.render("createCommunity", {
+        page_title,
+        communityList
+      });
+    }
+  });
+});
+
+router.post("/insertCommunity", function (req, res) {
+  var reqs = req.body;
+  var CName = reqs.CName;
+  var Address = reqs.Address;
+  let sql = "INSERT into Communities (CName, Address) VALUES (?,?);";
+  let vals = [CName, Address];
+  con.query(sql, vals, function (err, result) {
+    let sqlid = "SELECT LAST_INSERT_ID() as comm_id";
+
+    con.query(sqlid, (err, result) => {
+      if (err) throw err;
+
+      var comm_id = result[0].comm_id;
+      let sqllink = "INSERT into CommunityUser (CommunityID, UserID) VALUES (?,?);";
+      let values = [comm_id, req.user];
+
+      con.query(sqllink, values, (err, result) => {
+        if (err) throw err;
+        console.log("linked");
+      });
+
+      res.redirect("/feed/" + comm_id);
+    });
+  });
 });
 
 // #endregion

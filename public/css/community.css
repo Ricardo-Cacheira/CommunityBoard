@@ -1,8 +1,6 @@
 #sidebar{
   min-width: 20%;
   max-width: 20vw;
-  align-content: center;
-  justify-content: center;
   background-color: #ffa318;
   color: black;
   min-height: 95%;
@@ -11,6 +9,7 @@
   padding: 0;
   margin: 0;
   align-content: center;
+  justify-content: center;
 }
 
 #feed{
@@ -43,7 +42,7 @@
 
 .name{
   color: #ffffff;
-  text-align: left;
+  margin: auto;
   text-decoration: underline;
   text-align: center;
   font-size: 2em;
@@ -81,16 +80,29 @@
   width: inherit;
   position: absolute;
   bottom: 0;
-  margin: 0 0 0 0.25em; 
   display: inline-block;
 }
 
 .post-reactions div{
+  background-color: #1762b5;
+  color: white;
   display: inline-block;
   margin: auto;
   height: 5vh;
-  width: 49.7%;
+  width: 50%;
   text-align: center;
+}
+
+.post-reactions div:hover{
+  cursor: pointer;
+}
+
+.accepted{
+  background-color: #06D85F !important;
+}
+
+.post-comment, .accept{
+  padding-top: 2vh;
 }
 
 .comment{

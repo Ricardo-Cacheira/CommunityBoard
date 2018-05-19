@@ -11,6 +11,9 @@
                 <%= post.Content %>
             </p>
         </article>
+        <section class="post-reactions">
+            <div onclick="accept(this.id);" id="<%= post.PostID %>" class="accept">Accept Request</div>
+        </section>
         <br>
     </div>
 
