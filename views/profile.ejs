@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/typeahead.min.js"></script>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/community.css">
+
+    <title>
+        <%= page_title %>
+    </title>
+</head>
+
+<body>
+    <%- include('nav', communityList); %>
+
+    <section id="profile">
+            <form method="POST" action="/updateUser" id="register" disabled>
+                <fieldset disabled>
+                <br>
+                <h2>Register</h2>
+                Username:
+                <br>
+                <input type="text" name="username" id="username" value="<%= userinfo.UserName %>">
+                <!-- <br> Password:
+                <br>
+                <input type="password" name="password" id="password" value="Minimum 6 characters">
+                <br> Confirm Password:
+                <br>
+                <input type="password" name="confirmpassword" id="confirmpassword" value="Confirm your password">
+                <br> Email:
+                <br> -->
+                <input type="email" name="email" id="email" value="<%= userinfo.Email %>">
+                <br> First name:
+                <br>
+                <input type="text" name="firstname" id="firstname" value="<%= userinfo.FirstName %>">
+                <br> Last name:
+                <br>
+                <input type="text" name="lastname" id="lastname" value="<%= userinfo.LastName %>">
+                <!-- <br> Birthday:
+                <br>
+                <input type="date" name="birthday" id="birthday"> -->
+                <!-- <br> Picture:
+                <br>
+                <input type="file" name="file" id="file"> -->
+                <br>
+                </fieldset>
+                <button type="submit" id="usubmit"> Edit info </button>
+            </form>
+        </section>
+        <script src="/js/main.js"></script>
+</body>
+
+</html>

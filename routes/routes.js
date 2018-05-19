@@ -12,7 +12,7 @@ var passport = require("passport"),
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "RdSQL1At365d.",
+  password: "MreZ39lpdSql",
   database: "bdnetwork"
 });
 //RdSQL1At365d.
@@ -34,7 +34,7 @@ const options = {
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "RdSQL1At365d.",
+  password: "MreZ39lpdSql",
   database: "bdnetwork"
 };
 
@@ -105,11 +105,27 @@ router.get("/calendar", authenticationMiddleware(), function (req, res) {
   });
 });
 
+router.get("/profile", authenticationMiddleware(), function (req, res) {
+  let page_title = 'Profile';
+  let profileq = "SELECT * FROM Users WHERE ID= ?;";
+  
+  con.query(profileq, req.user, function (err, result) {
+    let userinfo = result[0];
+    getCommunityList(req.user, function (err, result) {
+      let communityList = result;
+      res.render("profile", {
+        page_title,
+        userinfo,
+        communityList
+      });
+    });
+  });
+});
+
 //create community
 
 router.post("/newp", authenticationMiddleware(), function (req, res) {
   let community = req.body.comID;
-
   let newp =
     'INSERT into Posts (`PosterID`, `Content`, `PostDate`, `CommunityID`) VALUES ("' +
     req.user +
@@ -168,7 +184,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
     `;
   con.query(select_posts, postId, function (err, result, fields) {
     if (err) throw err;
-    
+
     var post = result[0];
     let page_title = post.Content;
     let community = post.CommunityID;
@@ -208,7 +224,7 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
 
   let newc =
     'INSERT into Comments (`text`, `date`, `users_id`, `posts_id`) VALUES (?, NOW(), ?, ?)';
-    let vals = [req.body.content,req.user, post];
+  let vals = [req.body.content, req.user, post];
   con.query(newc, vals, function (err, result, fields) {
     if (err) throw err;
     console.log("You commented something");
@@ -313,44 +329,24 @@ router.get("/login", function (req, res) {
 router.get("/logout", function (req, res) {
   req.logOut();
   //this works?
-  // req.clearCookie();
+
   req.session.destroy(function (err) {
-    res.redirect("/login"); //Inside a callback… bulletproof!
+    res.redirect("/login"); //Inside a callback
+    // req.clearCookie();
   });
+
 });
 
-router.get("/search", function (req, res) {
-  con.query(
-    'SELECT ID, CName, Address FROM Communities WHERE CName LIKE "%' +
-    req.query.key +
-    '%" OR Address LIKE "%' +
-    req.query.key +
-    '%"',
-    function (err, rows, fields) {
-      console.log(req.query.key);
-      if (err) throw err;
-      var data = [];
-      var newrows;
-      for (i = 0; i < rows.length; i++) {
-        // data.push(rows[i].CName, rows[i].Address);
-        data.push({
-          ID: rows[i].ID,
-          CName: rows[i].CName,
-          Address: rows[i].Address
-        });
-
-        // con.query('SELECT ID from Communities where CName like "' + req.query.key + '" OR Address like "' + req.query.key + '"',  function (err, rows, fields) {
-        //   if (err) return err;
-        //   if (rows.length != 0) {
-        //     newrows = JSON.stringify(rows[0].ID);
-        //     console.log(newrows);
-        //     // res.send(newrows);
-        //   }
-        // });
-      }
-      res.send(JSON.stringify(data));
-    }
-  );
+router.get('/search', function (req, res) {
+  var data = [];
+  con.query('SELECT ID, CName, Address from Communities where CName like "%' + req.query.key + '%" OR Address like "%' + req.query.key + '%"', function (err, rows, fields) {
+    // console.log(req.query.key);
+    if (err) throw err;
+    for (i = 0; i < rows.length; i++) {
+      data.push({ ID: rows[i].ID, Name: rows[i].CName, Address: rows[i].Address });
+    };
+    res.send(data);
+  });
 });
 
 //writing user data in the session

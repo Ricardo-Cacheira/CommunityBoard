@@ -1,16 +1,25 @@
 <script type="text/javascript">
     $(document).ready(function () {
-        $('input.typeahead').typeahead(
-        {
-            name: 'Communities',
-            remote: '/search?key=%QUERY',
-            limit: 10
-        }
-        );
-        $('input.typeahead').bind('typeahead:select', function(ev, suggestion) {
-            console.log('Selection: ' + suggestion.ID);
+        $('.autocomplete').autocomplete({
+            minLength: 1,
+            highlight: true
+        },
+            {
+                name: 'Communities',
+                source: function (query, callback) {
+                    $.get({
+                        url: '/search',
+                        data: { key: query }
+                    }).done(function (data) {
+                        callback(data)
+                    })
+                },
+                displayKey: function (suggestion) { return ("<b>Name: </b>" + suggestion.Name + "&nbsp - &nbsp<b>Address: </b>" + suggestion.Address)}
+            }),
+        $('.autocomplete').bind('autocomplete:selected', function (ev, suggestion) {
+            window.location.href = "/feed/" + suggestion.ID;
         });
-});
+    });
 </script>
 
 <div id="navbar">
@@ -20,8 +29,10 @@
                 <button onclick="myFunction()" class="dropbtn">Communities</button>
                 <div id="myDropdown" class="dropdown-content">
                     <% for (let i = 0; i < communityList.length; i++) { %>
-                    <a href="/feed/<%- communityList[i].communityid %>">Community <%- communityList[i].communityid %></a>
-                    <% } %>
+                        <a href="/feed/<%- communityList[i].communityid %>">Community
+                            <%- communityList[i].communityid %>
+                        </a>
+                        <% } %>
                 </div>
             </div>
             <!-- <a class="active" href="#intro">Communities</a> -->
@@ -30,15 +41,14 @@
             <a href="/calendar">Calendar</a>
         </li>
         <li>
-            <a href="#profile">Profile</a>
+            <a href="/profile">Profile</a>
         </li>
         <li>
             <a href="/">Index</a>
         </li>
-        <li>
-            <div class="bs-example">
-                <input type="text" name="typeahead" class="typeahead tt-query" autocomplete="off" spellcheck="false" placeholder="Search Community by name or adress">
-            </div>
+        <li id="searchbar">
+            <input class="form-control autocomplete" id="communities" name="key" type="text" placeholder='Search a Community by name or address'
+            />
         </li>
         <li style="float:right">
             <a href="/logout">Logout</a>
