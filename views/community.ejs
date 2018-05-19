@@ -15,7 +15,7 @@
 
 <body>
 
-<%- include('nav'); %>
+<%- include('nav', communityList); %>
 
 <%- include('sidebar', community); %>
 
@@ -25,6 +25,7 @@
 <script>
     function accept(postid)
     {
+        console.log(postid);
         $.post('/accept', {idpost: postid}).done( function(response) {
             if (response) {
                 document.getElementById(postid).classList.add("accepted");    

@@ -107,7 +107,7 @@ router.get("/calendar", authenticationMiddleware(), function (req, res) {
 
 router.get("/profile", authenticationMiddleware(), function (req, res) {
   let page_title = 'Profile';
-  let profileq = "SELECT * FROM Users WHERE ID= ?;";
+  let profileq = "SELECT * FROM users WHERE id= ?;";
   
   con.query(profileq, req.user, function (err, result) {
     let userinfo = result[0];
@@ -127,7 +127,7 @@ router.get("/profile", authenticationMiddleware(), function (req, res) {
 router.post("/newp", authenticationMiddleware(), function (req, res) {
   let community = req.body.comID;
   let newp =
-    'INSERT into Posts (`PosterID`, `Content`, `PostDate`, `CommunityID`) VALUES ("' +
+    'INSERT into posts (`users_id`, `content`, `date`, `communities_id`) VALUES ("' +
     req.user +
     '", "' +
     req.body.content +
@@ -147,11 +147,11 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
   let page_title = "Community " + community + " Feed";
   let select_posts =
     `
-    select users.FirstName, users.LastName, users.UserName, posts.Content, posts.PostDate, posts.PostID,
-    (Select accepts.UserID from Accepts where userID = ? AND PostID = posts.PostID) as accepted
-    FROM Posts
-    INNER JOIN  users ON Posts.PosterID = users.ID
-    Where CommunityID = ?;
+    select users.firstName, users.lastName, users.userName, posts.content, posts.date, posts.id,
+    (Select accepts.users_id from accepts where users_id = ? AND posts_id = posts.id) as accepted
+    FROM posts
+    INNER JOIN  users ON posts.users_id = users.id
+    Where communities_id = ?;
     `;
   let vals = [req.user, community]
   con.query(select_posts, vals, function (err, result, fields) {
@@ -179,21 +179,21 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
   var reqs = req.params;
   let postId = reqs.idp;
   let select_posts = `
-    select users.FirstName, users.LastName, users.UserName, posts.Content, posts.PostDate, posts.CommunityID
-    FROM Posts
-    INNER JOIN  users ON posts.PosterID = users.ID
-    Where PostID = ?;
+    select users.firstName, users.lastName, users.userName, posts.content, posts.date, posts.communities_id
+    FROM posts
+    INNER JOIN  users ON posts.users_id = users.id
+    Where posts.id = ?;
     `;
   con.query(select_posts, postId, function (err, result, fields) {
     if (err) throw err;
 
     var post = result[0];
-    let page_title = post.Content;
-    let community = post.CommunityID;
+    let page_title = post.content;
+    let community = post.communities_id;
     let select_comments = `
-    select text,date,users.UserName
-    FROM Comments
-    INNER JOIN  users ON Comments.users_id = users.ID
+    select text,date,users.userName
+    FROM comments
+    INNER JOIN  users ON comments.users_id = users.id
     Where posts_id = ?;
     `;
     con.query(select_comments, postId, function (err, result2, fields) {
@@ -225,7 +225,7 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
   let post = req.body.postID;
 
   let newc =
-    'INSERT into Comments (`text`, `date`, `users_id`, `posts_id`) VALUES (?, NOW(), ?, ?)';
+    'INSERT into comments (`text`, `date`, `users_id`, `posts_id`) VALUES (?, NOW(), ?, ?)';
   let vals = [req.body.content, req.user, post];
   con.query(newc, vals, function (err, result, fields) {
     if (err) throw err;
@@ -236,10 +236,11 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
 
 router.post("/accept", function (req, res) {
   let post = req.body.idpost;
-  let check = "Select * from Accepts where userID = ? AND PostID = ?;"
-  let newa = 'INSERT into Accepts (UserID, PostID) VALUES (?, ?);';
-  let newr = 'DELETE FROM Accepts where userID = ? AND PostID = ?;';
+  let check = "Select * from accepts where users_id = ? AND posts_id = ?;";
+  let newa = 'INSERT into accepts (users_id, posts_id, date) VALUES (?, ?, NOW());';
+  let newr = 'DELETE FROM accepts where users_id = ? AND posts_id = ?;';
   let vals = [req.user, post];
+  console.log(post);
 
   con.query(check, vals, function (err, result, fields) {
     if (result.length > 0) {
@@ -272,12 +273,12 @@ router.get("/createCommunity", authenticationMiddleware(), function (req, res) {
     }
   });
 });
-
+//add another valeu
 router.post("/insertCommunity", function (req, res) {
   var reqs = req.body;
   var CName = reqs.CName;
   var Address = reqs.Address;
-  let sql = "INSERT into Communities (CName, Address) VALUES (?,?);";
+  let sql = "INSERT into communities (cName, address) VALUES (?,?);";
   let vals = [CName, Address];
   con.query(sql, vals, function (err, result) {
     let sqlid = "SELECT LAST_INSERT_ID() as comm_id";
@@ -286,7 +287,7 @@ router.post("/insertCommunity", function (req, res) {
       if (err) throw err;
 
       var comm_id = result[0].comm_id;
-      let sqllink = "INSERT into CommunityUser (CommunityID, UserID) VALUES (?,?);";
+      let sqllink = "INSERT into communities_has_users (communities_id, users_id, role) VALUES (?,?, 1);";
       let values = [comm_id, req.user];
 
       con.query(sqllink, values, (err, result) => {
@@ -303,7 +304,7 @@ router.post("/insertCommunity", function (req, res) {
 
 function getCommunityList(uID, callback) {
   let comquery =
-    "SELECT communityid FROM bdnetwork.communityuser WHERE UserID = ?;";
+    "SELECT communities_id FROM communities_has_users WHERE users_id = ?;";
   let vals = [uID];
   return con.query(comquery, vals, function (sqlerr, result) {
     if (sqlerr) {
@@ -326,7 +327,7 @@ router.post("/insertUser", function (req, res) {
 
   bcrypt.hash(userPassword, saltRounds, function (err, hash) {
     let sqlid =
-      "INSERT into Users (UserName, UserPassword, Email, FirstName, LastName, Birthday) VALUES (?,?,?,?,?,?)";
+      "INSERT into users (userName, userPassword, email, firstName, lastName, birthday) VALUES (?,?,?,?,?,?)";
     let vals = [userName, hash, email, firstName, lastName, birthday];
     con.query(sqlid, vals, function (err, result) {
       let sql = "SELECT LAST_INSERT_ID() as user_id";
@@ -356,18 +357,19 @@ router.post("/selectLogin", function (req, res) {
   var userName = reqs.username;
   var userPassword = reqs.password;
 
-  let loginquery = "SELECT ID, UserPassword FROM Users WHERE UserName = ?;";
+  let loginquery = "SELECT id, userPassword FROM users WHERE userName = ?;";
   let vals = [userName];
 
   con.query(loginquery, vals, function (sqlerr, result) {
     if (sqlerr) {
       res.status(500);
     } else {
-      let hash = result[0].UserPassword;
+      // console.log(result[0]);
+      let hash = result[0].userPassword;
       bcrypt.compare(userPassword, hash, function (err, bres) {
         if (bres) {
           console.log("Valid login");
-          var user_id = result[0].ID;
+          var user_id = result[0].id;
           req.login(user_id, function (err) {
             res.redirect("/index");
           });
@@ -406,11 +408,11 @@ router.get("/logout", function (req, res) {
 
 router.get('/search', function (req, res) {
   var data = [];
-  con.query('SELECT ID, CName, Address from Communities where CName like "%' + req.query.key + '%" OR Address like "%' + req.query.key + '%"', function (err, rows, fields) {
-    // console.log(req.query.key);
+  con.query('SELECT id, cName, address from communities where cName like "%' + req.query.key + '%" OR address like "%' + req.query.key + '%"', function (err, rows, fields) {
     if (err) throw err;
     for (i = 0; i < rows.length; i++) {
-      data.push({ ID: rows[i].ID, Name: rows[i].CName, Address: rows[i].Address });
+      // console.log(result);
+      data.push({ ID: rows[i].id, Name: rows[i].cName, Address: rows[i].address });
     };
     res.send(data);
   });
