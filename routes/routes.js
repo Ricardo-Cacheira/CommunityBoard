@@ -12,7 +12,7 @@ var passport = require("passport"),
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "MreZ39lpdSql",
+  password: "RdSQL1At365d.",
   database: "bdnetwork"
 });
 //RdSQL1At365d.
@@ -34,7 +34,7 @@ const options = {
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "MreZ39lpdSql",
+  password: "RdSQL1At365d.",
   database: "bdnetwork"
 };
 
@@ -108,7 +108,7 @@ router.get("/calendar", authenticationMiddleware(), function (req, res) {
 router.get("/profile", authenticationMiddleware(), function (req, res) {
   let page_title = 'Profile';
   let profileq = "SELECT * FROM users WHERE id= ?;";
-  
+
   con.query(profileq, req.user, function (err, result) {
     let userinfo = result[0];
     getCommunityList(req.user, function (err, result) {
@@ -144,20 +144,45 @@ router.post("/newp", authenticationMiddleware(), function (req, res) {
 router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
   var reqs = req.params;
   let community = reqs.Community;
+  let belongs, role, requests;
   let page_title = "Community " + community + " Feed";
   let select_posts =
     `
-    select users.firstName, users.lastName, users.userName, posts.content, posts.date, posts.id,
+    select users.firstName, users.lastName, users.userName, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%I - %d/%m/%Y")) as 'date', posts.id,
     (Select accepts.users_id from accepts where users_id = ? AND posts_id = posts.id) as accepted
     FROM posts
     INNER JOIN  users ON posts.users_id = users.id
-    Where communities_id = ?;
+    Where communities_id = ?
+    ORDER BY date DESC;
     `;
-  let vals = [req.user, community]
+  let vals = [req.user, community];
   con.query(select_posts, vals, function (err, result, fields) {
     if (err) throw err;
 
     var feed = result;
+
+    let check = "Select * from communities_has_users where users_id = ? AND communities_id = ?;";
+
+    con.query(check, vals, function (err, result, fields) {
+      if (result.length > 0) {
+        belongs = true;
+        role = result[0].role;
+      } else {
+        belongs = false;
+      }
+    });
+
+    let reqJoin = `
+    select users.firstName, users.lastName, users.userName, users.id
+    FROM requests
+    INNER JOIN  users ON requests.users_id = users.id
+    Where communities_id = ?;
+    `;
+
+    con.query(reqJoin, community, function (err, result, fields) {
+      requests = result;
+    });
+
     getCommunityList(req.user, function (err, result) {
       if (err) {
         res.send(500);
@@ -168,7 +193,10 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
           page_title,
           community,
           feed,
-          communityList
+          communityList,
+          belongs,
+          role,
+          requests
         });
       }
     });
@@ -177,9 +205,10 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
 
 router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
   var reqs = req.params;
+  let belongs, role, requests;
   let postId = reqs.idp;
   let select_posts = `
-    select users.firstName, users.lastName, users.userName, posts.content, posts.date, posts.communities_id
+    select users.firstName, users.lastName, users.userName, posts.content, (SELECT DATE_FORMAT(posts.date, "%H:%I - %d/%m/%Y")) as 'date', posts.communities_id
     FROM posts
     INNER JOIN  users ON posts.users_id = users.id
     Where posts.id = ?;
@@ -201,6 +230,30 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
 
       var comments = result2;
 
+      let check = "Select * from communities_has_users where users_id = ? AND communities_id = ?;";
+      let vals = [req.user, community];
+      con.query(check, vals, function (err, result, fields) {
+        if (result.length > 0) {
+          console.log("belongs");
+          belongs = true;
+          role = result[0].role;
+        } else {
+          console.log("doesnt belong");
+          belongs = false;
+        }
+      });
+
+      let reqJoin = `
+      select users.firstName, users.lastName, users.userName, users.id
+      FROM requests
+      INNER JOIN  users ON requests.users_id = users.id
+      Where communities_id = ?;
+      `;
+  
+      con.query(reqJoin, community, function (err, result, fields) {
+        requests = result;
+      });
+
       getCommunityList(req.user, function (err, result) {
         if (err) {
           res.send(500);
@@ -213,7 +266,10 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
             community,
             postId,
             communityList,
-            comments
+            comments,
+            belongs,
+            role,
+            requests
           });
         }
       });
@@ -253,6 +309,54 @@ router.post("/accept", function (req, res) {
       con.query(newa, vals, function (err, result, fields) {
         if (err) throw err;
         console.log("You accepted something");
+        res.send(true);
+      });
+    }
+  });
+});
+
+router.post("/addUser", function (req, res) {
+  let user = req.body.iduser;
+  let com = req.body.community;
+  let check = "Select * from communities_has_users where communities_id = ? AND users_id = ?;";
+  let newa = 'insert into communities_has_users (communities_id, users_id, role) Values(?,?,0);';
+  let newd = 'DELETE FROM requests where communities_id = ? AND users_id = ?;';
+  let vals = [com, user];
+
+  con.query(check, vals, function (err, result, fields) {
+    if (result.length > 0) {
+      con.query(newd, vals, function (err, result, fields) {
+        if (err) throw err;
+        console.log("This dude already there");
+        res.send(false);
+      });
+    } else {
+      con.query(newa, vals, function (err, result, fields) {
+        if (err) throw err;
+        con.query(newd, vals, function (err, result, fields) {
+          if (err) throw err;
+          console.log("You accepted someone");
+          res.send(true);
+        });
+      });
+    }
+  });
+});
+
+router.post("/request", function (req, res) {
+  let com = req.body.com;
+  let check = "Select * from requests where users_id = ? AND communities_id = ?;";
+  let newr = 'INSERT into requests (users_id, communities_id) VALUES (?, ?);';
+  let vals = [req.user, com];
+
+  con.query(check, vals, function (err, result, fields) {
+    if (result.length > 0) {
+      console.log("Already requested");
+      res.send(false);
+    } else {
+      con.query(newr, vals, function (err, result, fields) {
+        if (err) throw err;
+        console.log("You requested something");
         res.send(true);
       });
     }
@@ -412,7 +516,11 @@ router.get('/search', function (req, res) {
     if (err) throw err;
     for (i = 0; i < rows.length; i++) {
       // console.log(result);
-      data.push({ ID: rows[i].id, Name: rows[i].cName, Address: rows[i].address });
+      data.push({
+        ID: rows[i].id,
+        Name: rows[i].cName,
+        Address: rows[i].address
+      });
     };
     res.send(data);
   });
@@ -460,5 +568,4 @@ function authenticationMiddleware() {
 // });
 
 //verification END --------------------------------
-
 module.exports = router;

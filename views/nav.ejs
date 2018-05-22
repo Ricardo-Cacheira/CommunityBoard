@@ -29,7 +29,7 @@
                 <button onclick="myFunction()" class="dropbtn">Communities</button>
                 <div id="myDropdown" class="dropdown-content">
                     <% for (let i = 0; i < communityList.length; i++) { %>
-                    <a href="/feed/<%- communityList[i].communityid %>">Community <%- communityList[i].communityid %></a>
+                    <a href="/feed/<%- communityList[i].communities_id %>">Community <%- communityList[i].communities_id %></a>
                     <% } %>
                     <a href="/createCommunity">Create Community</a>
                 </div>

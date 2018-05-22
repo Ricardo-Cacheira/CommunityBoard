@@ -1,8 +1,42 @@
 <div class="left" id="sidebar">
-    <img class="profile-pic circular--square" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRA3sT9gBpKnl_cJRDOqrq-_NiwosIBY_eHuisQ_Kj8SkABMqaw" />
-    <a href="/feed/<%- community %>"><p class="name"> Community <%- community %></p></a>
+    <img class="profile-pic circular--square" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRA3sT9gBpKnl_cJRDOqrq-_NiwosIBY_eHuisQ_Kj8SkABMqaw"
+    />
+    <a href="/feed/<%- community %>">
+        <p class="name"> Community
+            <%- community %>
+        </p>
+    </a>
     <p class="bio">
-        Group of Community <%- community %> 
+        Group of Community
+        <%- community %>
     </p>
     <a id="new" class="button" href="#popup1">NEW POST</a>
+
+    <% if(role == 1){ %>
+        <a id="new" class="button" href="#popup2">JOIN REQUESTS</a>
+        <% } %>
 </div>
+
+<% if(role == 1){ %>
+    <div id="popup2" class="overlay">
+        <div class="popup">
+            <a class="close" href="#">&times;</a>
+            <p>LIST OF USERS WHO REQUESTED TO JOIN</p>
+            <table class="content table">
+                <tr>
+                    <th style="width: 80%">User info</th>
+                    <th style="width: 20%">Accept</th>
+                </tr>
+                <% for (let i = 0; i < requests.length; i++) { %>
+                    <% var element = requests[i]; %>
+                    <tr>
+                        <td><%= element.firstName + " " + element.lastName +" UserName: "+ element.userName%></td>
+                        <td>
+                                <div onclick="acceptRequest(this.id, <%= community %>);" id="<%= element.id %>">Accept Request</div>
+                        </td>
+                    </tr>
+                <% } %>
+            </table>
+        </div>
+    </div>
+    <% } %>

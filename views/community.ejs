@@ -17,31 +17,14 @@
 
 <%- include('nav', communityList); %>
 
-<%- include('sidebar', community); %>
+<%- include('sidebar', community, belongs, role, requests); %>
 
+<% if (belongs){%>
 <%- include('feed', {feed, community}); %>
-
+<% }else{%>
+<%- include('request', {community});%>
+<% }%>
 <script src="/js/main.js"></script>
-<script>
-    function accept(postid)
-    {
-        console.log(postid);
-        $.post('/accept', {idpost: postid}).done( function(response) {
-            if (response) {
-                document.getElementById(postid).classList.add("accepted");    
-            }else
-            {
-                document.getElementById(postid).classList.remove("accepted");    
-            }
-            
-        })
-        .fail( function(response){
-            alert("Couldn't complete your action, Try Again!");
-        })
-        .always( function(response){});
-    }
-
-</script>
 </body>
 
 </html>
