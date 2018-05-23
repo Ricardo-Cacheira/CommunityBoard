@@ -19,10 +19,8 @@
 
 
     <form method="POST" id="commform" action='/newc'>
-        <textarea required type="content" id="content" name="content" style="resize: none;" cols="40" rows="5" placeholder="Ask Something"></textarea>
+        <textarea required type="content" id="content" name="content" style="resize: none;" cols="40" rows="20" placeholder="Ask Something"></textarea><button type="submit" class="btn btn-primary" id="submit"> SUBMIT </button>
         <input style="visibility:hidden;" type="text" name="postID" id="postID" value="<%- postId %>">
-
-        <button type="submit" class="btn btn-primary" id="submit"> SUBMIT </button>
     </form>
     <ul>
         <% for (let i = 0; i < comments.length; i++) { %>

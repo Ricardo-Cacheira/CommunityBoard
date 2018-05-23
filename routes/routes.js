@@ -148,12 +148,12 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
   let page_title = "Community " + community + " Feed";
   let select_posts =
     `
-    select users.firstName, users.lastName, users.userName, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%I - %d/%m/%Y")) as 'date', posts.id,
+    select users.firstName, users.lastName, users.userName, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) as 'date', posts.id,
     (Select accepts.users_id from accepts where users_id = ? AND posts_id = posts.id) as accepted
     FROM posts
     INNER JOIN  users ON posts.users_id = users.id
     Where communities_id = ?
-    ORDER BY date DESC;
+    ORDER BY posts.date DESC;
     `;
   let vals = [req.user, community];
   con.query(select_posts, vals, function (err, result, fields) {
@@ -220,10 +220,11 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
     let page_title = post.content;
     let community = post.communities_id;
     let select_comments = `
-    select text,date,users.userName
+    select text,(SELECT DATE_FORMAT(date, "%d/%m/%Y")) as 'date',users.userName
     FROM comments
     INNER JOIN  users ON comments.users_id = users.id
-    Where posts_id = ?;
+    Where posts_id = ?
+    ORDER BY comments.date DESC;
     `;
     con.query(select_comments, postId, function (err, result2, fields) {
       if (err) throw err;

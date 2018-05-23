@@ -3,7 +3,7 @@
   max-width: 20vw;
   background-color: #ffa318;
   color: black;
-  min-height: 95%;
+  min-height: 93vh;
   max-height: 93vh;
   bottom: 0;
   padding: 0;
@@ -68,22 +68,31 @@
   font-family: Arial, Helvetica, sans-serif;
   padding: 0;
   margin: auto;
+  margin-top: 1vh;
   background-color: #e0e0e0;
-  min-height: 40vh;
+  min-height: 30vh;
   width: 60vw;
-  margin-bottom: 5vh;
+  margin-bottom: 2vh;
   position: relative;
 }
 
-.post-name, .post-info{
+.post-info{
   margin: 0.25em;
-  font-size: 1.2em;
+  font-size: 0.9em;
+  font-style: bold;
+  color: black;
+}
+
+.post-name{
+  margin: 0.25em;
+  font-size: 1.7em;
   font-style: bold;
   color: black;
 }
 
 .post-text{
   word-wrap: break-word;
+  margin-top: 0.5em;
   margin-left: 0.25em;
   font-size: 1.5em;
   color: black;
@@ -122,12 +131,12 @@
 .comment{
   display: flex;
   flex-direction: column;
+  min-height: 8vh;
   font-family: Arial, Helvetica, sans-serif;
   padding: 0;
   margin: auto;
   margin-top: 1vh;
   background-color: #e0e0e0;
-  min-height: 2vh;
   width: 60vw;
 }
 .comment-info{
@@ -151,24 +160,29 @@
   font-family: Arial, Helvetica, sans-serif;
   padding: 0;
   margin: auto;
-  background-color: #e0e0e0;    
   min-height: 2vh;
-  height: 10vh;
+  height: 5vh;
   width: 60vw;
-  margin-top: 5vh;
-  margin-bottom: 2vh;
+  margin-bottom: 6vh;
   position: relative;
 }
 
+#comform button, #comform textarea{
+  display: inline-block;
+
+}
+
 #commform button{
-  width: 20%;
-  margin: auto;
+  width: 10%;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  border-radius: 0; 
 }
 
 #commform textarea{
-  width: 80%;
-  height: 30%;
-  margin: auto;
+  width: 90%;
+  height: 100%;
 }
 
 #postID{
