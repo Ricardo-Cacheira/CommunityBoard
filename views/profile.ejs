@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.js"></script>
     <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">    
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/community.css">
+    <link rel="stylesheet" href="/css/form.css">
 
     <title>
         <%= page_title %>
@@ -18,41 +18,83 @@
 
 <body>
     <%- include('nav', communityList); %>
-
-    <section id="profile">
-            <form method="POST" action="/updateUser" id="register" disabled>
-                <fieldset disabled>
-                <br>
-                <h2>Register</h2>
-                Username:
-                <br>
-                <input type="text" name="username" id="username" value="<%= userinfo.userName %>">
-                <!-- <br> Password:
+        <div id="content">
+            <div class="row">
+                <div class="col-md-4">
+                    <div id="updateform" style="display: none">
+                        <section id="profile">
+                            <form method="POST" action="/updateUser" id="register" disabled>
+                                <br>
+                                <h3>Update your personal info</h3>
+                                Username:
+                                <br>
+                                <input type="text" name="username" id="username" value="<%= userinfo.userName %>">
+                                <!-- <br> Password:
                 <br>
                 <input type="password" name="password" id="password" value="Minimum 6 characters">
                 <br> Confirm Password:
                 <br>
-                <input type="password" name="confirmpassword" id="confirmpassword" value="Confirm your password">
-                <br> Email:
-                <br> -->
-                <input type="email" name="email" id="email" value="<%= userinfo.email %>">
-                <br> First name:
-                <br>
-                <input type="text" name="firstname" id="firstname" value="<%= userinfo.firstName %>">
-                <br> Last name:
-                <br>
-                <input type="text" name="lastname" id="lastname" value="<%= userinfo.lastName %>">
-                <!-- <br> Birthday:
+                <input type="password" name="confirmpassword" id="confirmpassword" value="Confirm your password"> -->
+                                <br> Email:
+                                <br>
+                                <input type="email" name="email" id="email" value="<%= userinfo.email %>">
+                                <br> First name:
+                                <br>
+                                <input type="text" name="firstname" id="firstname" value="<%= userinfo.firstName %>">
+                                <br> Last name:
+                                <br>
+                                <input type="text" name="lastname" id="lastname" value="<%= userinfo.lastName %>">
+                                <!-- <br> Birthday:
                 <br>
                 <input type="date" name="birthday" id="birthday"> -->
-                <!-- <br> Picture:
+                                <!-- <br> Picture:
                 <br>
                 <input type="file" name="file" id="file"> -->
-                <br>
-                </fieldset>
-                <button type="submit" id="usubmit"> Edit info </button>
-            </form>
-        </section>
+                                <br>
+                                <button type="submit" id="usubmit"> Update info </button>
+                            </form>
+                        </section>
+                    </div>
+                    <input type="button" id="hideshowinfo" value="Update your info" style="margin: 1vh 0.5vw">
+                </div>
+                <div style="display: inline-block; width: 30%">
+                    <h2 style="text-align: center; margin: 0"> Welcome to CommunityBoard,
+                        <b>
+                            <%= userinfo.firstName %>
+                                <%= userinfo.lastName %>
+                        </b>
+                    </h2>
+                </div>
+                <div id="accepts" style="float:right; display: none">
+                    <section id="accepts" style="float:right">
+                        <form method="POST" action="/acceptHelp" id="register" disabled>
+                            <h3> Accept help</h3>
+                            <% for (let i = 0; i < accepts.length; i++) { %>
+                                <% var element = accepts[i]%>
+                                <div> <=% element.length %> </div>
+                                <% } %>
+                            <!-- <button type="submit" id="usubmit"> Update info </button> -->
+                        </form>
+                    </section>
+                </div>
+                <input type="button" id="hideshowaccept" value="Check requests" style="margin: 1vh 1.5vw; float: right;">
+            </div>
+        </div>
+
+        <script>
+            jQuery(document).ready(function () {
+                jQuery('#hideshowinfo').on('click', function (event) {
+                    jQuery('#updateform').toggle('hide');
+                });
+            });
+        </script>
+        <script>
+            jQuery(document).ready(function () {
+                jQuery('#hideshowaccept').on('click', function (event) {
+                    jQuery('#accepts').toggle('hide');
+                });
+            });
+        </script>
         <script src="/js/main.js"></script>
 </body>
 

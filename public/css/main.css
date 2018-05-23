@@ -120,3 +120,7 @@ a.active {
     font-weight: bold;
     font-style: normal;
   }
+
+  #content {
+      padding: 10vh 1vw;
+  }
