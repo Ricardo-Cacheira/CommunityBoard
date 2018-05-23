@@ -27,7 +27,6 @@ con.connect(err => {
 });
 
 router.use(cookieParser());
-// router.use(express.static('public'));
 
 //express mysql session
 const options = {
@@ -89,38 +88,131 @@ router.get("/index", authenticationMiddleware(), function (req, res) {
   });
 });
 
-router.get("/calendar", authenticationMiddleware(), function (req, res) {
-  let page_title = "Calendar";
-  getCommunityList(req.user, function (err, result) {
-    if (err) {
-      res.send(500);
-    } else {
+//get personal events
+router.get("/todo", authenticationMiddleware(), function (req, res) {
+  let page_title = "To-Do";
+  let getEvents = `
+  SELECT users_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%H:%i - %W %b %e %Y")) as date
+  FROM events
+  INNER JOIN users_has_events ON events.id = users_has_events.events_id
+  WHERE users_id = ?
+  ORDER BY events.date DESC;`;
 
-      let communityList = result;
-      res.render("calendar", {
-        page_title,
-        communityList
-      });
-    }
+  //and date > now() ?
+  con.query(getEvents, req.user, function (err, result) {
+
+    if (err) throw err;
+    let events = result;
+    getCommunityList(req.user, function (err, result) {
+      if (err) {
+        res.send(500);
+      } else {
+        let communityList = result;
+        res.render("todo", {
+          page_title,
+          events,
+          communityList
+        });
+      }
+    });
   });
 });
 
+//create personal events
+router.post('/insertTodo', function (req, res) {
+  var reqs = req.body;
+  var description = reqs.description;
+  var date = reqs.date;
+
+  let newEvent = 'INSERT INTO events (description, date) VALUES (?, ?);';
+  let vals = [description, date]
+  con.query(newEvent, vals, function (err, result) {
+    if (err) throw err;
+    let eventOwner = 'INSERT INTO users_has_events (users_id, events_id) VALUES (?, ?);';
+
+    let ownervals = [req.user, result.insertId]
+    con.query(eventOwner, ownervals, function (err, result) {
+      if (err) {
+        throw err;
+      } else {
+        res.redirect('/todo');
+      }
+    });
+  });
+});
+
+//get profile (info and accepts)
 router.get("/profile", authenticationMiddleware(), function (req, res) {
   let page_title = 'Profile';
-  let profileq = "SELECT * FROM users WHERE id= ?;";
-  
-  con.query(profileq, req.user, function (err, result) {
+  let selectProfile = `SELECT * FROM users WHERE id= ?;`;
+
+  con.query(selectProfile, req.user, function (err, result) {
     let userinfo = result[0];
-    getCommunityList(req.user, function (err, result) {
-      let communityList = result;
-      res.render("profile", {
-        page_title,
-        userinfo,
-        communityList
+
+    let selectPosts = `SELECT posts.content, 
+      (SELECT COUNT(*) FROM accepts WHERE posts_id = posts.id AND users_id != ?) AS acceptCount
+      FROM posts 
+      WHERE posts.users_id = ?
+      HAVING acceptCount != 0;`;
+
+    let vals = [req.user, req.user]
+    con.query(selectPosts, vals, function (err, result) {
+      console.log(result);
+      let accepts = result;
+
+      getCommunityList(req.user, function (err, result) {
+        let communityList = result;
+        res.render("profile", {
+          page_title,
+          userinfo,
+          accepts,
+          communityList
+        });
       });
     });
   });
 });
+
+//update user info
+router.post('/updateUser', function (req, res) {
+  var reqs = req.body;
+  var userName = reqs.username;
+  var email = reqs.email;
+  var firstName = reqs.firstname;
+  var lastName = reqs.lastname;
+
+  getCommunityList(req.user, function (err, result) {
+    let updateuser = `UPDATE users SET userName = '` + userName + `', email = '` + email + `', firstName = '` + firstName + `', lastName = '` + lastName + `' WHERE id= 1;`;
+    let vals = [req.user];
+    console.log(vals);
+    con.query(updateuser, vals, function (err, result) {
+      if (err) {
+        throw err;
+      } else {
+        console.log('User info updated')
+        res.redirect('/index')
+      }
+    });
+  });
+});
+
+router.get('/acceptHelp', authenticationMiddleware(), function (req, res) {
+  let accepth = `SELECT content, date, id FROM posts WHERE users_id = '?';`;
+  let vals = [req.user];
+
+  con.query(accepth, vals, function (err, result) {
+    if (err) throw err;
+    console.log(result);
+    res.render("community", {
+      page_title,
+      community,
+      feed,
+      communityList
+    });
+  });
+});
+
+// router.post('/')
 
 //create community
 

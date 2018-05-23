@@ -17,9 +17,11 @@
 
 <%- include('nav', communityList); %>
 
+<div id="content">
 <%- include('sidebar', community); %>
 
 <%- include('feed', {feed, community}); %>
+</div>
 
 <script src="/js/main.js"></script>
 <script>
