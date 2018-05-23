@@ -144,15 +144,9 @@ router.post('/insertTodo', function (req, res) {
 //get profile (info and accepts)
 router.get("/profile", authenticationMiddleware(), function (req, res) {
   let page_title = 'Profile';
-<<<<<<< HEAD
   let selectProfile = `SELECT * FROM users WHERE id= ?;`;
 
   con.query(selectProfile, req.user, function (err, result) {
-=======
-  let profileq = "SELECT * FROM users WHERE id= ?;";
-
-  con.query(profileq, req.user, function (err, result) {
->>>>>>> 23fa12f67de68dea78eb00ade21e668aff3b9aea
     let userinfo = result[0];
 
     let selectPosts = `SELECT posts.content, 
