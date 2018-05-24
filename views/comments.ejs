@@ -12,11 +12,7 @@
             </p>
         </article>
         <section class="post-reactions">
-            <div onclick="accept(this.id);" id="<%= post.PostID %>" class="accept">Accept Request</div>
-
-            <% if(post.users_id == userId){ %>
-                <a id="help" class="button" href="#popup4">Accepted List</a>
-                <% } %>
+            <div onclick="accept(this.id);" id="<%= postId   %>" class="accept">Accept Request</div><% if(post.users_id == userId){ %><div onclick="location.href='#popup4';" class="button" style="bottom: 0;position: absolute;" >Accepted List</div> <% } %> 
         </section>
         <br>
     </div>

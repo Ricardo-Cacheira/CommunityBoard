@@ -89,3 +89,20 @@ function choose(postid, userid)
     })
     .always( function(response){});
 }
+
+function deleteTodo(todoid)
+{
+    $.get('/deleteTodo', {todoid: todoid}).done( function(response) {
+        if (response) {
+            alert("Todo deleted");    
+        }else
+        {
+            alert("Error deleting Todo");    
+        }
+        
+    })
+    .fail( function(response){
+        alert("Couldn't complete your action, Try Again!");
+    })
+    .always( function(response){});
+}

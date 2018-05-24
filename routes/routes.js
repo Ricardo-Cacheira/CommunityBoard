@@ -67,12 +67,11 @@ router.get("/todo", authenticationMiddleware(), function (req, res) {
   SELECT users_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%H:%i - %W %b %e %Y")) AS date
   FROM events
   INNER JOIN users_has_events ON events.id = users_has_events.events_id
-  WHERE users_id = ?
-  ORDER BY events.date DESC;`;
+  WHERE users_id = ?  AND date > NOW()
+  ORDER BY events.date  ASC;`;
 
   //and date > now() ?
   con.query(getEvents, req.user, function (err, result) {
-
     if (err) throw err;
     let events = result;
     getCommunityList(req.user, function (err, result) {
@@ -109,6 +108,27 @@ router.post('/insertTodo', function (req, res) {
       } else {
         res.redirect('/todo');
       }
+    });
+  });
+});
+
+//delete personal events
+router.get('/deleteTodo/:todoId', function (req, res) {
+  var reqs = req.params;
+  console.log(reqs);
+  var todoId = reqs.id;
+
+  let deleteTodoOwner = 'DELETE FROM users_has_events WHERE events_id = ?;';
+
+  con.query(deleteTodoOwner, todoId, function (err, result) {
+    if (err) throw err;
+
+    let deletetodo = 'DELETE FROM events WHERE id = ?;';
+
+    con.query(deletetodo, todoId, function (err, result) {
+      if (err) throw err;
+      console.log(result);
+      res.redirect('/todo');
     });
   });
 });

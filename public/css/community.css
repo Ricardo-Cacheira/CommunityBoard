@@ -191,6 +191,16 @@
   display: none;
 }
 
+a#help.button {
+  margin: 0;
+  width: 50%;
+}
+
+#help{
+  color: white;
+}
+
+
 /* ---------------------------POPUP NEW POST ------------------------------------ */
 
 .button {
