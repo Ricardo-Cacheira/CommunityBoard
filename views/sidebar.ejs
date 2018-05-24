@@ -2,19 +2,21 @@
     <img class="profile-pic circular--square" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRA3sT9gBpKnl_cJRDOqrq-_NiwosIBY_eHuisQ_Kj8SkABMqaw"
     />
     <a href="/feed/<%- community %>">
-        <p class="name"> Community
-            <%- community %>
+        <p class="name">
+            <%- communityName %>
         </p>
     </a>
     <p class="bio">
-        Group of Community
-        <%- community %>
+        Group of 
+        <%- communityName %>
     </p>
     <a id="new" class="button" href="#popup1">NEW POST</a>
 
     <% if(role == 1){ %>
-        <a id="new" class="button" href="#popup2">JOIN REQUESTS</a>
-        <% } %>
+        <a id="join" class="button" href="#popup2">JOIN REQUESTS</a>
+    <% } %>
+
+    <a id="members" class="button" href="#popup3">Members</a>
 </div>
 
 <% if(role == 1){ %>
@@ -32,11 +34,33 @@
                     <tr>
                         <td><%= element.firstName + " " + element.lastName +" UserName: "+ element.userName%></td>
                         <td>
-                                <div onclick="acceptRequest(this.id, <%= community %>);" id="<%= element.id %>">Accept Request</div>
+                                <div onclick="acceptRequest(this.id, <%=community %>);" id="<%= element.id %>">Accept Request</div>
                         </td>
                     </tr>
                 <% } %>
             </table>
         </div>
     </div>
-    <% } %>
+<% } %>
+
+<div id="popup3" class="overlay">
+    <div class="popup">
+        <a class="close" href="#">&times;</a>
+        <b>List of users in this community</b>
+        <table class="content table">
+            <tr>
+                <th style="width: 60%">Name</th>
+                <th style="width: 40%">UserName</th>
+            </tr>
+            <% for (let i = 0; i < members.length; i++) { %>
+                <% var element = members[i]; %>
+                <tr>
+                    <td><%= element.firstName + " " + element.lastName%></td>
+                    <td>
+                        <%= element.userName %>
+                    </td>
+                </tr>
+            <% } %>
+        </table>
+    </div>
+</div>

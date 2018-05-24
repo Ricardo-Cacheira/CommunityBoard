@@ -10,14 +10,14 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">    
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/community.css">
-    <title><%= page_title %></title>
+    <title><%= communityName %></title>
 </head>
 
 <body>
 
 <%- include('nav', communityList); %>
 
-<%- include('sidebar', community, belongs, role, requests); %>
+<%- include('sidebar', community, belongs, role, requests, communityName, members); %>
 
 <% if (belongs){%>
 <%- include('feed', {feed, community}); %>
