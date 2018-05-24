@@ -234,7 +234,7 @@ router.post("/newp", authenticationMiddleware(), function (req, res) {
 router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
   var reqs = req.params;
   let community = reqs.Community;
-  let belongs, role, requests;
+  let belongs, role, requests, communityName, members;
   let page_title = "Community " + community + " Feed";
   let SELECT_posts =
     `
@@ -272,6 +272,22 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
     con.query(reqJoin, community, function (err, result, fields) {
       requests = result;
     });
+    let cominfo = `select * FROM communities Where id = ?;`;
+
+    con.query(cominfo, community, function (err, result, fields) {
+      communityName = result[0].cName;
+    });
+
+    let memberList = `
+    select users.firstName, users.lastName, users.userName
+    FROM communities_has_users
+    INNER JOIN  users ON communities_has_users.users_id = users.id
+    Where communities_id = ?;
+    `;
+
+    con.query(memberList, community, function (err, result, fields) {
+      members = result;
+    });
 
     getCommunityList(req.user, function (err, result) {
       if (err) {
@@ -286,7 +302,9 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
           communityList,
           belongs,
           role,
-          requests
+          requests,
+          communityName,
+          members
         });
       }
     });
@@ -295,7 +313,7 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
 
 router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
   var reqs = req.params;
-  let belongs, role, requests;
+  let belongs, role, requests, communityName, members;
   let postId = reqs.idp;
   let userId = req.user;
   let SELECT_posts = `
@@ -356,6 +374,25 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
           requests = result;
         });
 
+        let cominfo = `select * FROM communities Where id = ?;`;
+
+        con.query(cominfo, community, function (err, result, fields) {
+          console.log(result);
+          communityName = result[0].cName;
+        });
+
+        let memberList = `
+      select users.firstName, users.lastName, users.userName
+      FROM communities_has_users
+      INNER JOIN  users ON communities_has_users.users_id = users.id
+      Where communities_id = ?;
+      `;
+
+        con.query(memberList, community, function (err, result, fields) {
+          members = result;
+        });
+
+
         getCommunityList(req.user, function (err, result) {
           if (err) {
             res.send(500);
@@ -373,6 +410,8 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
               belongs,
               role,
               requests,
+              communityName,
+              members,
               userId
             });
           }
@@ -513,7 +552,10 @@ router.post("/insertCommunity", function (req, res) {
 
 function getCommunityList(uID, callback) {
   let comquery =
-    "SELECT communities_id FROM communities_has_users WHERE users_id = ?;";
+    `SELECT communities_has_users.communities_id as id, communities.cName as 'name'
+    FROM communities_has_users 
+    INNER JOIN communities ON communities_has_users.communities_id = communities.id
+    WHERE users_id = ?;`
   let vals = [uID];
   return con.query(comquery, vals, function (sqlerr, result) {
     if (sqlerr) {
