@@ -21,7 +21,7 @@
 
     <%- include('nav', communityList); %>
 
-    <%- include('sidebar', community, belongs, role, requests); %>
+    <%- include('sidebar', {community, belongs, role, requests, communityName, members}); %>
 
     <% if (belongs){%>
     <%- include('comments', {postId, post, comments, userId}); %>
