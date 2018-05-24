@@ -13,7 +13,7 @@ var passport = require("passport"),
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "MreZ39lpdSql",
+  password: "RdSQL1At365d.",
   database: "bdnetwork"
 });
 //RdSQL1At365d.
@@ -35,7 +35,7 @@ const options = {
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "MreZ39lpdSql",
+  password: "RdSQL1At365d.",
   database: "bdnetwork"
 };
 
