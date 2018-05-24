@@ -13,28 +13,60 @@
         </article>
         <section class="post-reactions">
             <div onclick="accept(this.id);" id="<%= post.PostID %>" class="accept">Accept Request</div>
+
+            <% if(post.users_id == userId){ %>
+                <a id="help" class="button" href="#popup4">Accepted List</a>
+                <% } %>
         </section>
         <br>
     </div>
 
 
     <form method="POST" id="commform" action='/newc'>
-        <textarea required type="content" id="content" name="content" style="resize: none;" cols="40" rows="20" placeholder="Ask Something"></textarea><button type="submit" class="btn btn-primary" id="submit"> SUBMIT </button>
+        <textarea required type="content" id="content" name="content" style="resize: none;" cols="40" rows="20" placeholder="Ask Something"></textarea>
+        <button type="submit" class="btn btn-primary" id="submit"> SUBMIT </button>
         <input style="visibility:hidden;" type="text" name="postID" id="postID" value="<%- postId %>">
     </form>
     <ul>
         <% for (let i = 0; i < comments.length; i++) { %>
             <% var element = comments[i]%>
-            <li class="comment">
-                <article class="comment-content">
-                    <p class="comment-info">
-                        <%= element.userName+ ` `+ element.date %>
-                    </p>
-                    <p class="comment-text">
-                        <%= element.text %>
-                    </p>
-                </article>
-            </li>
-        <% } %>
+                <li class="comment">
+                    <article class="comment-content">
+                        <p class="comment-info">
+                            <%= element.userName+ ` `+ element.date %>
+                        </p>
+                        <p class="comment-text">
+                            <%= element.text %>
+                        </p>
+                    </article>
+                </li>
+                <% } %>
     </ul>
+</div>
+
+
+<div id="popup4" class="overlay">
+    <div class="popup">
+        <a class="close" href="#">&times;</a>
+        <p>List of users that can help</p>
+        <table class="content table">
+            <tr>
+                <th style="width: 80%">User info</th>
+                <th style="width: 20%">Accept</th>
+            </tr>
+            <% for (let i = 0; i < accepts.length; i++) { %>
+                <% var element = accepts[i]; %>                
+                <% console.log('Element: ' + element) %>
+
+                    <tr>
+                        <td>
+                            <%- element.firstName + " " + element.lastName +"<b> ("+ element.userName + ")</b>"%>
+                        </td>
+                        <td>
+                            <div onclick="choose(<%= postId + ', ' + element.users_id %>);">Choose user</div>
+                        </td>
+                    </tr>
+                    <% } %>
+        </table>
+    </div>
 </div>

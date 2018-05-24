@@ -10,6 +10,7 @@ form#todo {
 
 ul {
     list-style: none;
+    margin: 0 3vw;
 }
 
 form input {
@@ -20,3 +21,8 @@ form input {
 form h2 {
     padding-bottom: 2vh;
 }
+
+#events {
+    overflow-y: scroll;
+    justify-content: center;
+  }

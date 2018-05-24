@@ -18,9 +18,9 @@
 
 <body>
     <%- include('nav'); %>
-        <div id="content">
+        <div id="wrap">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3" style="position: fixed">
                     <section id="createevent">
                         <form method="POST" action="/insertTodo" id="todo">
                             <br>
@@ -35,7 +35,7 @@
                         </form>
                     </section>
                 </div>
-                <div class="col-md-8" id="events">
+                <div class="col-md-9" id="events" style="float: right">
                     <ul>
                         <% for (let i = 0; i < events.length; i++) { %>
                             <% var element = events[i]%>

@@ -1,0 +1,27 @@
+<a id="help" class="button" href="#popup3">
+    Accepted List</a>
+<% if(posts.users_id == users.id){ %>
+    <div id="popup3" class="overlay">
+        <div class="popup">
+            <a class="close" href="#">&times;</a>
+            <p>List of users that can help</p>
+            <table class="content table">
+                <tr>
+                    <th style="width: 80%">User info</th>
+                    <th style="width: 20%">Accept</th>
+                </tr>
+                <% for (let i = 0; i < accepts.length; i++) { %>
+                    <% var element = accepts[i]; %>
+                        <tr>
+                            <td>
+                                <%= element.firstName + " " + element.lastName +" UserName: "+ element.userName%>
+                            </td>
+                            <td>
+                                <div onclick="acceptRequest(this.id, <%= community %>);" id="<%= element.id %>">Accept Request</div>
+                            </td>
+                        </tr>
+                        <% } %>
+            </table>
+        </div>
+    </div>
+    <% } %>

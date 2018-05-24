@@ -24,7 +24,7 @@
     <%- include('sidebar', community, belongs, role, requests); %>
 
     <% if (belongs){%>
-    <%- include('comments', {postId, post, comments}); %>
+    <%- include('comments', {postId, post, comments, userId}); %>
     <% }else{%>
     <%- include('request', {community});%>
     <% }%>

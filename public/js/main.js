@@ -72,3 +72,20 @@ function request(comid)
     })
     .always( function(response){});
 }
+
+function choose(postid, userid)
+{
+    $.post('/chooseUser', {pid: postid, uid: userid}).done( function(response) {
+        if (response) {
+            alert("USER CHOSEN");    
+        }else
+        {
+           alert("YOU ALREADY CHOSE SOMEONE");    
+        }
+        
+    })
+    .fail( function(response){
+        alert("Couldn't complete your action, Try Again!");
+    })
+    .always( function(response){});
+}

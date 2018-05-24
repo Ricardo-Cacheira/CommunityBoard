@@ -12,10 +12,11 @@ var passport = require("passport"),
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "RdSQL1At365d.",
+  password: "MreZ39lpdSql",
   database: "bdnetwork"
 });
 //RdSQL1At365d.
+//MreZ39lpdSql
 
 con.connect(err => {
   if (err) {
@@ -33,7 +34,7 @@ const options = {
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "RdSQL1At365d.",
+  password: "MreZ39lpdSql",
   database: "bdnetwork"
 };
 
@@ -56,43 +57,14 @@ router.use(parser.urlencoded({
 
 // #region render views
 router.get("/", authenticationMiddleware(), function (req, res) {
-  let page_title = "ROOT";
-  getCommunityList(req.user, function (err, result) {
-    if (err) {
-      res.send(500);
-    } else {
-
-      let communityList = result;
-      res.render("index", {
-        page_title,
-        communityList
-      });
-    }
-  });
-});
-
-router.get("/index", authenticationMiddleware(), function (req, res) {
-  console.log("req.user " + JSON.stringify(req.user));
-  let page_title = "Testing";
-  getCommunityList(req.user, function (err, result) {
-    if (err) {
-      res.send(500);
-    } else {
-
-      let communityList = result;
-      res.render("index", {
-        page_title,
-        communityList
-      });
-    }
-  });
+  res.redirect('/profile');
 });
 
 //get personal events
 router.get("/todo", authenticationMiddleware(), function (req, res) {
   let page_title = "To-Do";
   let getEvents = `
-  SELECT users_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%H:%i - %W %b %e %Y")) as date
+  SELECT users_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%H:%i - %W %b %e %Y")) AS date
   FROM events
   INNER JOIN users_has_events ON events.id = users_has_events.events_id
   WHERE users_id = ?
@@ -149,8 +121,8 @@ router.get("/profile", authenticationMiddleware(), function (req, res) {
   con.query(selectProfile, req.user, function (err, result) {
     let userinfo = result[0];
 
-    let selectPosts = `SELECT posts.content, 
-      (SELECT COUNT(*) FROM accepts WHERE posts_id = posts.id AND users_id != ?) AS acceptCount
+    let selectPosts = `SELECT posts.id, posts.content, 
+      (SELECT COUNT(*) FROM accepts WHERE posts_id = posts.id AND users_id != ? AND accepted != 1) AS acceptCount
       FROM posts 
       WHERE posts.users_id = ?
       HAVING acceptCount != 0;`;
@@ -182,7 +154,7 @@ router.post('/updateUser', function (req, res) {
   var lastName = reqs.lastname;
 
   getCommunityList(req.user, function (err, result) {
-    let updateuser = `UPDATE users SET userName = '` + userName + `', email = '` + email + `', firstName = '` + firstName + `', lastName = '` + lastName + `' WHERE id= 1;`;
+    let updateuser = `UPDATE users SET userName = '` + userName + `', email = '` + email + `', firstName = '` + firstName + `', lastName = '` + lastName + `' WHERE id= ?;`;
     let vals = [req.user];
     console.log(vals);
     con.query(updateuser, vals, function (err, result) {
@@ -190,7 +162,7 @@ router.post('/updateUser', function (req, res) {
         throw err;
       } else {
         console.log('User info updated')
-        res.redirect('/index')
+        res.redirect('/profile')
       }
     });
   });
@@ -209,6 +181,32 @@ router.get('/acceptHelp', authenticationMiddleware(), function (req, res) {
       feed,
       communityList
     });
+  });
+});
+
+router.post("/chooseUser", function (req, res) {
+  let pid = req.body.pid;
+  let uid = req.body.uid;
+  let vals = [uid, pid];
+  console.log(vals);
+  let checkAccepts = `SELECT * FROM accepts WHERE accepted = 1 AND posts_id = ?;`;
+  let chooseAccept = `UPDATE accepts SET accepted = 1 WHERE users_id = ? AND posts_id = ?;`;
+
+  con.query(checkAccepts, pid, function (err, result, fields) {
+    if (err) {
+      throw err;
+    } else {
+      if (result.length > 0) {
+        console.log("Selected accepts");
+        res.send(false);
+      } else {
+        con.query(chooseAccept, vals, function (err, result, fields) {
+          if (err) throw err;
+          console.log("Chose a user");
+          res.send(true);
+        });
+      }
+    }
   });
 });
 
@@ -238,22 +236,22 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
   let community = reqs.Community;
   let belongs, role, requests;
   let page_title = "Community " + community + " Feed";
-  let select_posts =
+  let SELECT_posts =
     `
-    select users.firstName, users.lastName, users.userName, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) as 'date', posts.id,
-    (Select accepts.users_id from accepts where users_id = ? AND posts_id = posts.id) as accepted
+    SELECT users.firstName, users.lastName, users.userName, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) AS 'date', posts.id,
+    (SELECT accepts.users_id FROM accepts where users_id = ? AND posts_id = posts.id) AS accepted
     FROM posts
     INNER JOIN  users ON posts.users_id = users.id
     Where communities_id = ?
     ORDER BY posts.date DESC;
     `;
   let vals = [req.user, community];
-  con.query(select_posts, vals, function (err, result, fields) {
+  con.query(SELECT_posts, vals, function (err, result, fields) {
     if (err) throw err;
 
     var feed = result;
 
-    let check = "Select * from communities_has_users where users_id = ? AND communities_id = ?;";
+    let check = "SELECT * FROM communities_has_users where users_id = ? AND communities_id = ?;";
 
     con.query(check, vals, function (err, result, fields) {
       if (result.length > 0) {
@@ -265,7 +263,7 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
     });
 
     let reqJoin = `
-    select users.firstName, users.lastName, users.userName, users.id
+    SELECT users.firstName, users.lastName, users.userName, users.id
     FROM requests
     INNER JOIN  users ON requests.users_id = users.id
     Where communities_id = ?;
@@ -299,72 +297,86 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
   var reqs = req.params;
   let belongs, role, requests;
   let postId = reqs.idp;
-  let select_posts = `
-    select users.firstName, users.lastName, users.userName, posts.content, (SELECT DATE_FORMAT(posts.date, "%H:%I - %d/%m/%Y")) as 'date', posts.communities_id
+  let userId = req.user;
+  let SELECT_posts = `
+    SELECT users.firstName, users.lastName, users.userName, posts.content, (SELECT DATE_FORMAT(posts.date, "%H:%I - %d/%m/%Y")) AS 'date', posts.communities_id, posts.users_id
     FROM posts
     INNER JOIN  users ON posts.users_id = users.id
     Where posts.id = ?;
     `;
-  con.query(select_posts, postId, function (err, result, fields) {
+  con.query(SELECT_posts, postId, function (err, result, fields) {
     if (err) throw err;
 
     var post = result[0];
     let page_title = post.content;
     let community = post.communities_id;
-    let select_comments = `
-    select text,(SELECT DATE_FORMAT(date, "%d/%m/%Y")) as 'date',users.userName
+    let SELECT_comments = `
+    SELECT text,(SELECT DATE_FORMAT(date, "%d/%m/%Y")) AS 'date',users.userName
     FROM comments
     INNER JOIN  users ON comments.users_id = users.id
     Where posts_id = ?
     ORDER BY comments.date DESC;
     `;
-    con.query(select_comments, postId, function (err, result2, fields) {
-      if (err) throw err;
 
+    con.query(SELECT_comments, postId, function (err, result2, fields) {
+      if (err) throw err;
       var comments = result2;
 
-      let check = "Select * from communities_has_users where users_id = ? AND communities_id = ?;";
-      let vals = [req.user, community];
-      con.query(check, vals, function (err, result, fields) {
-        if (result.length > 0) {
-          console.log("belongs");
-          belongs = true;
-          role = result[0].role;
-        } else {
-          console.log("doesnt belong");
-          belongs = false;
-        }
-      });
+      let SELECTAccepts = `
+      SELECT accepts.id, users.firstName, users.lastName, users.userName, accepts.users_id
+      FROM accepts
+      INNER JOIN users ON accepts.users_id = users.id
+      WHERE posts_id = ?;
+      `;
 
-      let reqJoin = `
-      select users.firstName, users.lastName, users.userName, users.id
+      con.query(SELECTAccepts, req.params.idp, function (err, result3, fiels) {
+        console.log('Result 3 ' + JSON.stringify(result3));
+        var accepts = result3;
+
+        let check = "SELECT * FROM communities_has_users where users_id = ? AND communities_id = ?;";
+        let vals = [req.user, community];
+        con.query(check, vals, function (err, result, fields) {
+          if (result.length > 0) {
+            belongs = true;
+            role = result[0].role;
+          } else {
+            ;
+            belongs = false;
+          }
+        });
+
+        let reqJoin = `
+      SELECT users.firstName, users.lastName, users.userName, users.id
       FROM requests
       INNER JOIN  users ON requests.users_id = users.id
       Where communities_id = ?;
       `;
-  
-      con.query(reqJoin, community, function (err, result, fields) {
-        requests = result;
-      });
 
-      getCommunityList(req.user, function (err, result) {
-        if (err) {
-          res.send(500);
-        } else {
+        con.query(reqJoin, community, function (err, result, fields) {
+          requests = result;
+        });
 
-          let communityList = result;
-          res.render("post", {
-            page_title,
-            post,
-            community,
-            postId,
-            communityList,
-            comments,
-            belongs,
-            role,
-            requests
-          });
-        }
+        getCommunityList(req.user, function (err, result) {
+          if (err) {
+            res.send(500);
+          } else {
+
+            let communityList = result;
+            res.render("post", {
+              page_title,
+              post,
+              community,
+              postId,
+              communityList,
+              comments,
+              accepts,
+              belongs,
+              role,
+              requests,
+              userId
+            });
+          }
+        });
       });
     });
   });
@@ -385,7 +397,7 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
 
 router.post("/accept", function (req, res) {
   let post = req.body.idpost;
-  let check = "Select * from accepts where users_id = ? AND posts_id = ?;";
+  let check = "SELECT * FROM accepts where users_id = ? AND posts_id = ?;";
   let newa = 'INSERT into accepts (users_id, posts_id, date) VALUES (?, ?, NOW());';
   let newr = 'DELETE FROM accepts where users_id = ? AND posts_id = ?;';
   let vals = [req.user, post];
@@ -411,7 +423,7 @@ router.post("/accept", function (req, res) {
 router.post("/addUser", function (req, res) {
   let user = req.body.iduser;
   let com = req.body.community;
-  let check = "Select * from communities_has_users where communities_id = ? AND users_id = ?;";
+  let check = "SELECT * FROM communities_has_users where communities_id = ? AND users_id = ?;";
   let newa = 'insert into communities_has_users (communities_id, users_id, role) Values(?,?,0);';
   let newd = 'DELETE FROM requests where communities_id = ? AND users_id = ?;';
   let vals = [com, user];
@@ -438,7 +450,7 @@ router.post("/addUser", function (req, res) {
 
 router.post("/request", function (req, res) {
   let com = req.body.com;
-  let check = "Select * from requests where users_id = ? AND communities_id = ?;";
+  let check = "SELECT * FROM requests where users_id = ? AND communities_id = ?;";
   let newr = 'INSERT into requests (users_id, communities_id) VALUES (?, ?);';
   let vals = [req.user, com];
 
@@ -478,7 +490,7 @@ router.post("/insertCommunity", function (req, res) {
   let sql = "INSERT into communities (cName, address) VALUES (?,?);";
   let vals = [CName, Address];
   con.query(sql, vals, function (err, result) {
-    let sqlid = "SELECT LAST_INSERT_ID() as comm_id";
+    let sqlid = "SELECT LAST_INSERT_ID() AS comm_id";
 
     con.query(sqlid, (err, result) => {
       if (err) throw err;
@@ -527,7 +539,7 @@ router.post("/insertUser", function (req, res) {
       "INSERT into users (userName, userPassword, email, firstName, lastName, birthday) VALUES (?,?,?,?,?,?)";
     let vals = [userName, hash, email, firstName, lastName, birthday];
     con.query(sqlid, vals, function (err, result) {
-      let sql = "SELECT LAST_INSERT_ID() as user_id";
+      let sql = "SELECT LAST_INSERT_ID() AS user_id";
 
       con.query(sql, (err, result) => {
         if (err) throw err;
@@ -541,7 +553,7 @@ router.post("/insertUser", function (req, res) {
           if (err) {
             return next(err);
           }
-          res.redirect("/index");
+          res.redirect("/profile");
         });
       });
     });
@@ -549,7 +561,7 @@ router.post("/insertUser", function (req, res) {
 });
 
 //login
-router.post("/selectLogin", function (req, res) {
+router.post("/SELECTLogin", function (req, res) {
   var reqs = req.body;
   var userName = reqs.username;
   var userPassword = reqs.password;
@@ -568,7 +580,7 @@ router.post("/selectLogin", function (req, res) {
           console.log("Valid login");
           var user_id = result[0].id;
           req.login(user_id, function (err) {
-            res.redirect("/index");
+            res.redirect("/profile");
           });
         } else {
           console.log("Invalid login");
@@ -605,7 +617,7 @@ router.get("/logout", function (req, res) {
 
 router.get('/search', function (req, res) {
   var data = [];
-  con.query('SELECT id, cName, address from communities where cName like "%' + req.query.key + '%" OR address like "%' + req.query.key + '%"', function (err, rows, fields) {
+  con.query('SELECT id, cName, address FROM communities where cName like "%' + req.query.key + '%" OR address like "%' + req.query.key + '%"', function (err, rows, fields) {
     if (err) throw err;
     for (i = 0; i < rows.length; i++) {
       // console.log(result);
@@ -624,7 +636,7 @@ passport.serializeUser(function (user_id, done) {
   done(null, user_id);
 });
 
-//retrieving user datafrom the session
+//retrieving user dataFROM the session
 passport.deserializeUser(function (user_id, done) {
   done(null, user_id);
 });
