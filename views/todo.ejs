@@ -45,7 +45,7 @@
                                             <%= `Due: `+ element.date %>
                                         </p>
                                         <p class="event-info">
-                                                <%= element.description %>
+                                            <%= element.description %>
                                         </p>
                                     </article>
                                     <br>
@@ -66,6 +66,25 @@
             </div>
         </div>
         <script src="/js/main.js"></script>
+        <script>
+            $(function () {
+                var dtToday = new Date();
+
+                var month = dtToday.getMonth() + 1;
+                var day = dtToday.getDate();
+                var year = dtToday.getFullYear();
+                var hours = dtToday.getHours();
+                var min = dtToday.getMinutes();
+                if (month < 10)
+                    month = '0' + month.toString();
+                if (day < 10)
+                    day = '0' + day.toString();
+
+                var maxDate = year + '-' + month + '-' + day + "T" + hours + ":" + min;
+                console.log(maxDate);
+                $('#date').attr('min', maxDate);
+            });
+        </script>
 </body>
 
 </html>

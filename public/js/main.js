@@ -30,7 +30,22 @@ function accept(postid)
         {
             document.getElementById(postid).classList.remove("accepted");    
         }
-        
+    })
+    .fail( function(response){
+        alert("Couldn't complete your action, Try Again!");
+    })
+    .always( function(response){});
+}
+
+function comment(postid, text)
+{
+    $.post('/newc', {postID: postid, content: text}).done( function(response) {
+        if (response) {
+            console.log("ok");
+        }else
+        {
+            console.log("ko");
+        }
     })
     .fail( function(response){
         alert("Couldn't complete your action, Try Again!");

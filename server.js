@@ -5,8 +5,21 @@ const parser = require('body-parser');
 var indexRouter = require('./routes/routes');
 
 const app = express();
+var server = require('http').Server(app);
+var io = require('socket.io').listen(server);
 
-  //initialize session variable
+server.listen(3000);
+
+app.io = io;
+// io.on('connection', function (socket) {
+//   setInterval(function(){
+//     socket.emit('news', { 'hello' : 'world' });
+//   }, 1000);
+//   console.log('userconnection');
+//   socket.on('my other event', function (data) {
+//     console.log(data);
+//   });
+// });
 
 app.use('/', indexRouter);
 

@@ -9,6 +9,8 @@
     <script src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.js"></script>
     <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/community.css">
 
@@ -19,17 +21,38 @@
 
 <body>
 
-    <%- include('nav', communityList); %>
+    <div id="app">
+        <%- include('nav', communityList); %>
+    
+        <%- include('sidebar', {community, belongs, role, requests, communityName, members}); %>
 
-    <%- include('sidebar', {community, belongs, role, requests, communityName, members}); %>
-
-    <% if (belongs){%>
-    <%- include('comments', {postId, post, comments, userId}); %>
-    <% }else{%>
-    <%- include('request', {community});%>
-    <% }%>
+        <% if (belongs){%>
+        <%- include('comments', {postId, post, comments, userId}); %>
+        <% }else{%>
+        <%- include('request', {community});%>
+        <% }%>
+    </div>
 
     <script src="/js/main.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    var socket = io.connect();
+    socket.on('lol', function (data) {
+        // console.log("data: "+data);
+        app.title = data.comm;
+        // socket.emit('my other event', { my: 'data' });
+    });
+    </script>
+
+<script>
+    $('#commentb').click(function() {
+    var text = $('textarea#commentt').val();
+    var post = <%= postId   %>;
+    comment(post, text);
+});
+</script>
+
 </body>
 
 </html>

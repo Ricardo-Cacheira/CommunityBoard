@@ -1,4 +1,3 @@
-
 const router = require("express").Router();
 const mysql = require("mysql");
 const parser = require("body-parser");
@@ -369,7 +368,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
       `;
 
       con.query(SELECTAccepts, req.params.idp, function (err, result3, fiels) {
-        console.log('Result 3 ' + JSON.stringify(result3));
+        // console.log('Result 3 ' + JSON.stringify(result3));
         var accepts = result3;
 
         let check = "SELECT * FROM communities_has_users where users_id = ? AND communities_id = ?;";
@@ -398,7 +397,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
         let cominfo = `select * FROM communities Where id = ?;`;
 
         con.query(cominfo, community, function (err, result, fields) {
-          console.log(result);
+          // console.log(result);
           communityName = result[0].cName;
         });
 
@@ -418,7 +417,6 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
           if (err) {
             res.send(500);
           } else {
-
             let communityList = result;
             res.render("post", {
               page_title,
@@ -452,7 +450,9 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
     if (err) throw err;
     console.log("You commented something");
   });
-  res.redirect("/post/" + post);
+  req.app.io.emit("lol", {comm: req.body.content});
+  res.send(true);
+  // res.redirect("/post/" + post);
 });
 
 router.post("/accept", function (req, res) {

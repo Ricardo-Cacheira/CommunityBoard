@@ -1,4 +1,5 @@
 <div class="right" id="feed">
+    <h1>{{title}}</h1>
     <div class="post">
         <article class="post-content">
             <p class="post-name">
@@ -12,17 +13,20 @@
             </p>
         </article>
         <section class="post-reactions">
-            <div onclick="accept(this.id);" id="<%= postId   %>" class="accept">Accept Request</div><% if(post.users_id == userId){ %><div onclick="location.href='#popup4';" class="button" style="bottom: 0;position: absolute;" >Accepted List</div> <% } %> 
+            <div onclick="accept(this.id);" id="<%= postId   %>" class="accept">Accept Request</div>
+            <% if(post.users_id == userId){ %>
+                <div onclick="location.href='#popup4';" class="button" style="bottom: 0;position: absolute;">Accepted List</div>
+                <% } %>
         </section>
         <br>
     </div>
 
 
-    <form method="POST" id="commform" action='/newc'>
-        <textarea required type="content" id="content" name="content" style="resize: none;" cols="40" rows="20" placeholder="Ask Something"></textarea>
-        <button type="submit" class="btn btn-primary" id="submit"> SUBMIT </button>
+    <div  id="commform">
+        <textarea required type="content" id="commentt" name="commentt" style="resize: none;" cols="40" rows="20" placeholder="Ask Something"></textarea>
+        <button type="button" class="btn btn-primary" id="commentb"> SUBMIT </button>
         <input style="visibility:hidden;" type="text" name="postID" id="postID" value="<%- postId %>">
-    </form>
+    </div>
     <ul>
         <% for (let i = 0; i < comments.length; i++) { %>
             <% var element = comments[i]%>
@@ -51,18 +55,31 @@
                 <th style="width: 20%">Accept</th>
             </tr>
             <% for (let i = 0; i < accepts.length; i++) { %>
-                <% var element = accepts[i]; %>                
+                <% var element = accepts[i]; %>
                 <% console.log('Element: ' + element) %>
-
-                    <tr>
-                        <td>
-                            <%- element.firstName + " " + element.lastName +"<b> ("+ element.userName + ")</b>"%>
-                        </td>
-                        <td>
-                            <div onclick="choose(<%= postId + ', ' + element.users_id %>);">Choose user</div>
-                        </td>
-                    </tr>
-                    <% } %>
+                <tr>
+                    <td>
+                        <%- element.firstName + " " + element.lastName +"<b> ("+ element.userName + ")</b>"%>
+                    </td>
+                    <td>
+                        <div onclick="choose(<%= postId + ', ' + element.users_id %>);">Choose user</div>
+                    </td>
+                </tr>
+            <% } %>
         </table>
     </div>
 </div>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            title: "somtin",
+            comments: [
+            {userName: "", date: "", text: "", },
+            { message: 'Bar' }
+            ]
+        },
+        mounted: function () {}
+    });
+</script>
