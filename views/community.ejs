@@ -17,7 +17,7 @@
 
 <%- include('nav', communityList); %>
 
-<%- include('sidebar', community, belongs, role, requests, communityName, members); %>
+<%- include('sidebar', community, belongs, role, requests, communityName, members, comEvents, userId); %>
 
 <% if (belongs){%>
 <%- include('feed', {feed, community}); %>

@@ -12,9 +12,14 @@ var passport = require("passport"),
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
+<<<<<<< HEAD
   password: "RdSQL1At365d.",
   database: "bdnetwork",
   multipleStatements: true
+=======
+  password: "MreZ39lpdSql",
+  database: "bdnetwork"
+>>>>>>> ae0f4e179942614d817acbda9469b6340f0d13e3
 });
 //RdSQL1At365d.
 //MreZ39lpdSql
@@ -35,7 +40,7 @@ const options = {
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "RdSQL1At365d.",
+  password: "MreZ39lpdSql",
   database: "bdnetwork"
 };
 
@@ -64,17 +69,17 @@ router.get("/", authenticationMiddleware(), function (req, res) {
 //get personal events
 router.get("/todo", authenticationMiddleware(), function (req, res) {
   let page_title = "To-Do";
-  let getEvents = `
+  let getUEvents = `
   SELECT users_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%H:%i - %W %b %e %Y")) AS date
   FROM events
   INNER JOIN users_has_events ON events.id = users_has_events.events_id
   WHERE users_id = ?  AND date > NOW()
   ORDER BY events.date  ASC;`;
 
-  //and date > now() ?
-  con.query(getEvents, req.user, function (err, result) {
+  con.query(getUEvents, req.user, function (err, result) {
     if (err) throw err;
     let events = result;
+
     getCommunityList(req.user, function (err, result) {
       if (err) {
         res.send(500);
@@ -90,7 +95,7 @@ router.get("/todo", authenticationMiddleware(), function (req, res) {
   });
 });
 
-//create personal eventss
+//create personal events
 router.post('/insertTodo', function (req, res) {
   var reqs = req.body;
   var description = reqs.description;
@@ -113,10 +118,46 @@ router.post('/insertTodo', function (req, res) {
   });
 });
 
-//delete personal events
+router.post('/insertComEvent', function (req, res) {
+  var reqs = req.body;
+  var description = reqs.description;
+  var date = reqs.date;
+  var communityID = reqs.comID;
+
+  let newEvent = 'INSERT INTO events (description, date) VALUES (?, ?);';
+  let vals = [description, date]
+  con.query(newEvent, vals, function (err, result) {
+    if (err) throw err;
+    let eventOwner = 'INSERT INTO communities_has_events (communities_id, events_id) VALUES (?, ?);';
+
+
+    let comvals = [communityID, result.insertId]
+    con.query(eventOwner, comvals, function (err, result) {
+      if (err) {
+        throw err;
+      } else {
+        res.redirect('/feed/' + communityID);
+      }
+    });
+  });
+});
+
+router.post('/insertAcceptedEvent', authenticationMiddleware(), function (req, res) {
+  var reqs = req.body;
+  var iduser = reqs.iduser;
+  var idevent = reqs.idevent;
+
+  let acceptEvent = 'INSERT INTO users_has_events (users_id, events_id) VALUES (?, ?);';
+  let vals = [iduser, idevent]
+  con.query(acceptEvent, vals, function (err, result) {
+    if (err) throw err;
+    res.redirect('/todo');
+  });
+});
+
+//delete personal events -- todo (:)
 router.get('/deleteTodo/:todoId', function (req, res) {
   var reqs = req.params;
-  console.log(reqs);
   var todoId = reqs.id;
 
   let deleteTodoOwner = 'DELETE FROM users_has_events WHERE events_id = ?;';
@@ -128,7 +169,6 @@ router.get('/deleteTodo/:todoId', function (req, res) {
 
     con.query(deletetodo, todoId, function (err, result) {
       if (err) throw err;
-      console.log(result);
       res.redirect('/todo');
     });
   });
@@ -177,7 +217,6 @@ router.post('/updateUser', function (req, res) {
   getCommunityList(req.user, function (err, result) {
     let updateuser = `UPDATE users SET userName = '` + userName + `', email = '` + email + `', firstName = '` + firstName + `', lastName = '` + lastName + `' WHERE id= ?;`;
     let vals = [req.user];
-    console.log(vals);
     con.query(updateuser, vals, function (err, result) {
       if (err) {
         throw err;
@@ -209,7 +248,6 @@ router.post("/chooseUser", function (req, res) {
   let pid = req.body.pid;
   let uid = req.body.uid;
   let vals = [uid, pid];
-  console.log(vals);
   let checkAccepts = `SELECT * FROM accepts WHERE accepted = 1 AND posts_id = ?;`;
   let chooseAccept = `UPDATE accepts SET accepted = 1 WHERE users_id = ? AND posts_id = ?;`;
 
@@ -223,8 +261,16 @@ router.post("/chooseUser", function (req, res) {
       } else {
         con.query(chooseAccept, vals, function (err, result, fields) {
           if (err) throw err;
-          console.log("Chose a user");
-          res.send(true);
+          let updateUserScore = `UPDATE users SET UserScore = UserScore + 250 WHERE id = ?;`;
+
+          con.query(updateUserScore, uid, function (err, result) {
+
+            if (err) throw err;
+            console.log("Chose a user");
+            res.send(true);
+          })
+
+
         });
       }
     }
@@ -237,6 +283,7 @@ router.post("/chooseUser", function (req, res) {
 
 router.post("/newp", authenticationMiddleware(), function (req, res) {
   let community = req.body.comID;
+  console.log(community);
   let newp =
     'INSERT into posts (`users_id`, `content`, `date`, end, `communities_id`) VALUES ("' +
     req.user +
@@ -255,11 +302,15 @@ router.post("/newp", authenticationMiddleware(), function (req, res) {
 router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
   var reqs = req.params;
   let community = reqs.Community;
-  let belongs, role, requests, communityName, members;
+  let belongs, role, requests, communityName, members, comEvents;
   let page_title = "Community " + community + " Feed";
   let SELECT_posts =
     `
+<<<<<<< HEAD
     SELECT users.firstName, users.lastName, users.userName, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) AS 'date', (SELECT DATE_FORMAT(posts.end, "%H:%i - %d/%m/%Y")) AS 'end', posts.id,
+=======
+    SELECT users.firstName, users.lastName, users.userName, users.userScore, users.Birthday, users.Photo, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) AS 'date', posts.id,
+>>>>>>> ae0f4e179942614d817acbda9469b6340f0d13e3
     (SELECT accepts.users_id FROM accepts where users_id = ? AND posts_id = posts.id) AS accepted
     FROM posts
     INNER JOIN  users ON posts.users_id = users.id
@@ -310,6 +361,17 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
       members = result;
     });
 
+    let cevents = `
+    SELECT communities_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%H:%i - %W %b %e %Y")) AS date
+    FROM events
+    INNER JOIN communities_has_events ON events.id = communities_has_events.events_id
+    WHERE communities_has_events.communities_id = ?  AND date > NOW()
+    ORDER BY events.date ASC;`;
+    con.query(cevents, community, function (err, result, fields) {
+      comEvents = result;
+
+    });
+
     getCommunityList(req.user, function (err, result) {
       if (err) {
         res.send(500);
@@ -325,7 +387,9 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
           role,
           requests,
           communityName,
-          members
+          members,
+          comEvents,
+          userId: req.user,
         });
       }
     });
@@ -334,7 +398,7 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
 
 router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
   var reqs = req.params;
-  let belongs, role, requests, communityName, members;
+  let belongs, role, requests, communityName, members, comEvents;
   let postId = reqs.idp;
   let userId = req.user;
   let SELECT_posts = `
@@ -369,7 +433,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
       `;
 
       con.query(SELECTAccepts, req.params.idp, function (err, result3, fiels) {
-        // console.log('Result 3 ' + JSON.stringify(result3));
+        console.log('Result 3 ' + JSON.stringify(result3));
         var accepts = result3;
 
         let check = "SELECT * FROM communities_has_users where users_id = ? AND communities_id = ?;";
@@ -398,7 +462,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
         let cominfo = `select * FROM communities Where id = ?;`;
 
         con.query(cominfo, community, function (err, result, fields) {
-          // console.log(result);
+          console.log(result);
           communityName = result[0].cName;
         });
 
@@ -413,11 +477,23 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
           members = result;
         });
 
+        let cevents = `
+    SELECT communities_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%H:%i - %W %b %e %Y")) AS date
+    FROM events
+    INNER JOIN communities_has_events ON events.id = communities_has_events.events_id
+    WHERE communities_has_events.communities_id = ?  AND date > NOW()
+    ORDER BY events.date  ASC;`;
+        con.query(cevents, community, function (err, result, fields) {
+          comEvents = result;
+
+        });
+
 
         getCommunityList(req.user, function (err, result) {
           if (err) {
             res.send(500);
           } else {
+
             let communityList = result;
             res.render("post", {
               page_title,
@@ -432,7 +508,8 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
               requests,
               communityName,
               members,
-              userId
+              userId,
+              comEvents
             });
           }
         });
@@ -460,9 +537,13 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
     if (err) throw err;
     console.log("You commented something");
   });
+<<<<<<< HEAD
   req.app.io.emit("comment", {uName: "", date: "",comm: req.body.content, id: ""});
   res.send(true);
   // res.redirect("/post/" + post);
+=======
+  res.redirect("/post/" + post);
+>>>>>>> ae0f4e179942614d817acbda9469b6340f0d13e3
 });
 
 router.post("/accept", function (req, res) {

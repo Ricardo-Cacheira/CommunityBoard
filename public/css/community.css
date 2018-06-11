@@ -47,10 +47,18 @@
 
 .profile-pic{
   margin: auto;
+<<<<<<< HEAD
   margin-top: 5vh;
   display: block;
   width: 12vw;
   height: 12vw;
+=======
+  margin-top: 3vh;
+  margin-bottom: 3vh; 
+  display: block;
+  width: 12vw;
+  height: 12vw  ;
+>>>>>>> ae0f4e179942614d817acbda9469b6340f0d13e3
 }
 
 .name{
@@ -220,7 +228,7 @@ a#help.button {
   background-color: #1762b5;
   margin: auto;
   width: 60%;
-  margin-top: 5vh;
+  margin-top: 3vh;
   display: block;
   border: none;
   color: white;
@@ -252,16 +260,26 @@ a#help.button {
   opacity: 1;
 }
 
+a#new, a#join, a#members, a#createevent, a#addevent {
+  font-size: 12px;
+}
+
+a#createevent, a#join {
+  scale: 0.7; 
+}
+
 .popup {
   display: flex;
+  max-height: 75vh;
   flex-direction: column;
   margin: 70px auto;
   padding: 20px;
   background: #fff;
   border-radius: 5px;
-  width: 30%;
+  width: 40%;
   position: relative;
   transition: all 5s ease-in-out;
+  overflow-y: scroll;
 }
 
 .popup h2 {
@@ -284,6 +302,5 @@ a#help.button {
   color: #06D85F;
 }
 .popup .content {
-  max-height: 30%;
-  overflow: auto;
+  max-height: 100%;
 }

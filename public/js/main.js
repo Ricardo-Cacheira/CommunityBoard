@@ -70,6 +70,25 @@ function acceptRequest(userid, community)
     .always( function(response){});
 }
 
+function acceptEvent(userid, eventsid)
+{
+    $.post('/insertAcceptedEvent', {iduser: userid, idevent: eventsid}).done( function(response) {
+        if (response) {
+            alert("user accepted");    
+        }else
+        {
+            alert("User has already been accepted");    
+        }
+        
+    })
+    .fail( function(response){
+        alert("Couldn't complete your action, Try Again!");
+    })
+    .always( function(response){
+        alert("hey?");
+    });
+}
+
 function request(comid)
 {
     console.log(comid);
