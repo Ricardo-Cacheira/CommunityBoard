@@ -88,6 +88,28 @@ function request(comid)
     .always( function(response){});
 }
 
+function leave(community, comName)
+{
+    var result = confirm("Are you sure you want to leave this community?");
+    if(result)
+    {   
+        $.post('/leave', {com: community}).done( function(response) {
+            if (response) {
+                window.location.reload();
+                alert("You left " + comName)
+            }else
+            {
+                alert("Something went wrong refresh your page!");    
+            }
+            
+        })
+        .fail( function(response){
+            alert("Couldn't complete your action, Try Again!");
+        })
+        .always( function(response){});
+    }
+}
+
 function choose(postid, userid)
 {
     $.post('/chooseUser', {pid: postid, uid: userid}).done( function(response) {

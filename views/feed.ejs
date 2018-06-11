@@ -5,7 +5,7 @@
             <li class="post">
                 <article class="post-content">
                     <p class="post-name"><%= element.firstName+ ` `+ element.lastName + ` (` + element.userName + `)`%></p>
-                    <p class="post-info"><%= element.date %></p>
+                    <p class="post-info">Posted at <%= element.date %> <br> End Date: <%= element.end %></p>
                     <p class="post-text"> <%= element.content %></p>
                 </article>
                 <br>
@@ -19,3 +19,42 @@
          <% } %>
     </ul>
 </div>
+
+<div id="popup1" class="overlay">
+    <div class="popup">
+        <a class="close" href="#">&times;</a>
+        <div class="content">
+            <form method="POST" id="postform" action='/newp'>
+                <h2>Create a new Post</h2>
+                <p>What do you need help with?</p>
+                <br>
+                <textarea required type="content" id="content" name="content" style="resize: none;" cols="40" rows="5" placeholder="Don't give unnecessary information    Doing so might compromise your safety"></textarea>
+                <br>Due Date:
+                <br>
+                <input type="datetime-local" name="dato" id="dato">
+                <input style="visibility:hidden;" type="text" name="comID" id="comID" value="<%-community %>">
+                <br>
+                <button type="submit" class="btn btn-primary" id="submit"> SUBMIT </button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var dtToday = new Date();
+
+        var month = dtToday.getMonth() + 1;
+        var day = dtToday.getDate();
+        var year = dtToday.getFullYear();
+        var hours = dtToday.getHours();
+        var min = dtToday.getMinutes();
+        if (month < 10)
+            month = '0' + month.toString();
+        if (day < 10)
+            day = '0' + day.toString();
+
+        var maxDate = year + '-' + month + '-' + day + "T" + hours + ":" + min;
+        console.log(maxDate);
+        $('#dato').attr('min', maxDate);
+    });
+</script>
