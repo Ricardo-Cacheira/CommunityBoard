@@ -1,123 +1,123 @@
 <div class="right" id="feed">
-    <h1>{{title}}</h1>
-    <div class="post">
-        <article class="post-content">
-            <p class="post-name">
-                <%= post.firstName+ ` `+ post.lastName %>
-            </p>
-            <p class="post-info">
-                <%= post.userName+ ` `+ post.date %>
-            </p>
-            <p class="post-text">
-                <%= post.content %>
-            </p>
-        </article>
-        <section class="post-reactions">
-            <div onclick="accept(this.id);" id="<%= postId   %>" class="accept">Accept Request</div>
-            <% if(post.users_id == userId){ %>
-                <div onclick="location.href='#popup4';" class="button" style="bottom: 0;position: absolute;">Accepted List</div>
-                <% } %>
-        </section>
-        <br>
-    </div>
-
-
-    <div  id="commform">
-        <textarea required type="content" id="commentt" name="commentt" style="resize: none;" cols="40" rows="20" placeholder="Ask Something"></textarea>
-        <button type="button" class="btn btn-primary" id="commentb"> SUBMIT </button>
-        <input style="visibility:hidden;" type="text" name="postID" id="postID" value="<%- postId %>">
-    </div>
-    <ul>
-        <li v-for="comment in comments" class="comment">
-            <article class="comment-content">
-                <p class="comment-info">
-                    {{ comment.userName }} &nbsp; {{ comment.date }}
+        <h1>{{title}}</h1>
+        <div class="post">
+            <article class="post-content">
+                <p class="post-name">
+                    <%= post.firstName+ ` `+ post.lastName %>
                 </p>
-                <p class="comment-text" v-bind:id="comment.id">
-                    {{ comment.text }}
+                <p class="post-info">
+                    <%= post.userName+ ` `+ post.date %>
+                </p>
+                <p class="post-text">
+                    <%= post.content %>
                 </p>
             </article>
-        </li>
-    </ul>
-</div>
-
-
-<div id="popup4" class="overlay">
-    <div class="popup">
-        <a class="close" href="#">&times;</a>
-        <p>List of users that can help (Choosing closes the post!)</p>
-        <table class="content table">
-            <tr>
-                <th style="width: 80%">User info</th>
-                <th style="width: 20%">Accept</th>
-            </tr>
-            <% for (let i = 0; i < accepts.length; i++) { %>
-                <% var element = accepts[i]; %>
-                <% console.log('Element: ' + element) %>
-                <tr>
-                    <td>
-                        <%- element.firstName + " " + element.lastName +"<b> ("+ element.userName + ")</b>"%>
-                    </td>
-                    <td>
-                        <div onclick="choose(<%= postId + ', ' + element.users_id %>);">Choose user</div>
-                    </td>
-                </tr>
-            <% } %>
-        </table>
+            <section class="post-reactions">
+                <div onclick="accept(this.id);" id="<%= postId   %>" class="accept">Accept Request</div>
+                <% if(post.users_id == userId){ %>
+                    <div onclick="location.href='#popup4';" class="button" style="bottom: 0;position: absolute;">Accepted List</div>
+                    <% } %>
+            </section>
+            <br>
+        </div>
+    
+    
+        <div  id="commform">
+            <textarea required type="content" id="commentt" name="commentt" style="resize: none;" cols="40" rows="20" placeholder="Ask Something"></textarea>
+            <button type="button" class="btn btn-primary" id="commentb"> SUBMIT </button>
+            <input style="visibility:hidden;" type="text" name="postID" id="postID" value="<%- postId %>">
+        </div>
+        <ul>
+            <li v-for="comment in comments" class="comment">
+                <article class="comment-content">
+                    <p class="comment-info">
+                        {{ comment.userName }} &nbsp; {{ comment.date }}
+                    </p>
+                    <p class="comment-text" v-bind:id="comment.id">
+                        {{ comment.text }}
+                    </p>
+                </article>
+            </li>
+        </ul>
     </div>
-</div>
-
-<script>
-    var app = new Vue({
-        el: '#app',
-            data: {
-                title: "somtin",
-                comments: [
-                <% for (let i = 0; i < comments.length; i++) { %>
-                <% var element = comments[i]%>
-                { userName: "<%= element.userName %>", date: "<%= element.date %>", text: "<%= element.text %>", id: "<%= element.id %>"}<% if(i != comments.length-1){ %>,<% } %>
+    
+    
+    <div id="popup4" class="overlay">
+        <div class="popup">
+            <a class="close" href="#">&times;</a>
+            <p>List of users that can help</p>
+            <table class="content table">
+                <tr>
+                    <th style="width: 80%">User info</th>
+                    <th style="width: 20%">Accept</th>
+                </tr>
+                <% for (let i = 0; i < accepts.length; i++) { %>
+                    <% var element = accepts[i]; %>
+                    <% console.log('Element: ' + element) %>
+                    <tr>
+                        <td>
+                            <%- element.firstName + " " + element.lastName +"<b> ("+ element.userName + ")</b>"%>
+                        </td>
+                        <td>
+                            <div onclick="choose(<%= postId + ', ' + element.users_id %>);">Choose user</div>
+                        </td>
+                    </tr>
                 <% } %>
-                ]
-            },
-        mounted: function () {}
-    });
-</script>
-
-<div id="popup1" class="overlay">
-    <div class="popup">
-        <a class="close" href="#">&times;</a>
-        <div class="content">
-            <form method="POST" id="postform" action='/newp'>
-                <h2>Create a new Post</h2>
-                <p>What do you need help with?</p>
-                <br>
-                <textarea required type="content" id="content" name="content" style="resize: none;" cols="40" rows="5" placeholder="Don't give unnecessary information    Doing so might compromise your safety"></textarea>
-                <br>Due Date:
-                <br>
-                <input type="datetime-local" name="dato" id="dato">
-                <input style="visibility:hidden;" type="text" name="comID" id="comID" value="<%-community %>">
-                <br>
-                <button type="submit" class="btn btn-primary" id="submit"> SUBMIT </button>
-            </form>
+            </table>
         </div>
     </div>
-</div>
-<script>
-    $(function () {
-        var dtToday = new Date();
-
-        var month = dtToday.getMonth() + 1;
-        var day = dtToday.getDate();
-        var year = dtToday.getFullYear();
-        var hours = dtToday.getHours();
-        var min = dtToday.getMinutes();
-        if (month < 10)
-            month = '0' + month.toString();
-        if (day < 10)
-            day = '0' + day.toString();
-
-        var maxDate = year + '-' + month + '-' + day + "T" + hours + ":" + min;
-        console.log(maxDate);
-        $('#dato').attr('min', maxDate);
-    });
-</script>
+    
+    <script>
+        var app = new Vue({
+            el: '#app',
+                data: {
+                    title: "somtin",
+                    comments: [
+                    <% for (let i = 0; i < comments.length; i++) { %>
+                    <% var element = comments[i]%>
+                    { userName: "<%= element.userName %>", date: "<%= element.date %>", text: "<%= element.text %>", id: "<%= element.id %>"}<% if(i != comments.length-1){ %>,<% } %>
+                    <% } %>
+                    ]
+                },
+            mounted: function () {}
+        });
+    </script>
+    
+    <div id="popup1" class="overlay">
+        <div class="popup">
+            <a class="close" href="#">&times;</a>
+            <div class="content">
+                <form method="POST" id="postform" action='/newp'>
+                    <h2>Create a new Post</h2>
+                    <p>What do you need help with?</p>
+                    <br>
+                    <textarea required type="content" id="content" name="content" style="resize: none;" cols="40" rows="5" placeholder="Don't give unnecessary information    Doing so might compromise your safety"></textarea>
+                    <br>Due Date:
+                    <br>
+                    <input type="datetime-local" name="dato" id="dato">
+                    <input style="visibility:hidden;" type="text" name="comID" id="comID" value="<%-community %>">
+                    <br>
+                    <button type="submit" class="btn btn-primary" id="submit"> SUBMIT </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            var dtToday = new Date();
+    
+            var month = dtToday.getMonth() + 1;
+            var day = dtToday.getDate();
+            var year = dtToday.getFullYear();
+            var hours = dtToday.getHours();
+            var min = dtToday.getMinutes();
+            if (month < 10)
+                month = '0' + month.toString();
+            if (day < 10)
+                day = '0' + day.toString();
+    
+            var maxDate = year + '-' + month + '-' + day + "T" + hours + ":" + min;
+            console.log(maxDate);
+            $('#dato').attr('min', maxDate);
+        });
+    </script>

@@ -48,18 +48,11 @@
 
 .profile-pic{
   margin: auto;
-<<<<<<< HEAD
-  margin-top: 5vh;
-  display: block;
-  width: 12vw;
-  height: 12vw;
-=======
   margin-top: 3vh;
   margin-bottom: 3vh; 
   display: block;
   width: 12vw;
   height: 12vw  ;
->>>>>>> ae0f4e179942614d817acbda9469b6340f0d13e3
 }
 
 .name{

@@ -12,14 +12,9 @@ var passport = require("passport"),
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-<<<<<<< HEAD
-  password: "RdSQL1At365d.",
+  password: "MreZ39lpdSql",
   database: "bdnetwork",
   multipleStatements: true
-=======
-  password: "MreZ39lpdSql",
-  database: "bdnetwork"
->>>>>>> ae0f4e179942614d817acbda9469b6340f0d13e3
 });
 //RdSQL1At365d.
 //MreZ39lpdSql
@@ -306,11 +301,7 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
   let page_title = "Community " + community + " Feed";
   let SELECT_posts =
     `
-<<<<<<< HEAD
-    SELECT users.firstName, users.lastName, users.userName, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) AS 'date', (SELECT DATE_FORMAT(posts.end, "%H:%i - %d/%m/%Y")) AS 'end', posts.id,
-=======
-    SELECT users.firstName, users.lastName, users.userName, users.userScore, users.Birthday, users.Photo, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) AS 'date', posts.id,
->>>>>>> ae0f4e179942614d817acbda9469b6340f0d13e3
+    SELECT users.firstName, users.lastName, users.userName, users.userScore, users.Birthday, users.Photo, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) AS 'date',(SELECT DATE_FORMAT(posts.end, "%H:%i - %d/%m/%Y")) AS 'end', posts.id,
     (SELECT accepts.users_id FROM accepts where users_id = ? AND posts_id = posts.id) AS accepted
     FROM posts
     INNER JOIN  users ON posts.users_id = users.id
@@ -537,13 +528,9 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
     if (err) throw err;
     console.log("You commented something");
   });
-<<<<<<< HEAD
   req.app.io.emit("comment", {uName: "", date: "",comm: req.body.content, id: ""});
   res.send(true);
   // res.redirect("/post/" + post);
-=======
-  res.redirect("/post/" + post);
->>>>>>> ae0f4e179942614d817acbda9469b6340f0d13e3
 });
 
 router.post("/accept", function (req, res) {
