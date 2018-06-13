@@ -5,51 +5,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="/js/jquery-3.3.1.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">  
-    <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/css/form.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/form.css" />
     <title>Register</title>
 </head>
 
 <body>
     <%- include('navform'); %>
-        <div class="row">
-            <div class="col-md-2">
-                <section>
-                    <form method="POST" action="/insertUser" id="register">
-                        <br>
-                        <h2>Register</h2>
-                        Username:
-                        <br>
-                        <input type="text" name="username" id="username" placeholder="Username">
-                        <br> Password:
-                        <br>
-                        <input type="password" name="password" id="password" placeholder="Minimum 6 characters">
-                        <br> Confirm Password:
-                        <br>
-                        <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Confirm your password">
-                        <br> Email:
-                        <br>
-                        <input type="email" name="email" id="email" placeholder="name@example.com">
-                        <br> First name:
-                        <br>
-                        <input type="text" name="firstname" id="firstname" placeholder="First Name">
-                        <br> Last name:
-                        <br>
-                        <input type="text" name="lastname" id="lastname" placeholder="Last Name">
-                        <br> Birthday:
-                        <br>
-                        <input type="date" name="birthday" id="birthday">
-                        <br> Picture:
-                        <br>
-                        <input type="file" name="file" id="file">
-                        <br>
-                        <button type="submit" id="rsubmit"> Register </button>
-                    </form>
-                </section>
+        <div id="registerdiv">
+            <img class="profile-pic circular--square" src="img/logo.jpg" />
+
+            <div id="form">
+                <form method="POST" action="/insertUser" id="register">
+                    <input type="text" name="username" id="username" placeholder="New username">
+                    <hr>
+                    <input type="password" name="password" id="password" placeholder="Password">
+                    <hr>
+                    <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Confirm your password">
+                    <hr>
+                    <input type="email" name="email" id="email" placeholder="name@example.com">
+                    <hr>
+                    <input type="text" name="firstname" id="firstname" placeholder="First Name">
+                    <hr>
+                    <input type="text" name="lastname" id="lastname" placeholder="Last Name">
+                    <hr>
+                    <input type="date" type="text" name="birthday" id="birthday" placeholder="Birthday" onfocus="(this.type='date')" onblur="(this.type='text')">
+
             </div>
-            <div class="col-md-10"></div>
+
+            <button type="submit" id="rsubmit"> Register </button>
+            </form>
         </div>
 
         <script src="/js/main.js"></script>

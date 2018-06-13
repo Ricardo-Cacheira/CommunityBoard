@@ -1,10 +1,7 @@
 body {
     font-family: 'Arial Narrow Bold', sans-serif;
-    min-height: 100vh;  
-    background: linear-gradient(to top, rgb(0, 79, 226),rgb(1, 169, 235));
-    overflow: hidden;
-
-}
+    min-height: 100vh;
+    }
 
 form {
     font-size: 14px;
@@ -18,38 +15,12 @@ div#form {
     position: relative;
 }
 
-div#logindiv, div#registerdiv, div#updateform {
+div#updatediv {
     width: 20vw;
     margin-top: 20vh;
-    margin-left: auto;
-    margin-right: auto;
     text-align: center;
     display: block;
     padding: 0;
-}
-
-div#logindiv div form input {
-    appearance: none;
-    border: 0;
-    padding: 2vh 2vw;
-    font-size: 15px;
-    font-weight: bold;
-    text-decoration: #ccc; 
-    outline: none;
-    width: 19vw;
-    height: fit-content;
-}
-
-div#registerdiv div form input {
-    appearance: none;
-    border: 0;
-    padding: 1.5vh 2vw;
-    font-size: 14px;
-    font-weight: bold;
-    text-decoration: #ccc; 
-    outline: none;
-    width: 19vw;
-    height: fit-content;
 }
 
 form h3 {
@@ -57,7 +28,19 @@ form h3 {
     text-align: center;
 }
 
-button {
+input#hideshowinfo {
+    width: 10vw;
+    font-size: 14px;
+    font-weight: 500;
+    border-style: none;
+    border-radius: 10px;
+    margin-top: 1vh;
+    padding: 1vh 0;
+    background-color: orange;
+    color: rgb(255, 255, 255);
+}
+
+button#usubmit {
     width: 20vw;
     font-size: 16px;
     font-weight: 600;
@@ -85,7 +68,7 @@ hr {
     z-index: 5;
     display: block;
     margin: 0 auto;
-    top: 14vh;
+    top: 10vh;
     right: 47vw;
     width: 6vw;
     height: 6vw;

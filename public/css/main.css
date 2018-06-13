@@ -2,8 +2,13 @@ body{
     margin: 0;
     width: 100vw;
     max-width:100%;
-    background-color: white;
+    background: linear-gradient(to top, rgb(0, 53, 226),rgb(1, 200, 235));
     font-family: Arial, Helvetica, sans-serif
+}
+
+#navbar {
+  display: inline-block;
+  position: relative;
 }
 
 #navbar ul {
@@ -121,12 +126,12 @@ a.active {
     font-style: normal;
   }
 
-  #wrap {
+  /* #wrap {
       padding: 7vh 0vw;
       overflow: hidden;
       max-width: 99%;
       min-width: 99%;
-  }
+  } */
 
   /* ------------------------ SCROLL BAR SETUP ------------------------------------ */
 

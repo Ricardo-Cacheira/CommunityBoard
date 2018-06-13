@@ -18,53 +18,43 @@
 
 <body>
     <%- include('nav'); %>
-        <div id="wrap">
-            <div class="row">
-                <div class="col-md-3" style="position: fixed">
-                    <section id="createevent">
+        <div class="wrap">
+                <div id="inserttodo">
                         <form method="POST" action="/insertTodo" id="todo">
-                            <br>
-                            <h2 style="margin: 0">Insert To-Do Event</h2>
-                            Description:
-                            <br>
+                            <h3>Insert To-Do Event</h2>
                             <input type="text" name="description" id="description" placeholder="Your To-Do description">
-                            <br> Date:
-                            <br>
-                            <input type="datetime-local" name="date" id="date">
+                            <hr>
+                            Due date:
+                            <input type="datetime-local" name="date" id="date"/>
                             <button type="submit" id="esubmit"> Insert Event </button>
                         </form>
-                    </section>
                 </div>
-                <div class="col-md-9" id="events" style="float: right">
+
+                <div id="events">
                     <ul>
                         <% for (let i = 0; i < events.length; i++) { %>
                             <% var element = events[i]%>
-                                <li style="background: lightskyblue" id="event">
+                                <li id="event">
                                     <article class="event-content">
                                         <p class="event-date">
                                             <%= `Due: `+ element.date %>
                                         </p>
+                                        <hr>
                                         <p class="event-info">
                                             <%= element.description %>
                                         </p>
                                     </article>
-                                    <br>
-                                    <section class="event-delete">
-                                        <!-- <div onclick="accept(this.id);" id="<%= element.id %>" class="accept <% if(element.accepted != null){ %> accepted <% } %>">Accept Request</div>
-                                    <div onclick="window.location.replace('/post/<%= element.id %>');"
-                                        class="post-comment">Comments</div> -->
-                                    </section>
+                                    <div id="deletetodo" onclick="delete(this.id);"> DELETE</div>
                                 </li>
-                                <div onclick="delete(this.id);" style="float: right"> DELETE</div>
-
                                 <br>
-                                <br>
+                                <hr id="line">
 
                                 <% } %>
                     </ul>
                 </div>
-            </div>
+                
         </div>
+
         <script src="/js/main.js"></script>
         <script>
             $(function () {
