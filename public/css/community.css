@@ -48,11 +48,18 @@
 
 .profile-pic{
   margin: auto;
+<<<<<<< HEAD
+  margin-top: 5vh;
+  display: block;
+  width: 12vw;
+  height: 12vw;
+=======
   margin-top: 3vh;
   margin-bottom: 3vh; 
   display: block;
   width: 12vw;
   height: 12vw  ;
+>>>>>>> ae0f4e179942614d817acbda9469b6340f0d13e3
 }
 
 .name{
@@ -203,6 +210,20 @@ a#help.button {
 
 
 /* ---------------------------POPUP NEW POST ------------------------------------ */
+
+#leave{
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  width: 2vw;
+  height: 2vw;
+  text-align: center;
+  background-color: red;
+  font-size: 110%;
+  color: white;
+  cursor: pointer;
+  padding-top: 1.5%;
+}
 
 .button {
   background-color: #1762b5;

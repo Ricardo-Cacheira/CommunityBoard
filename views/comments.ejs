@@ -28,19 +28,16 @@
         <input style="visibility:hidden;" type="text" name="postID" id="postID" value="<%- postId %>">
     </div>
     <ul>
-        <% for (let i = 0; i < comments.length; i++) { %>
-            <% var element = comments[i]%>
-                <li class="comment">
-                    <article class="comment-content">
-                        <p class="comment-info">
-                            <%= element.userName+ ` `+ element.date %>
-                        </p>
-                        <p class="comment-text">
-                            <%= element.text %>
-                        </p>
-                    </article>
-                </li>
-                <% } %>
+        <li v-for="comment in comments" class="comment">
+            <article class="comment-content">
+                <p class="comment-info">
+                    {{ comment.userName }} &nbsp; {{ comment.date }}
+                </p>
+                <p class="comment-text" v-bind:id="comment.id">
+                    {{ comment.text }}
+                </p>
+            </article>
+        </li>
     </ul>
 </div>
 
@@ -73,13 +70,54 @@
 <script>
     var app = new Vue({
         el: '#app',
-        data: {
-            title: "somtin",
-            comments: [
-            {userName: "", date: "", text: "", },
-            { message: 'Bar' }
-            ]
-        },
+            data: {
+                title: "somtin",
+                comments: [
+                <% for (let i = 0; i < comments.length; i++) { %>
+                <% var element = comments[i]%>
+                { userName: "<%= element.userName %>", date: "<%= element.date %>", text: "<%= element.text %>", id: "<%= element.id %>"}<% if(i != comments.length-1){ %>,<% } %>
+                <% } %>
+                ]
+            },
         mounted: function () {}
+    });
+</script>
+
+<div id="popup1" class="overlay">
+    <div class="popup">
+        <a class="close" href="#">&times;</a>
+        <div class="content">
+            <form method="POST" id="postform" action='/newp'>
+                <h2>Create a new Post</h2>
+                <p>What do you need help with?</p>
+                <br>
+                <textarea required type="content" id="content" name="content" style="resize: none;" cols="40" rows="5" placeholder="Don't give unnecessary information    Doing so might compromise your safety"></textarea>
+                <br>Due Date:
+                <br>
+                <input type="datetime-local" name="dato" id="dato">
+                <input style="visibility:hidden;" type="text" name="comID" id="comID" value="<%-community %>">
+                <br>
+                <button type="submit" class="btn btn-primary" id="submit"> SUBMIT </button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var dtToday = new Date();
+
+        var month = dtToday.getMonth() + 1;
+        var day = dtToday.getDate();
+        var year = dtToday.getFullYear();
+        var hours = dtToday.getHours();
+        var min = dtToday.getMinutes();
+        if (month < 10)
+            month = '0' + month.toString();
+        if (day < 10)
+            day = '0' + day.toString();
+
+        var maxDate = year + '-' + month + '-' + day + "T" + hours + ":" + min;
+        console.log(maxDate);
+        $('#dato').attr('min', maxDate);
     });
 </script>

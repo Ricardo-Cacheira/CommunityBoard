@@ -12,8 +12,14 @@ var passport = require("passport"),
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
+<<<<<<< HEAD
+  password: "RdSQL1At365d.",
+  database: "bdnetwork",
+  multipleStatements: true
+=======
   password: "MreZ39lpdSql",
   database: "bdnetwork"
+>>>>>>> ae0f4e179942614d817acbda9469b6340f0d13e3
 });
 //RdSQL1At365d.
 //MreZ39lpdSql
@@ -279,11 +285,11 @@ router.post("/newp", authenticationMiddleware(), function (req, res) {
   let community = req.body.comID;
   console.log(community);
   let newp =
-    'INSERT into posts (`users_id`, `content`, `date`, `communities_id`) VALUES ("' +
+    'INSERT into posts (`users_id`, `content`, `date`, end, `communities_id`) VALUES ("' +
     req.user +
     '", "' +
     req.body.content +
-    '", NOW(), "' +
+    '", NOW(), "' + req.body.dato + '", "' +
     community +
     '")';
   con.query(newp, function (err, result, fields) {
@@ -300,12 +306,16 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
   let page_title = "Community " + community + " Feed";
   let SELECT_posts =
     `
+<<<<<<< HEAD
+    SELECT users.firstName, users.lastName, users.userName, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) AS 'date', (SELECT DATE_FORMAT(posts.end, "%H:%i - %d/%m/%Y")) AS 'end', posts.id,
+=======
     SELECT users.firstName, users.lastName, users.userName, users.userScore, users.Birthday, users.Photo, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) AS 'date', posts.id,
+>>>>>>> ae0f4e179942614d817acbda9469b6340f0d13e3
     (SELECT accepts.users_id FROM accepts where users_id = ? AND posts_id = posts.id) AS accepted
     FROM posts
     INNER JOIN  users ON posts.users_id = users.id
     Where communities_id = ?
-    ORDER BY posts.date DESC;
+    ORDER BY posts.end ASC;
     `;
   let vals = [req.user, community];
   con.query(SELECT_posts, vals, function (err, result, fields) {
@@ -404,7 +414,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
     let page_title = post.content;
     let community = post.communities_id;
     let SELECT_comments = `
-    SELECT text,(SELECT DATE_FORMAT(date, "%d/%m/%Y")) AS 'date',users.userName
+    SELECT text,(SELECT DATE_FORMAT(date, "%d/%m/%Y")) AS 'date',users.userName, comments.id
     FROM comments
     INNER JOIN  users ON comments.users_id = users.id
     Where posts_id = ?
@@ -508,6 +518,15 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
   });
 });
 
+router.get("/test", function (req, res) {
+  let test = `Select * From users; Select * From communities;`;
+  con.query(test, function (err, result, fields) {
+    if (err) throw err;
+    console.log("You commented something");
+    console.log(result);
+  });
+});
+
 router.post("/newc", authenticationMiddleware(), function (req, res) {
   let post = req.body.postID;
 
@@ -518,7 +537,13 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
     if (err) throw err;
     console.log("You commented something");
   });
+<<<<<<< HEAD
+  req.app.io.emit("comment", {uName: "", date: "",comm: req.body.content, id: ""});
+  res.send(true);
+  // res.redirect("/post/" + post);
+=======
   res.redirect("/post/" + post);
+>>>>>>> ae0f4e179942614d817acbda9469b6340f0d13e3
 });
 
 router.post("/accept", function (req, res) {
@@ -588,6 +613,24 @@ router.post("/request", function (req, res) {
       con.query(newr, vals, function (err, result, fields) {
         if (err) throw err;
         console.log("You requested something");
+        res.send(true);
+      });
+    }
+  });
+});
+
+router.post("/leave", function (req, res) {
+  let com = req.body.com;
+  let check = "SELECT * FROM communities_has_users where users_id = ? AND communities_id = ?;";
+  let newr = 'DELETE FROM communities_has_users where users_id = ? AND communities_id = ?;';
+  let vals = [req.user, com];
+
+  con.query(check, vals, function (err, result, fields) {
+    if (result.length < 0) {
+      res.send(false);
+    } else {
+      con.query(newr, vals, function (err, result, fields) {
+        if (err) throw err;
         res.send(true);
       });
     }
