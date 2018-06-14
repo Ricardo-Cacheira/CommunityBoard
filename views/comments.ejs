@@ -1,5 +1,4 @@
 <div class="right" id="feed">
-    <h1>{{title}}</h1>
     <div class="post">
         <article class="post-content">
             <p class="post-name">
@@ -45,7 +44,7 @@
 <div id="popup4" class="overlay">
     <div class="popup">
         <a class="close" href="#">&times;</a>
-        <p>List of users that can help (Choosing closes the post!)</p>
+        <p>List of users that can help</p>
         <table class="content table">
             <tr>
                 <th style="width: 80%">User info</th>
@@ -67,22 +66,6 @@
     </div>
 </div>
 
-<script>
-    var app = new Vue({
-        el: '#app',
-            data: {
-                title: "somtin",
-                comments: [
-                <% for (let i = 0; i < comments.length; i++) { %>
-                <% var element = comments[i]%>
-                { userName: "<%= element.userName %>", date: "<%= element.date %>", text: "<%= element.text %>", id: "<%= element.id %>"}<% if(i != comments.length-1){ %>,<% } %>
-                <% } %>
-                ]
-            },
-        mounted: function () {}
-    });
-</script>
-
 <div id="popup1" class="overlay">
     <div class="popup">
         <a class="close" href="#">&times;</a>
@@ -102,22 +85,3 @@
         </div>
     </div>
 </div>
-<script>
-    $(function () {
-        var dtToday = new Date();
-
-        var month = dtToday.getMonth() + 1;
-        var day = dtToday.getDate();
-        var year = dtToday.getFullYear();
-        var hours = dtToday.getHours();
-        var min = dtToday.getMinutes();
-        if (month < 10)
-            month = '0' + month.toString();
-        if (day < 10)
-            day = '0' + day.toString();
-
-        var maxDate = year + '-' + month + '-' + day + "T" + hours + ":" + min;
-        console.log(maxDate);
-        $('#dato').attr('min', maxDate);
-    });
-</script>

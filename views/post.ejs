@@ -3,16 +3,16 @@
 
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.js"></script>
-    <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/community.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <script src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.js"></script>
+        <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
+        <script src="https://unpkg.com/vue/dist/vue.js"></script>
+        <link rel="stylesheet" href="/css/main.css">
+        <link rel="stylesheet" href="/css/community.css">
 
     <title>
         <%= page_title %>
@@ -23,14 +23,16 @@
 
     <div id="app">
         <%- include('nav', communityList); %>
-    
+        
+        
+        <% if(belongs){ %>
+            <%- include('comments', {postId, post, comments, userId}); %>
+        <% }else{%>
+            <%- include('request', {community}); %>
+        <% }%>
+                
         <%- include('sidebar', {community, belongs, role, requests, communityName, members}); %>
 
-        <% if (belongs){%>
-        <%- include('comments', {postId, post, comments, userId}); %>
-        <% }else{%>
-        <%- include('request', {community});%>
-        <% }%>
     </div>
 
     <script src="/js/main.js"></script>
@@ -38,7 +40,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
     var socket = io.connect();
-    socket.on('comment', function (data) {
+    socket.on('comment' + postId, function (data) {
         // console.log("data: "+data);
         app.title = data.comm;
         app.comments.unshift({ userName: data.uName, date: data.date, text: data.comm, id: data.id});
@@ -46,12 +48,49 @@
     });
     </script>
 
+
+<script>
+    $(function () {
+        var dtToday = new Date();
+
+        var month = dtToday.getMonth() + 1;
+        var day = dtToday.getDate();
+        var year = dtToday.getFullYear();
+        var hours = dtToday.getHours();
+        var min = dtToday.getMinutes();
+        if (month < 10)
+            month = '0' + month.toString();
+        if (day < 10)
+            day = '0' + day.toString();
+
+        var maxDate = year + '-' + month + '-' + day + "T" + hours + ":" + min;
+        console.log(maxDate);
+        $('#dato').attr('min', maxDate);
+    });
+</script>
+
+<script>
+        var app = new Vue({
+            el: '#app',
+                data: {
+                    title: "somtin",
+                    comments: [
+                    <% for (let i = 0; i < comments.length; i++) { %>
+                    <% var element = comments[i]%>
+                    { userName: "<%= element.userName %>", date: "<%= element.date %>", text: "<%= element.text %>", id: "<%= element.id %>"}<% if(i != comments.length-1){ %>,<% } %>
+                    <% } %>
+                    ]
+                },
+            mounted: function () {}
+        });
+</script>
+
 <script>
     $('#commentb').click(function() {
     var text = $('textarea#commentt').val();
     var post = <%= postId   %>;
     comment(post, text);
-});
+    });
 </script>
 
 </body>
