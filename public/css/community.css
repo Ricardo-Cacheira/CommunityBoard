@@ -17,7 +17,7 @@
   min-width: 80%;
   max-width: 80vw;
   justify-content: center;
-  background-color: #696868;
+  background: linear-gradient(to top, rgb(0, 79, 226),rgb(1, 169, 235));
   color: black;
   bottom: 0;
   min-height: 93vh;
@@ -47,10 +47,11 @@
 
 .profile-pic{
   margin: auto;
-  margin-top: 5vh;
+  margin-top: 3vh;
+  margin-bottom: 3vh; 
   display: block;
   width: 12vw;
-  height: 12vw;
+  height: 12vw  ;
 }
 
 .name{
@@ -73,6 +74,8 @@
   width: 60vw;
   margin-bottom: 2vh;
   position: relative;
+  border: 2px solid grey;
+  border-radius: 5px;  
 }
 
 .post-info{

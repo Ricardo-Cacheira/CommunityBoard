@@ -1,21 +1,91 @@
+body {
+    font-family: 'Arial Narrow Bold', sans-serif;
+    min-height: 100vh;  
+    overflow: hidden;
+
+}
+
 form {
-    display: inline-block;
+    font-size: 14px;
+    padding: 2.5vh 0;
+    border: 2px solid lightgrey;
+    border-radius: 5%;
+   background-color: white
+}
+
+div#form {
+    position: relative;
+}
+
+div#logindiv, div#registerdiv, div#updateform {
+    width: 20vw;
+    margin-top: 20vh;
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
+    display: block;
+    padding: 0;
+}
+
+div#logindiv div form input {
+    appearance: none;
+    border: 0;
+    padding: 2vh 2vw;
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: #ccc; 
+    outline: none;
+    width: 19vw;
+    height: fit-content;
+}
+
+div#registerdiv div form input {
+    appearance: none;
+    border: 0;
+    padding: 1.5vh 2vw;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: #ccc; 
+    outline: none;
+    width: 19vw;
+    height: fit-content;
+}
+
+form h3 {
+    margin: auto;
+    text-align: center;
+}
+
+button {
+    width: 20vw;
     font-size: 16px;
-    padding: 4vh 3vw;
-    width: fit-content;
-   background-color: lightgray;
-}
-
-form input {
-    margin-bottom: 2vh;
-    padding: 1vh 1vw;
-}
-
-form h2 {
-    padding-bottom: 2vh;
+    font-weight: 600;
+    border-style: none;
+    border-radius: 10px;
+    margin-top: 2.5vh;
+    padding: 3vh 0;
+    background-color: orange;
+    color: rgb(255, 255, 255);
 }
 
 li {
     list-style: none;
 }
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #333;
+    background-image: linear-gradient(to right, #ccc, rgb(133, 132, 132), #ccc);
+}
+
+.profile-pic{
+    position: absolute;
+    z-index: 5;
+    display: block;
+    margin: 0 auto;
+    top: 14vh;
+    right: 47vw;
+    width: 6vw;
+    height: 6vw;
+  }

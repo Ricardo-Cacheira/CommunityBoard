@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.js"></script>
     <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/form.css">
+    <link rel="stylesheet" href="/css/profile.css">
 
     <title>
         <%= page_title %>
@@ -18,93 +20,88 @@
 
 <body>
     <%- include('nav', communityList); %>
-        <div id="wrap">
-            <div class="row">
-                <div class="col-md-4">
-                    <div id="updateform" style="display: none">
-                        <section id="profile">
-                            <form method="POST" action="/updateUser" id="register" disabled>
-                                <br>
-                                <h3>Update your personal info</h3>
-                                Username:
-                                <br>
-                                <input type="text" name="username" id="username" value="<%= userinfo.userName %>">
-                                <!-- <br> Password:
-                <br>
-                <input type="password" name="password" id="password" value="Minimum 6 characters">
-                <br> Confirm Password:
-                <br>
-                <input type="password" name="confirmpassword" id="confirmpassword" value="Confirm your password"> -->
-                                <br> Email:
-                                <br>
-                                <input type="email" name="email" id="email" value="<%= userinfo.email %>">
-                                <br> First name:
-                                <br>
-                                <input type="text" name="firstname" id="firstname" value="<%= userinfo.firstName %>">
-                                <br> Last name:
-                                <br>
-                                <input type="text" name="lastname" id="lastname" value="<%= userinfo.lastName %>">
-                                <!-- <br> Birthday:
-                <br>
-                <input type="date" name="birthday" id="birthday"> -->
-                                <!-- <br> Picture:
-                <br>
-                <input type="file" name="file" id="file"> -->
-                                <br>
-                                <button type="submit" id="usubmit"> Update info </button>
-                            </form>
-                        </section>
-                    </div>
-                    <input type="button" id="hideshowinfo" value="Update your info" style="margin: 1vh 0.5vw">
-                </div>
+        <div class="wrap">
+            <input type="button" id="hideshowinfo" value="Update your info">
+            <input type="button" id="hideshowaccept" value="You have <%= accepts.length %> posts with volunteers" style="margin: 1vh 1.5vw; float: right;">
 
-                <div id="welcomemessage" style="display: inline-block; width: 30%">
-                    <h2 style="text-align: center; margin-top: 5vh"> Welcome to CommunityBoard,
-                        <b>
-                            <%= userinfo.firstName %>
-                                <%= userinfo.lastName %>
-                        </b>
-                    </h2>
-                </div>
-
-                <div id="accepts" style="float:right; display: none">
-                    <section id="accepts" style="float:right">
-                        <form method="POST" action="/acceptHelp" id="register" disabled>
-                            <h3> Accept help</h3>
-
-                            <% for (let i = 0; i < accepts.length; i++) { %>
-                                <% var element = accepts[i]%>
-                                    <li class="accept">
-                                        <article class="accept-content">
-                                            <br>
-                                            <p class="post-info">
-                                                <div style="color: rgb(218, 142, 1); font-size: 18px" onclick="window.location.replace('/post/<%= element.id %>');">
-                                                    <%= 'Post: '+ element.content %>
-                                                </div>
-                                            </p>
-                                        </article>
-                                    </li>
-                                    <% } %>
-                                        <!-- <button type="submit" id="usubmit"> Update info </button> -->
-                        </form>
-                    </section>
-                </div>
-                <input type="button" id="hideshowaccept" value="You have <%= accepts.length %> posts with volunteers" style="margin: 1vh 1.5vw; float: right;">
-            </div>
-            <div class="row" id="userScore" style="margin-top: 25vh;">
-                <h2 style="text-align: center; margin-top: 5vh">
+            <div id="welcomemessage">
+                <h2> Welcome to CommunityBoard,
+                    <br>
                     <b>
-                        You currently have <b style="color: orange"><%= userinfo.userScore %></b> points!
-                            Thanks for helping!!
+                        <%= userinfo.firstName %>
+                            <%= userinfo.lastName %>
                     </b>
                 </h2>
             </div>
+
+        </div>
+
+        <div id="top">
+            <div id="updatediv" style="display: none">
+
+                <section id="updateform">
+                    <form method="POST" action="/updateUser" id="update" disabled>
+                        <h3>Update your personal info</h3>
+                        Username:
+                        <input type="text" name="username" id="username" value="<%= userinfo.userName %>">
+                        <hr> FirstName:
+                        <input type="text" name="firstname" id="firstname" value="<%= userinfo.firstName %>">
+                        <hr> LastName:
+                        <input type="text" name="lastname" id="lastname" value="<%= userinfo.lastName %>">
+                        <hr> Email:
+                        <input type="email" name="email" id="email" value="<%= userinfo.email %>">
+                </section>
+                <button type="submit" id="usubmit"> Update info </button>
+                </form>
+            </div>
+
+                <div id="accepts" style="display: none">
+                    <form method="POST" action="/acceptHelp" id="register" disabled>
+                        <h3> Accept help</h3>
+
+                        <% for (let i = 0; i < accepts.length; i++) { %>
+                            <% var element = accepts[i]%>
+                                <li class="accept">
+                                    <article class="accept-content">
+                                        <br>
+                                        <p class="post-info">
+                                            <div onclick="window.location.replace('/post/<%= element.id %>');">
+                                                <%= 'Post: '+ element.content %>
+                                            </div>
+                                        </p>
+                                    </article>
+                                </li>
+                                <% } %>
+                    </form>
+                </div>
+        </div>
+
+
+        <div id="userscore">
+            <h2>
+                <% if(userinfo.userScore == 0){ %>
+                    <b>
+                        You don't have any points yet :(
+                        <br> Help someone to get some!!
+
+                    </b>
+                    <% } %>
+
+                        <% if(userinfo.userScore != 0){ %>
+                            <b>
+                                You currently have
+                                <b style="color: orange">
+                                    <%= userinfo.userScore %>
+                                </b> points! Thanks for helping!!
+                            </b>
+                            <% } %>
+            </h2>
         </div>
 
         <script>
             jQuery(document).ready(function () {
                 jQuery('#hideshowinfo').on('click', function (event) {
-                    jQuery('#updateform').toggle('hide');
+                    jQuery('#updatediv').toggle('hide');
                 });
             });
         </script>
@@ -115,6 +112,7 @@
                 });
             });
         </script>
+
         <script src="/js/main.js"></script>
 </body>
 

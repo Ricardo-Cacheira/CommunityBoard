@@ -35,7 +35,7 @@ const options = {
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "MreZ39lpdSql",
+  password: "RdSQL1At365d.",
   database: "bdnetwork"
 };
 
@@ -63,7 +63,7 @@ router.get("/", authenticationMiddleware(), function (req, res) {
 
 //get personal events
 router.get("/todo", authenticationMiddleware(), function (req, res) {
-  let page_title = "To-Do";
+  let page_title = "To-Do List";
   let getUEvents = `
   SELECT users_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%H:%i - %W %b %e %Y")) AS date
   FROM events
@@ -301,9 +301,8 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
   let page_title = "Community " + community + " Feed";
   let SELECT_posts =
     `
-    SELECT users.firstName, users.lastName, users.userName, users.userScore, users.Birthday, users.Photo, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) AS 'date', posts.id,
-    (SELECT accepts.users_id FROM accepts where users_id = ? AND posts_id = posts.id) AS accepted,
-    (SELECT DATE_FORMAT(posts.end, "%H:%i - %d/%m/%Y")) AS 'end'
+    SELECT users.firstName, users.lastName, users.userName, users.userScore, users.Birthday, users.Photo, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) AS 'date',(SELECT DATE_FORMAT(posts.end, "%H:%i - %d/%m/%Y")) AS 'end', posts.id,
+    (SELECT accepts.users_id FROM accepts where users_id = ? AND posts_id = posts.id) AS accepted
     FROM posts
     INNER JOIN  users ON posts.users_id = users.id
     Where communities_id = ?
@@ -528,7 +527,7 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
     if (err) throw err;
     console.log("You commented something");
   });
-  req.app.io.emit("comment" + post, {uName: "", date: "",comm: req.body.content, id: ""});
+  req.app.io.emit("comment", {uName: "", date: "",comm: req.body.content, id: ""});
   res.send(true);
   // res.redirect("/post/" + post);
 });

@@ -40,9 +40,8 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
     var socket = io.connect();
-    socket.on('comment' + postId, function (data) {
+    socket.on('comment', function (data) {
         // console.log("data: "+data);
-        app.title = data.comm;
         app.comments.unshift({ userName: data.uName, date: data.date, text: data.comm, id: data.id});
         // socket.emit('my other event', { my: 'data' });
     });
