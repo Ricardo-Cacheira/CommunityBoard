@@ -1,35 +1,87 @@
 body {
     font-family: 'Arial Narrow Bold', sans-serif;
     min-height: 100vh;
-    }
+    height: 100vh;
+    overflow: hidden;
+}
+
+div.wrap {
+    margin-top: 4vh;
+    margin-left: 1vw;
+    max-height: 15vh;
+    min-width: 100vw;
+    height: 7vh;
+}
+
+div#top {
+    min-width: 100vw;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    justify-content: end;
+}
+
+div#updatediv {
+    max-width: 22vw;
+    margin-left: 1vw;
+    margin-right: 0;
+    padding: 1vh 1vw;
+}
+
+div#welcomemessage {
+    margin: auto;
+    max-width: 30vw;
+    text-align: center;
+}
+
+input#hideshowinfo {
+    margin-top: 5vh;
+}
+
+div#accepts {
+    position: fixed;
+    max-width: 23vw;
+    width: 100%;
+    top: 15vh;
+    right: 5vw;
+}
+
+div#userscore {
+    position: fixed;
+    width: 100%;
+    bottom: 20vh;
+    text-align: center;
+    color: #333
+}
 
 form {
     font-size: 14px;
-    padding: 2.5vh 0;
+    padding: 2vh 0;
     border: 2px solid lightgrey;
     border-radius: 5%;
    background-color: white
 }
 
-div#form {
-    position: relative;
-}
-
-div#updatediv {
-    width: 20vw;
-    margin-top: 20vh;
-    text-align: center;
-    display: block;
-    padding: 0;
-}
-
 form h3 {
-    margin: auto;
+    margin: 0 0 3vh 0;
     text-align: center;
+    font-size: 20px;
 }
 
 input#hideshowinfo {
     width: 10vw;
+    font-size: 14px;
+    font-weight: 500;
+    border-style: none;
+    border-radius: 10px;
+    margin-top: 1vh;
+    padding: 1vh 0;
+    background-color: orange;
+    color: rgb(255, 255, 255);
+}
+
+input#hideshowaccept{
+    width: 17vw;
     font-size: 14px;
     font-weight: 500;
     border-style: none;

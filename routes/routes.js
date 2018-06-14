@@ -63,7 +63,7 @@ router.get("/", authenticationMiddleware(), function (req, res) {
 
 //get personal events
 router.get("/todo", authenticationMiddleware(), function (req, res) {
-  let page_title = "To-Do";
+  let page_title = "To-Do List";
   let getUEvents = `
   SELECT users_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%H:%i - %W %b %e %Y")) AS date
   FROM events

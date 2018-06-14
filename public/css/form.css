@@ -1,7 +1,6 @@
 body {
     font-family: 'Arial Narrow Bold', sans-serif;
     min-height: 100vh;  
-    background: linear-gradient(to top, rgb(0, 79, 226),rgb(1, 169, 235));
     overflow: hidden;
 
 }

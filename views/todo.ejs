@@ -13,46 +13,45 @@
     <script type="text/javascript" src="/js/typeahead.min.js"></script>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/css/todo.css" />
-    <title>Register</title>
+    <title><%= page_title %></title>
 </head>
 
 <body>
     <%- include('nav'); %>
         <div class="wrap">
-                <div id="inserttodo">
-                        <form method="POST" action="/insertTodo" id="todo">
-                            <h3>Insert To-Do Event</h2>
-                            <input type="text" name="description" id="description" placeholder="Your To-Do description">
-                            <hr>
-                            Due date:
-                            <input type="datetime-local" name="date" id="date"/>
-                            <button type="submit" id="esubmit"> Insert Event </button>
-                        </form>
-                </div>
+        </div>
 
-                <div id="events">
-                    <ul>
-                        <% for (let i = 0; i < events.length; i++) { %>
-                            <% var element = events[i]%>
-                                <li id="event">
-                                    <article class="event-content">
-                                        <p class="event-date">
-                                            <%= `Due: `+ element.date %>
-                                        </p>
-                                        <hr>
-                                        <p class="event-info">
-                                            <%= element.description %>
-                                        </p>
-                                    </article>
-                                    <div id="deletetodo" onclick="delete(this.id);"> DELETE</div>
-                                </li>
-                                <br>
-                                <hr id="line">
+        <div id="inserttodo">
+            <form method="POST" action="/insertTodo" id="todo">
+                <h3>Insert To-Do Event</h2>
+                    <input type="text" name="description" id="description" placeholder="Your To-Do description">
+                    <hr> Due date:
+                    <input type="datetime-local" name="date" id="date" />
+                    <button type="submit" id="esubmit"> Insert Event </button>
+            </form>
+        </div>
 
-                                <% } %>
-                    </ul>
-                </div>
-                
+        <div id="events">
+            <ul>
+                <% for (let i = 0; i < events.length; i++) { %>
+                    <% var element = events[i]%>
+                        <li id="event">
+                            <article class="event-content">
+                                <p class="event-date">
+                                    <%= element.date %>
+                                </p>
+                                <hr>
+                                <p class="event-info">
+                                    <%= element.description %>
+                                </p>
+                            </article>
+                            <div id="deletetodo" onclick="delete(this.id);"> DELETE</div>
+                        </li>
+                        <br>
+                        <hr id="line">
+
+                        <% } %>
+            </ul>
         </div>
 
         <script src="/js/main.js"></script>

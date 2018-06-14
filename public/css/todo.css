@@ -1,15 +1,13 @@
 body {
+    font-family: 'Arial Narrow Bold', sans-serif;
     min-height: 100vh;
     overflow: hidden;
 }
 
 div.wrap {
-    min-height: 90vh;
-    height: 90vh;
-    margin-top: 5vh;
-    padding-top: 0;
-    display: flex;
-    justify-content: center;
+    max-height: 7vh;
+    min-width: 100vw;
+    height: 7vh;
 }
 
 #inserttodo {
@@ -18,12 +16,12 @@ div.wrap {
 }
 
 form#todo {
-    display: inline-block;
     text-align: left;
     padding: 2vh 1vw;
-    margin: 2vh 2vw;
+    margin: 0 3vw;
     font-size: 16px;
     width: fit-content;
+    float: left;
     border: 2px solid lightgrey;
     border-radius: 5%;
     background-color: white;
@@ -34,6 +32,7 @@ li#event {
     margin: 0 3vw;
     padding: 1vh 1vw;
     background-color: rgb(255, 255, 255);
+    border: 2px solid lightgrey;
     border-radius: 5px;
 }
 
@@ -60,7 +59,7 @@ h3 {
 button#esubmit {
     display: block;
     width: 13vw;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     border-style: none;
     border-radius: 10px;
@@ -72,18 +71,29 @@ button#esubmit {
     color: rgb(255, 255, 255);
 }
 
+.event-date {
+    color: grey;
+    font-size: 18px;
+    margin-left: 6vw;
+}
+
+.event-info {
+    margin-left: 3vw;
+}
+
 #events {
-    min-width: 70vw;
-    margin: 0 auto;
+    min-width: 68vw;
+    padding-right: 2vw;
+    height: 93vh;
+    float: right;    
     overflow-y: scroll;
-    justify-content: center;
 }
 
 div#deletetodo {
     position: relative;
     float: right;
-    bottom: 3vh;
-    left: 0.8vw;
+    bottom: 2.4vh;
+    left: 1.1vw;
     background-color: orange;
     border: 2px solid orange;
     border-radius: 10%;
@@ -105,7 +115,7 @@ hr#line {
     margin-bottom: 4vh;
     border: 0;
     width: 70%;
-    height: 1px;
+    height: 1.5px;
     background: #333;
-    background-image: linear-gradient(to right, rgb(238, 236, 236), rgb(199, 199, 199), #ccc);
+    background-image: linear-gradient(to right, rgb(189, 189, 189), rgb(151, 151, 151), rgb(189, 189, 189));
 }
