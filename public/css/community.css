@@ -1,29 +1,37 @@
 #sidebar{
-  min-width: 20%;
-  max-width: 20vw;
-  background-color: #ffa318;
-  color: black;
+  background-color: rgb(31, 30, 30);
+  color: white;
   min-height: 93vh;
   max-height: 93vh;
-  bottom: 0;
+  width: 18vw;
   padding: 0;
   margin: 0;
   align-content: center;
   justify-content: center;
 }
 
+#sidebar a{
+  text-decoration: none;
+}
+
+button#submit {
+  margin: 2vh 0;
+}
+
 #feed{
   overflow-y: scroll;
-  min-width: 80%;
-  max-width: 80vw;
+  width: 100%;
+  min-width: 82vw;
+  max-width: 82vw;
   justify-content: center;
-  background: linear-gradient(to top, rgb(0, 79, 226),rgb(1, 169, 235));
   color: black;
   bottom: 0;
   min-height: 93vh;
   max-height: 93vh;
   padding: 0;
   margin: 0;
+  background: linear-gradient(to top, rgb(0, 53, 226),rgb(1, 200, 235));
+
 }
 
 #request{
@@ -68,54 +76,75 @@
   font-family: Arial, Helvetica, sans-serif;
   padding: 0;
   margin: auto;
-  margin-top: 1vh;
-  background-color: #e0e0e0;
+  margin-top: 2vh;
+  background-color: #f1eeee;
   min-height: 30vh;
   width: 60vw;
-  margin-bottom: 2vh;
+  margin-bottom: 1vh;
   position: relative;
-  border: 2px solid grey;
-  border-radius: 5px;  
+  border: 2px solid rgb(206, 204, 204);
+  border-radius: 5px;
+  max-width: 55vw;  
 }
 
 .post-info{
-  margin: 0.25em;
+  margin: 0 4.5vw;
   font-size: 0.9em;
+  font-style: bold;
+  color: rgb(99, 99, 99);
+}
+
+b#date {
+  color: grey;
+  font-weight: 500;
+  font-size: 0.6em;
+}
+
+.post-name{
+  margin: 1vh 3vw;
+  font-size: 1.4em;
   font-style: bold;
   color: black;
 }
 
-.post-name{
-  margin: 0.25em;
-  font-size: 1.7em;
-  font-style: bold;
-  color: black;
+hr {
+  border-top: 1px solid rgb(150, 150, 150);
+  height: 1px;
+  margin: 0 auto;
+  width: 85%;
 }
 
 .post-text{
   word-wrap: break-word;
-  margin-top: 0.5em;
-  margin-left: 0.25em;
-  font-size: 1.5em;
-  color: black;
+  overflow: hidden;
+  width: 100%;
+  margin: 1vh auto;
+  padding: 0 2vw;
+  max-height: 9vh;
+  font-size: 1em;
+  color: rgb(34, 34, 34);
   bottom: 0;
 }
 
 .post-reactions{
-  width: inherit;
+  width: 100%;
   position: absolute;
   bottom: 0;
   display: inline-block;
 }
 
 .post-reactions div{
-  background-color: #1762b5;
+  background-color: rgb(241, 163, 16);
   color: white;
   display: inline-block;
   margin: auto;
   height: 8vh;
   width: 50%;
   text-align: center;
+}
+
+div.accept {
+  border-right: 2px solid rgb(37, 37, 37);
 }
 
 .post-reactions div:hover{
@@ -129,7 +158,6 @@
 .post-comment, .accept{
   padding-top: 2.5vh;
 }
-
 .comment{
   display: flex;
   flex-direction: column;
@@ -164,7 +192,8 @@
   margin: auto;
   min-height: 2vh;
   height: 5vh;
-  width: 60vw;
+  width: 100%;
+  max-width: 55vw;
   margin-bottom: 6vh;
   position: relative;
 }
@@ -174,16 +203,24 @@
 
 }
 
-#commform button{
+button#commentb{
   width: 10%;
   height: 100%;
   position: absolute;
+  background-color: #ffa318;
+  border: 1px solid lightgray;
+  border-radius: 5px;
   right: 0;
-  border-radius: 0; 
+}
+
+.buttona {
+  height: 100%;
+  padding-top: 2.5vh;
+
 }
 
 #commform textarea{
-  width: 90%;
+  width: 89%;
   height: 100%;
 }
 
@@ -252,19 +289,27 @@ a#help.button {
 }
 
 .button {
-  background-color: #1762b5;
+  background-color: rgb(224, 152, 17);
   margin: auto;
   width: 60%;
-  margin-top: 3vh;
+  margin-bottom: 2vh;
   display: block;
   border: none;
   color: white;
-  padding: 15px 32px;
+  padding: 1vh 2vw;
+  border: 1px solid lightgray;
+  border-radius: 7%;
   text-align: center;
   text-decoration: none;
   font-size: 16px;
   transition: all 0.3s ease-out;
 }
+
+#new {
+  padding: 3vh 1vw;
+  margin: 4vh auto;
+}
+
 .button:hover {
   color: #ffa318;
   Background-color: #333;
@@ -295,7 +340,25 @@ a#createevent, a#join {
   scale: 0.7; 
 }
 
+p.bio {
+  text-align: center;
+}
+
 .popup {
+  display: flex;
+  max-height: 75vh;
+  flex-direction: column;
+  margin: 2vh auto;
+  padding: 2vh 2vw;
+  background: #fff;
+  border-radius: 5px;
+  width: fit-content;
+  position: relative;
+  transition: all 5s ease-in-out;
+  overflow-y: hidden;
+}
+
+.popup1 {
   display: flex;
   max-height: 75vh;
   flex-direction: column;
@@ -303,7 +366,8 @@ a#createevent, a#join {
   padding: 20px;
   background: #fff;
   border-radius: 5px;
-  width: 40%;
+  width: 100%;
+  max-width: 40vw;
   position: relative;
   transition: all 5s ease-in-out;
   overflow-y: scroll;

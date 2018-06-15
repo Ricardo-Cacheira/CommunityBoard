@@ -12,7 +12,7 @@ var passport = require("passport"),
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "RdSQL1At365d.",
+  password: "MreZ39lpdSql",
   database: "bdnetwork",
   multipleStatements: true
 });
@@ -35,7 +35,7 @@ const options = {
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "RdSQL1At365d.",
+  password: "MreZ39lpdSql",
   database: "bdnetwork"
 };
 
@@ -65,7 +65,7 @@ router.get("/", authenticationMiddleware(), function (req, res) {
 router.get("/todo", authenticationMiddleware(), function (req, res) {
   let page_title = "To-Do List";
   let getUEvents = `
-  SELECT users_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%H:%i - %W %b %e %Y")) AS date
+  SELECT users_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%W %b %e %Y - %H:%i")) AS date
   FROM events
   INNER JOIN users_has_events ON events.id = users_has_events.events_id
   WHERE users_id = ?  AND date > NOW()
@@ -185,7 +185,6 @@ router.get("/profile", authenticationMiddleware(), function (req, res) {
 
     let vals = [req.user, req.user]
     con.query(selectPosts, vals, function (err, result) {
-      console.log(result);
       let accepts = result;
 
       getCommunityList(req.user, function (err, result) {
@@ -229,7 +228,6 @@ router.get('/acceptHelp', authenticationMiddleware(), function (req, res) {
 
   con.query(accepth, vals, function (err, result) {
     if (err) throw err;
-    console.log(result);
     res.render("community", {
       page_title,
       community,
@@ -311,7 +309,7 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
   let page_title = "Community " + community + " Feed";
   let SELECT_posts =
     `
-    SELECT users.firstName, users.lastName, users.userName, users.userScore, users.Birthday, users.Photo, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) AS 'date',(SELECT DATE_FORMAT(posts.end, "%H:%i - %d/%m/%Y")) AS 'end', posts.id,
+    SELECT users.firstName, users.lastName, users.userName, users.userScore, users.Birthday, users.Photo, posts.content,(SELECT DATE_FORMAT(posts.date, "%d/%m/%Y - %H:%i")) AS 'date',(SELECT DATE_FORMAT(posts.end, "%d/%m/%Y - %H:%i")) AS 'end', posts.id,
     (SELECT accepts.users_id FROM accepts where users_id = ? AND posts_id = posts.id) AS accepted
     FROM posts
     INNER JOIN  users ON posts.users_id = users.id
@@ -363,7 +361,7 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
     });
 
     let cevents = `
-    SELECT communities_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%H:%i - %W %b %e %Y")) AS date
+    SELECT communities_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%W %b %e %Y - %H:%i")) AS date
     FROM events
     INNER JOIN communities_has_events ON events.id = communities_has_events.events_id
     WHERE communities_has_events.communities_id = ?  AND date > NOW()
@@ -402,7 +400,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
   let postId = reqs.idp;
   let userId = req.user;
   let SELECT_posts = `
-    SELECT users.firstName, users.lastName, users.userName, posts.content, (SELECT DATE_FORMAT(posts.date, "%H:%I - %d/%m/%Y")) AS 'date', posts.communities_id, posts.users_id
+    SELECT users.firstName, users.lastName, users.userName, posts.content, (SELECT DATE_FORMAT(posts.date, "%d/%m/%Y - %H:%i")) AS 'date', (SELECT DATE_FORMAT(posts.end, "%d/%m/%Y - %H:%i")) AS 'end', posts.communities_id, posts.users_id
     FROM posts
     INNER JOIN  users ON posts.users_id = users.id
     Where posts.id = ?;
@@ -479,7 +477,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
         });
 
         let cevents = `
-    SELECT communities_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%H:%i - %W %b %e %Y")) AS date
+    SELECT communities_has_events.events_id, events.id, events.description, (SELECT DATE_FORMAT(events.date, "%W %b %e %Y - %H:%i")) AS date
     FROM events
     INNER JOIN communities_has_events ON events.id = communities_has_events.events_id
     WHERE communities_has_events.communities_id = ?  AND date > NOW()

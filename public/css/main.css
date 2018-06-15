@@ -2,6 +2,7 @@ body{
     margin: 0;
     width: 100vw;
     max-width:100%;
+    background-repeat: no-repeat;
     background: linear-gradient(to top, rgb(0, 53, 226),rgb(1, 200, 235));
     font-family: Arial, Helvetica, sans-serif
 }
@@ -19,15 +20,22 @@ body{
     background-color: #333;
     position: fixed;
     top: 0;
-    height: 7vh;
+    max-height: 7.5vh;
+    height: 100%;
     width: 100%;
     border: 0;
 }
 
 #navbar ul li {
     float: left;
-    height: 100%;
-    
+}
+
+#navbar ul li a {
+  border-left: 2px solid orange;
+  min-height: 7.5vh;
+}
+#navbar ul li a#profile {
+  border-right: 2px solid orange;
 }
 
 #navbar li a , .dropbtn{
@@ -42,6 +50,34 @@ body{
 
 #navbar  li a:hover{
     background-color: #ffa318;
+}
+
+div#namebar {
+  max-width: 20vw;
+  max-height: 7vh;
+}
+
+.profile-picnav{
+  position: fixed;
+  left: 39.7vw;
+  width: 3.5vw;
+  height: 3.5vw;
+}
+
+div#namebar p{
+  position: fixed;
+  top: 2vh;
+  right: 42vw;
+  font-size: 26px;
+  font-weight: 500;
+  color: whitesmoke;
+  max-height: 7vh;
+  z-index: 100;
+}
+
+
+.dropbtn {
+  min-height: 7.5vh;
 }
 
 a.active {
@@ -61,7 +97,7 @@ a.active {
     display: none;
     position: absolute;
     background-color: #f1f1f1;
-    min-width: 160px;
+    min-width: 15vh;
     overflow: auto;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
@@ -69,7 +105,7 @@ a.active {
 
 .dropdown-content a {
     color: black;
-    padding: 12px 16px;
+    padding: 1vh 1vw;
     text-decoration: none;
     display: block;
 }
@@ -95,9 +131,15 @@ a.active {
   }
 
 /* search bar */
+#searchwrap {
+  max-height: 7vh;
+}
 #searchbar {
-    width: 28vw;
-    padding: 0.7vh 2vw;
+  position: fixed;
+  display: block;
+    width: 22vw;
+    padding: 1vh 0;
+    right: 10vw;
 }
 .algolia-autocomplete {
     width: 100%;
@@ -125,13 +167,6 @@ a.active {
     font-weight: bold;
     font-style: normal;
   }
-
-  /* #wrap {
-      padding: 7vh 0vw;
-      overflow: hidden;
-      max-width: 99%;
-      min-width: 99%;
-  } */
 
   /* ------------------------ SCROLL BAR SETUP ------------------------------------ */
 
