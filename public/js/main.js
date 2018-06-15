@@ -129,6 +129,71 @@ function leave(community, comName)
     }
 }
 
+function kick(community, userid)
+{
+    var result = confirm("Are you sure you want to kick this user out of this community?");
+    if(result)
+    {   
+        $.post('/kick', {com: community, user: userid}).done( function(response) {
+            if (response) {
+                alert("You kicked a user");
+            }else
+            {
+                alert("Something went wrong refresh your page!");    
+            }
+            
+        })
+        .fail( function(response){
+            alert("Couldn't complete your action, Try Again!");
+        })
+        .always( function(response){});
+    }
+}
+
+
+function demote(community, userid)
+{
+    var result = confirm("Do you want to demote this user to be an admin?");
+    if(result)
+    {   
+        $.post('/demote', {com: community, user: userid}).done( function(response) {
+            if (response) {
+                alert("You demoted a user");
+            }else
+            {
+                alert("Something went wrong refresh your page!");    
+            }
+            
+        })
+        .fail( function(response){
+            alert("Couldn't complete your action, Try Again!");
+        })
+        .always( function(response){});
+    }
+}
+
+function promote(community, userid)
+{
+    var result = confirm("Do you want to promote this user to be an admin?");
+    if(result)
+    {   
+        $.post('/promote', {com: community, user: userid}).done( function(response) {
+            if (response) {
+                alert("You promoted a user");
+            }else
+            {
+                alert("Something went wrong refresh your page!");    
+            }
+            
+        })
+        .fail( function(response){
+            alert("Couldn't complete your action, Try Again!");
+        })
+        .always( function(response){});
+    }
+}
+
+
 function choose(postid, userid)
 {
     $.post('/chooseUser', {pid: postid, uid: userid}).done( function(response) {

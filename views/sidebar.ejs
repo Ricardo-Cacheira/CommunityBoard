@@ -17,148 +17,130 @@
             <a id="join" class="button" href="#popup2">JOIN REQUESTS</a>
             <a id="createevent" class="button" href="#popup6">CREATE EVENT</a>
         <% } %>
-    </div>
-    
-    <% if(role == 1){ %>
-        <div id="popup2" class="overlay">
-            <div class="popup">
-                <a class="close" href="#">&times;</a>
-                <p>LIST OF USERS WHO REQUESTED TO JOIN</p>
-                <table class="content table">
-                    <tr>
-                        <th style="width: 80%">User info</th>
-                        <th style="width: 20%">Accept</th>
-                    </tr>
-                    <% for (let i = 0; i < requests.length; i++) { %>
-                        <% var element = requests[i]; %>
-                            <tr>
-                                <td>
-                                    <%= element.firstName + " " + element.lastName +" UserName: "+ element.userName%>
-                                </td>
-                                <td>
-                                    <div onclick="acceptRequest(this.id, <%=community %>);" id="<%= element.id %>">Accept Request</div>
-                                </td>
-                            </tr>
-                            <% } %>
-                </table>
-            </div>
-        </div>
-        <% } %>
-    
-            <div id="popup3" class="overlay">
-                <div class="popup">
-                    <a class="close" href="#">&times;</a>
-                    <b>List of users in this community</b>
-                    <table class="content table">
+        <div id="leave" onclick='leave(<%=community %>, "<%= communityName %>");'>X</div>
+</div>
+
+
+<% if(role == 1){ %>
+    <div id="popup2" class="overlay">
+        <div class="popup">
+            <a class="close" href="#">&times;</a>
+            <p>LIST OF USERS WHO REQUESTED TO JOIN</p>
+            <br>
+            <table class="content table">
+                <tr>
+                    <th style="width: 80%">User info</th>
+                    <th style="width: 20%">Accept</th>
+                </tr>
+                <% for (let i = 0; i < requests.length; i++) { %>
+                    <% var element = requests[i]; %>
                         <tr>
-                            <th style="width: 60%">Name</th>
-                            <th style="width: 40%">UserName</th>
+                            <td>
+                                <%= element.firstName + " " + element.lastName +" UserName: "+ element.userName%>
+                            </td>
+                            <td>
+                                <div onclick="acceptRequest(this.id, <%=community %>);" id="<%= element.id %>">Accept Request</div>
+                            </td>
                         </tr>
-                        <% for (let i = 0; i < members.length; i++) { %>
-                            <% var element = members[i]; %>
-                                <tr>
-                                    <td>
-                                        <%= element.firstName + " " + element.lastName%>
-                                    </td>
-                                    <td>
-                                        <%= element.userName %>
-                                    </td>
-                                </tr>
-                                <% } %>
-                    </table>
-                </div>
-            </div>
-    
-    
-            <div id="popup1" class="overlay">
-                <div class="popup">
-                    <a class="close" href="#">&times;</a>
-                    <div class="content">
-                        <form method="POST" id="postform" action='/newp'>
-                            <h2>Create a new Post</h2>
-                            <p>What do you need help with?</p>
-                            <br>
-                            <textarea required type="content" id="content" name="content" style="resize: none;" cols="40" rows="5" placeholder="Don't give unnecessary information    Doing so might compromise your safety"></textarea>
-                            <br>Due Date:
-                            <br>
-                            <input type="datetime-local" name="dato" id="dato">
-                            <input style="visibility:hidden;" type="text" name="comID" id="comID" value="<%-community %>">
-                            <br>
-                            <button type="submit" class="btn btn-primary" id="submit"> SUBMIT </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-    
-            <!-- community events -->
-            <div id="popup5" class="overlay">
-                    <div class="popup">
-                        <a class="close" href="#">&times;</a>
-                        <div class="content">
-                            <b>Click on an event to add it to your list!</b>
-                            <table class="content table">
-                                <tr>
-                                    <th style="width: 70%">Description</th>
-                                    <th style="width: 30%">Date</th>
-                                </tr>
-                                <% for (let i = 0; i < comEvents.length; i++) { %>
-                                    <% var element = comEvents[i]; %>
-                                        <tr>
-                                            <td>
-                                                <%= element.description %>
-                                            </td>
-                                            <td>
-                                                <%= element.date %>
-                                            </td>
-                                            <td>
-                                                    <div onclick="acceptEvent(<%= userId %>, <%= element.id %>);">Accept Event</div>
-                                                </td>
-                                        </tr>
-                                <% } %>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-        
-                <% if(role == 1){ %>
-                    <div id="popup6" class="overlay">
-                        <div class="popup">
-                            <a class="close" href="#">&times;</a>
-                            <p>Create a new community event</p>
-                            <table class="content table">
-                                <form method="POST" action="/insertComEvent" id="ccevents">
-                                    <br>
-                                    <h2 style="margin: 0">Insert To-Do Event</h2>
-                                    Description:
-                                    <br>
-                                    <input type="text" name="description" id="description" style="padding-bottom: 2vh" placeholder="Your To-Do description">
-                                    <br> Date:
-                                    <br>
-                                    <input type="datetime-local" name="date" id="date">
-                                    <input style="visibility:hidden;" type="text" name="comID" id="comID" value="<%-community %>">
-                                    <button type="submit" class="btn btn-primary" id="cesubmit"> Insert Event </button>
-                                </form>
-                            </table>
-                        </div>
-                    </div>
+                        <% } %>
+            </table>
+        </div>
+    </div>
+</div>
+<% } %>
+
+<div id="popup3" class="overlay">
+    <div class="popup">
+        <a class="close" href="#">&times;</a>
+        <b>List of users in this community</b>
+        <br>
+        <table class="content table">
+            <tr>
+                <th style="width: 50%">Name</th>
+                <th style="width: 30%">UserName</th>
+                <th style="width: 10%"></th>
+                <th style="width: 10%"></th>
+            </tr>
+            <% for (let i = 0; i < members.length; i++) { %>
+                <% var element = members[i]; %>
+                    <tr>
+                        <td>
+                            <%= element.firstName + " " + element.lastName%>
+                        </td>
+                        <td>
+                            <%= element.userName %>
+                        </td>
+                        <% if(role == 1){ %>
+                        <% if(element.role == 1){ %>
+                            <td class="demote">
+                                <p onclick="demote(<%=community %>, <%= element.id %>);"> ⇩ </p>
+                            </td>
+                        <% }else{ %>
+                        <td class="promote">
+                            <p onclick="promote(<%=community %>, <%= element.id %>);"> ⇧ </p>
+                        </td>
+                        <% } %>
+                        <td class="kick">
+                            <p onclick="kick(<%=community %>, <%= element.id %>);"> X </p>
+                        </td>
+                        <% } %>
+                    </tr>
                     <% } %>
-    
-                    <script>
-                        $(function () {
-                            var dtToday = new Date();
-    
-                            var month = dtToday.getMonth() + 1;
-                            var day = dtToday.getDate();
-                            var year = dtToday.getFullYear();
-                            var hours = dtToday.getHours();
-                            var min = dtToday.getMinutes();
-                            if (month < 10)
-                                month = '0' + month.toString();
-                            if (day < 10)
-                                day = '0' + day.toString();
-    
-                            var maxDate = year + '-' + month + '-' + day + "T" + hours + ":" + min;
-                            console.log(maxDate);
-                            $('#dato').attr('min', maxDate);
-                        });
-                    </script>
+        </table>
+    </div>
+</div>
+
+<!-- community events -->
+<div id="popup5" class="overlay">
+    <div class="popup">
+        <a class="close" href="#">&times;</a>
+        <div class="content">
+            <b>Click on an event to add it to your list!</b>
+            <br>
+            <table class="content table">
+                <tr>
+                    <th style="width: 70%">Description</th>
+                    <th style="width: 30%">Date</th>
+                </tr>
+                <% for (let i = 0; i < comEvents.length; i++) { %>
+                    <% var element = comEvents[i]; %>
+                        <tr>
+                            <td>
+                                <%= element.description %>
+                            </td>
+                            <td>
+                                <%= element.date %>
+                            </td>
+                            <td>
+                                    <div onclick="acceptEvent(<%= userId %>, <%= element.id %>);">Accept Event</div>
+                                </td>
+                        </tr>
+                <% } %>
+            </table>
+        </div>
+    </div>
+</div>
+
+<% if(role == 1){ %>
+    <div id="popup6" class="overlay">
+        <div class="popup">
+            <a class="close" href="#">&times;</a>
+            <p>Create a new community event</p>
+            <br>
+            <table class="content table">
+                <form method="POST" action="/insertComEvent" id="ccevents">
+                    <br>
+                    <h2 style="margin: 0">Insert To-Do Event</h2>
+                    Description:
+                    <br>
+                    <input type="text" name="description" id="description" style="padding-bottom: 2vh" placeholder="Your To-Do description">
+                    <br> Date:
+                    <br>
+                    <input type="datetime-local" name="date" id="date">
+                    <input style="visibility:hidden;" type="text" name="comID" id="comID" value="<%-community %>">
+                    <button type="submit" class="btn btn-primary" id="cesubmit"> Insert Event </button>
+                </form>
+            </table>
+        </div>
+    </div>
+    <% } %>

@@ -12,7 +12,7 @@ var passport = require("passport"),
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "MreZ39lpdSql",
+  password: "RdSQL1At365d.",
   database: "bdnetwork",
   multipleStatements: true
 });
@@ -35,7 +35,7 @@ const options = {
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "MreZ39lpdSql",
+  password: "RdSQL1At365d.",
   database: "bdnetwork"
 };
 
@@ -341,7 +341,7 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
     });
 
     let memberList = `
-    select users.firstName, users.lastName, users.userName
+    select users.firstName, users.lastName, users.userName, users.id, communities_has_users.role as role
     FROM communities_has_users
     INNER JOIN  users ON communities_has_users.users_id = users.id
     Where communities_id = ?;
@@ -369,7 +369,6 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
 
         let communityList = result;
         res.render("community", {
-          page_title,
           community,
           feed,
           communityList,
@@ -423,7 +422,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
       `;
 
       con.query(SELECTAccepts, req.params.idp, function (err, result3, fiels) {
-        console.log('Result 3 ' + JSON.stringify(result3));
+        // console.log('Result 3 ' + JSON.stringify(result3));
         var accepts = result3;
 
         let check = "SELECT * FROM communities_has_users where users_id = ? AND communities_id = ?;";
@@ -452,12 +451,12 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
         let cominfo = `select * FROM communities Where id = ?;`;
 
         con.query(cominfo, community, function (err, result, fields) {
-          console.log(result);
+          // console.log(result);
           communityName = result[0].cName;
         });
 
         let memberList = `
-      select users.firstName, users.lastName, users.userName
+      select users.firstName, users.lastName, users.userName, users.id, communities_has_users.role as role
       FROM communities_has_users
       INNER JOIN  users ON communities_has_users.users_id = users.id
       Where communities_id = ?;
@@ -610,6 +609,64 @@ router.post("/leave", function (req, res) {
   let check = "SELECT * FROM communities_has_users where users_id = ? AND communities_id = ?;";
   let newr = 'DELETE FROM communities_has_users where users_id = ? AND communities_id = ?;';
   let vals = [req.user, com];
+
+  con.query(check, vals, function (err, result, fields) {
+    if (result.length < 0) {
+      res.send(false);
+    } else {
+      con.query(newr, vals, function (err, result, fields) {
+        if (err) throw err;
+        res.send(true);
+      });
+    }
+  });
+});
+
+router.post("/kick", function (req, res) {
+  let com = req.body.com;
+  let user = req.body.user;
+  let check = "SELECT * FROM communities_has_users where users_id = ? AND communities_id = ?;";
+  let newr = 'DELETE FROM communities_has_users where users_id = ? AND communities_id = ?;';
+  let vals = [user, com];
+
+  con.query(check, vals, function (err, result, fields) {
+    if (result.length < 0) {
+      res.send(false);
+    } else {
+      con.query(newr, vals, function (err, result, fields) {
+        if (err) throw err;
+        res.send(true);
+      });
+    }
+  });
+});
+
+router.post("/promote", function (req, res) {
+  let com = req.body.com;
+  let user = req.body.user;
+  let check = "SELECT * FROM communities_has_users WHERE users_id = ? AND communities_id = ?;";
+  let newr = 'UPDATE communities_has_users SET role = 1 WHERE users_id = ? AND communities_id = ?;';
+  let vals = [user, com];
+
+  con.query(check, vals, function (err, result, fields) {
+    if (result.length < 0) {
+      res.send(false);
+    } else {
+      con.query(newr, vals, function (err, result, fields) {
+        if (err) throw err;
+        res.send(true);
+      });
+    }
+  });
+});
+
+
+router.post("/demote", function (req, res) {
+  let com = req.body.com;
+  let user = req.body.user;
+  let check = "SELECT * FROM communities_has_users WHERE users_id = ? AND communities_id = ?;";
+  let newr = 'UPDATE communities_has_users SET role = 0 WHERE users_id = ? AND communities_id = ?;';
+  let vals = [user, com];
 
   con.query(check, vals, function (err, result, fields) {
     if (result.length < 0) {

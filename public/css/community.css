@@ -206,6 +206,7 @@ a#help.button {
 /* ---------------------------POPUP NEW POST ------------------------------------ */
 
 #leave{
+  font-weight: bold;
   position: absolute;
   bottom: 0;
   margin: 0;
@@ -217,6 +218,37 @@ a#help.button {
   color: white;
   cursor: pointer;
   padding-top: 1.5%;
+}
+
+.kick{
+  text-align: center;
+  background-color: red;
+  font-size: 100%;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+
+.promote{
+  text-align: center;
+  background-color: green;
+  font-size: 100%;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+
+.demote{
+  text-align: center;
+  background-color: orange;
+  font-size: 100%;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+
+.kick p, .promote p, .demote p{
+  margin: auto;
 }
 
 .button {
