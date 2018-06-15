@@ -151,21 +151,18 @@ router.post('/insertAcceptedEvent', authenticationMiddleware(), function (req, r
 });
 
 //delete personal events -- todo (:)
-router.get('/deleteTodo/:todoId', function (req, res) {
-  var reqs = req.params;
-  var todoId = reqs.id;
+router.post('/deleteTodo', function (req, res) {
+  var reqs = req.body;
+  var todoId = reqs.idtodo;
 
-  let deleteTodoOwner = 'DELETE FROM users_has_events WHERE events_id = ?;';
+  var vals = [todoId, req.user];
+  console.log(vals);
+
+  let deleteTodoOwner = 'DELETE FROM users_has_events WHERE events_id = ? AND users_id = ?;';
 
   con.query(deleteTodoOwner, todoId, function (err, result) {
     if (err) throw err;
-
-    let deletetodo = 'DELETE FROM events WHERE id = ?;';
-
-    con.query(deletetodo, todoId, function (err, result) {
-      if (err) throw err;
-      res.redirect('/todo');
-    });
+    res.redirect('/todo');
   });
 });
 
@@ -525,7 +522,7 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
     if (err) throw err;
     console.log("You commented something");
   });
-  req.app.io.emit("comment", {uName: "", date: "",comm: req.body.content, id: ""});
+  req.app.io.emit("comment", { uName: "", date: "", comm: req.body.content, id: "" });
   res.send(true);
   // res.redirect("/post/" + post);
 });

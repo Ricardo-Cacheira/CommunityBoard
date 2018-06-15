@@ -198,10 +198,10 @@ function choose(postid, userid)
 {
     $.post('/chooseUser', {pid: postid, uid: userid}).done( function(response) {
         if (response) {
-            alert("USER CHOSEN");    
+            alert("User chosen");  
         }else
         {
-           alert("YOU ALREADY CHOSE SOMEONE");    
+           alert("You already chose someone");    
         }
         
     })
@@ -213,7 +213,7 @@ function choose(postid, userid)
 
 function deleteTodo(todoid)
 {
-    $.get('/deleteTodo', {todoid: todoid}).done( function(response) {
+    $.post('/deleteTodo', {idtodo: todoid}).done( function(response) {
         if (response) {
             alert("Todo deleted");    
         }else

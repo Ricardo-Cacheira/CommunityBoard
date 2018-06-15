@@ -36,8 +36,8 @@ button#submit {
 
 #request{
   overflow-y: scroll;
-  min-width: 80%;
-  max-width: 80vw;
+  min-width: 82vw;
+  max-width: 82vw;
   justify-content: center;
   background-color: #696868;
   color: black;
