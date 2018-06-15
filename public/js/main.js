@@ -53,6 +53,22 @@ function comment(postid, text)
     .always( function(response){});
 }
 
+function postit(comid, text, endd)
+{
+    $.post('/newp', {comID: comid, content: text, end: endd}).done( function(response) {
+        if (response) {
+            console.log("ok");
+        }else
+        {
+            console.log("ko");
+        }
+    })
+    .fail( function(response){
+        alert("Couldn't complete your action, Try Again!");
+    })
+    .always( function(response){});
+}
+
 function acceptRequest(userid, community)
 {
     $.post('/addUser', {iduser: userid, community: community}).done( function(response) {
