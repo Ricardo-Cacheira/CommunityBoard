@@ -4,8 +4,9 @@
             <% var element = feed[i]%>
             <li class="post">
                 <article class="post-content">
-                    <p class="post-name"><%= element.firstName+ ` `+ element.lastName + ` (` + element.userName + `)`%></p>
-                    <p class="post-info">Posted at <%= element.date %> <br> End Date: <%= element.end %></p>
+                    <p class="post-name"><%= element.firstName+ ` `+ element.lastName + ` (` + element.userName + `)`%> <b id="date"><%= element.date %></b></p>
+                    <hr>
+                    <p class="post-info">  Due Date: <%= element.end %></p>
                     <p class="post-text"> <%= element.content %></p>
                 </article>
                 <br>

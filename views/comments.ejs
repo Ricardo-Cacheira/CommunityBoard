@@ -1,20 +1,16 @@
 <div class="right" id="feed">
     <div class="post">
         <article class="post-content">
-            <p class="post-name">
-                <%= post.firstName+ ` `+ post.lastName %>
-            </p>
-            <p class="post-info">
-                <%= post.userName+ ` `+ post.date %>
-            </p>
-            <p class="post-text">
-                <%= post.content %>
-            </p>
+            <p class="post-name"><%= post.firstName+ ` `+ post.lastName + ` (` + post.userName + `)`%> <b id="date"><%= post.date %></b></p>
+            <hr>
+            <p class="post-info">  Due Date: <%= post.end %></p>
+            <p class="post-text"> <%= post.content %></p>
         </article>
+        <br>
         <section class="post-reactions">
             <div onclick="accept(this.id);" id="<%= postId   %>" class="accept">Accept Request</div>
             <% if(post.users_id == userId){ %>
-                <div onclick="location.href='#popup4';" class="button" style="bottom: 0;position: absolute;">Accepted List</div>
+                <div onclick="location.href='#popup4';" class="buttona" style="bottom: 0;position: absolute;">Accepted List</div>
                 <% } %>
         </section>
         <br>
@@ -55,7 +51,6 @@
             </tr>
             <% for (let i = 0; i < accepts.length; i++) { %>
                 <% var element = accepts[i]; %>
-                <% console.log('Element: ' + element) %>
                 <tr>
                     <th style="width: 80%">User info</th>
                     <th style="width: 20%">Accept</th>

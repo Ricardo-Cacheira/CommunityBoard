@@ -23,10 +23,22 @@ div#top {
     justify-content: end;
 }
 
-form#update input, form#newcom input {
-    max-width: 60%;
+form#newcom input {
+    min-width: 100%;
+    outline: none;
     border: none;
+}
+
+form#update input {
+    max-width: 60%;
+    min-width: 60%;
+    border: none;
+    outline: none;
     color: rgb(121, 120, 120);
+}
+
+form#update input#email {
+    min-width: 70%;
 }
 
 div#updatediv {
@@ -54,6 +66,8 @@ div#welcomemessage {
 
 h1 {
     margin: 2vh auto;
+    margin: 0 0 2vh 0;
+    color: rgb(230, 230, 230);
 }
 
 b#username {
@@ -83,17 +97,18 @@ form {
 }
 
 form h3 {
-    margin: 0 0 2vh 0;
+    margin: 0 0 3vh 0;
     text-align: center;
     font-size: 20px;
 }
 
 form#register {
     max-width: 25vw;
-    max-height: 50vw;
+    max-height: 75vh;
     height: 100%;
     margin: 1.5vh 0;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 input#hideshowinfo {
@@ -157,8 +172,4 @@ div#accepts {
     width: 100%;
     top: 15vh;
     right: 2vw;
-}
-
-h1 {
-    margin: 0 0 2vh 0;
 }
