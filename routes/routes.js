@@ -12,7 +12,7 @@ var passport = require("passport"),
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "MreZ39lpdSql",
+  password: "RdSQL1At365d.",
   database: "bdnetwork",
   multipleStatements: true
 });
@@ -35,7 +35,7 @@ const options = {
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "MreZ39lpdSql",
+  password: "RdSQL1At365d.",
   database: "bdnetwork"
 };
 
@@ -142,11 +142,25 @@ router.post('/insertAcceptedEvent', authenticationMiddleware(), function (req, r
   var iduser = reqs.iduser;
   var idevent = reqs.idevent;
 
+  let check = 'Select * from users_has_events where users_id = ? AND events_id = ?'
   let acceptEvent = 'INSERT INTO users_has_events (users_id, events_id) VALUES (?, ?);';
   let vals = [iduser, idevent]
-  con.query(acceptEvent, vals, function (err, result) {
-    if (err) throw err;
-    res.redirect('/todo');
+
+
+  con.query(check, vals, function (err, result, fields) {
+    if (err) {
+      throw err;
+    } else {
+      if (result.length > 0) {
+        console.log("Already added");
+        res.send(false);
+      } else {
+        con.query(acceptEvent, vals, function (err, result) {
+          if (err) throw err;
+          res.redirect('/todo');
+        });
+      }
+    }
   });
 });
 
@@ -549,7 +563,6 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
       console.log("uname", result2[0].uName);
       req.app.io.emit("comment", {uName: comment.uName, date: comment.date,comm: comment.text, id: post});
     });
-    res.send(true);
   });
 
 
