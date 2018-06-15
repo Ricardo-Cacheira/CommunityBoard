@@ -10,30 +10,27 @@
     <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/css/form.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/profile.css" />
     <title>Register</title>
 </head>
 
 <body>
-        
-    <%- include('nav'); %>
-    
-    <section>
-        <form method="POST" action="/insertCommunity" id="register">
-            <br>
-            <h2>Create a new Community</h2>
-            Community Name:
-            <br>
-            <input type="text" required name="CName" id="CName" placeholder="Community Name">
-            <br> Address (Optional):
-            <br>
-            <input type="text" name="Address" id="Address" placeholder="Community Address">
-            <br>
-            <button type="submit" id="rsubmit"> Register </button>
-        </form>
-    </section>
 
-    <script src="/js/main.js"></script>
+    <%- include('nav'); %>
+
+        <div id="createcom">
+            <div id="formcom">
+                <form method="POST" action="/insertCommunity" id="newcom">
+                    <h3>Create a new Community</h3>
+                    <input type="text" required name="CName" id="CName" placeholder="Name">
+                    <hr>
+                    <input type="text" name="Address" id="Address" placeholder="Address">
+            </div>
+            <button type="submit" id="rsubmit"> Register </button>
+            </form>
+        </div>
+
+        <script src="/js/main.js"></script>
 </body>
 
 </html>

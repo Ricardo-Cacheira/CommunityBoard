@@ -14,11 +14,11 @@
                         callback(data)
                     })
                 },
-                displayKey: function (suggestion) { return ("<b>Name: </b>" + suggestion.Name + "&nbsp - &nbsp<b>Address: </b>" + suggestion.Address)}
+                displayKey: function (suggestion) { return ("<b>Name: </b>" + suggestion.Name + "&nbsp - &nbsp<b>Address: </b>" + suggestion.Address) }
             }),
-        $('.autocomplete').bind('autocomplete:selected', function (ev, suggestion) {
-            window.location.href = "/feed/" + suggestion.ID;
-        });
+            $('.autocomplete').bind('autocomplete:selected', function (ev, suggestion) {
+                window.location.href = "/feed/" + suggestion.ID;
+            });
     });
 </script>
 
@@ -29,23 +29,30 @@
                 <button onclick="myFunction()" class="dropbtn">Communities</button>
                 <div id="myDropdown" class="dropdown-content">
                     <% for (let i = 0; i < communityList.length; i++) { %>
-                    <a href="/feed/<%- communityList[i].id %>"><%- communityList[i].name %></a>
-                    <% } %>
-                    <a href="/createCommunity">Create Community</a>
+                        <a href="/feed/<%- communityList[i].id %>">
+                            <%- communityList[i].name %>
+                        </a>
+                        <% } %>
+                            <a href="/createCommunity">Create Community</a>
                 </div>
             </div>
-            <!-- <a class="active" href="#intro">Communities</a> -->
         </li>
         <li>
             <a href="/todo">To-do List</a>
         </li>
         <li>
-            <a href="/profile">Profile</a>
+            <a id="profile" href="/profile">Profile</a>
         </li>
+        <div id="namebar">
+        <img class="profile-picnav circular--square" src="/img/logo.jpg" />
+        <p>Community Board</p>
+        </div>
+        <div id="searchwrap">
         <li id="searchbar">
             <input class="form-control autocomplete" id="communities" name="key" type="text" placeholder='Search a Community by name or address'
             />
         </li>
+        </div>
         <li style="float:right">
             <a href="/logout">Logout</a>
         </li>

@@ -229,7 +229,6 @@ router.get('/acceptHelp', authenticationMiddleware(), function (req, res) {
 
   con.query(accepth, vals, function (err, result) {
     if (err) throw err;
-    console.log(result);
     res.render("community", {
       page_title,
       community,
