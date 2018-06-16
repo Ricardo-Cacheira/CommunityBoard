@@ -1,0 +1,30 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<script src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.js"></script>
+<script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.autocomplete').autocomplete({
+            minLength: 1,
+            highlight: true
+        },
+            {
+                name: 'Communities',
+                source: function (query, callback) {
+                    $.get({
+                        url: '/search',
+                        data: { key: query }
+                    }).done(function (data) {
+                        callback(data)
+                    })
+                },
+                displayKey: function (suggestion) { return ("<b>Name: </b>" + suggestion.Name + "&nbsp - &nbsp<b>Address: </b>" + suggestion.Address)}
+            }),
+        $('.autocomplete').bind('autocomplete:selected', function (ev, suggestion) {
+            window.location.href = "/feed/" + suggestion.ID;
+        });
+    });
+</script>

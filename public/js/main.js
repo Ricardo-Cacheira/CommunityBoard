@@ -53,6 +53,22 @@ function comment(postid, text)
     .always( function(response){});
 }
 
+function postit(comid, text, endd)
+{
+    $.post('/newp', {comID: comid, content: text, end: endd}).done( function(response) {
+        if (response) {
+            console.log("ok");
+        }else
+        {
+            console.log("ko");
+        }
+    })
+    .fail( function(response){
+        alert("Couldn't complete your action, Try Again!");
+    })
+    .always( function(response){});
+}
+
 function acceptRequest(userid, community)
 {
     $.post('/addUser', {iduser: userid, community: community}).done( function(response) {
@@ -74,10 +90,10 @@ function acceptEvent(userid, eventsid)
 {
     $.post('/insertAcceptedEvent', {iduser: userid, idevent: eventsid}).done( function(response) {
         if (response) {
-            alert("user accepted");    
+            alert("Added Event");    
         }else
         {
-            alert("User has already been accepted");    
+            alert("Event has already been accepted");    
         }
         
     })
@@ -85,7 +101,6 @@ function acceptEvent(userid, eventsid)
         alert("Couldn't complete your action, Try Again!");
     })
     .always( function(response){
-        alert("hey?");
     });
 }
 

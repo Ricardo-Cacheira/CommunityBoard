@@ -1,61 +1,38 @@
 <div class="right" id="feed">
     <ul>
-        <% for (let i = 0; i < feed.length; i++) { %>
-            <% var element = feed[i]%>
-            <li class="post">
-                <article class="post-content">
-                    <p class="post-name"><%= element.firstName+ ` `+ element.lastName + ` (` + element.userName + `)`%> <b id="date"><%= element.date %></b></p>
-                    <hr>
-                    <p class="post-info">  Due Date: <%= element.end %></p>
-                    <p class="post-text"> <%= element.content %></p>
-                </article>
-                <br>
-                <section class="post-reactions">
-                    <div onclick="accept(this.id);" id="<%= element.id %>" class="accept <% if(element.accepted != null){ %> accepted <% } %>">Accept Request</div><div onclick="window.location.replace('/post/<%= element.id %>');" class="post-comment">Comments</div>
-                </section>
-            </li>
+        <li v-for="post in feed" class="post">
+            <article class="post-content">
+                <p class="post-name">{{post.firstName}} {{post.lastName}}  ({{post.userName}}) <b id="date">{{post.date}}</b></p>
+                <hr>
+                <p class="post-info">Due Date: {{post.end}}</p>
+                <p class="post-text">{{post.content}}</p>
+            </article>
             <br>
-            <br>
-
-         <% } %>
+            <section class="post-reactions">
+                <div onclick="accept(this.id);" v-bind:id="post.id" v-bind:class="[post.accepted != '' ? 'accepted' : '']" class="accept" >Accept Request</div><div v-bind:id="post.id" onclick="window.location.replace('/post/'+this.id);" class="post-comment">Comments</div>
+            </section>
+        </li>
+        <br>
+        <br>
     </ul>
 </div>
 
 <div id="popup1" class="overlay">
-    <div class="popup">
-        <a class="close" href="#">&times;</a>
-        <div class="content">
-            <form method="POST" id="postform" action='/newp'>
-                <h2>Create a new Post</h2>
-                <p>What do you need help with?</p>
-                <br>
-                <textarea required type="content" id="content" name="content" style="resize: none;" cols="40" rows="5" placeholder="Don't give unnecessary information    Doing so might compromise your safety"></textarea>
-                <br>Due Date:
-                <br>
-                <input type="datetime-local" name="dato" id="dato">
-                <input style="visibility:hidden;" type="text" name="comID" id="comID" value="<%-community %>">
-                <br>
-                <button type="submit" class="btn btn-primary" id="submit"> SUBMIT </button>
-            </form>
+        <div class="popup">
+            <a class="close" href="#">&times;</a>
+            <div class="content">
+                <form id="postform">
+                    <h2>Create a new Post</h2>
+                    <p>What do you need help with?</p>
+                    <br>
+                    <textarea required type="content" id="contentt" name="contentt" style="resize: none;" cols="40" rows="5" placeholder="Don't give unnecessary information    Doing so might compromise your safety"></textarea>
+                    <br>Due Date:
+                    <br>
+                    <input type="datetime-local" name="dato" id="dato">
+                    <br>
+                    <button type="button" class="btn btn-primary" id="newp"> SUBMIT </button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-<script>
-    $(function () {
-        var dtToday = new Date();
-
-        var month = dtToday.getMonth() + 1;
-        var day = dtToday.getDate();
-        var year = dtToday.getFullYear();
-        var hours = dtToday.getHours();
-        var min = dtToday.getMinutes();
-        if (month < 10)
-            month = '0' + month.toString();
-        if (day < 10)
-            day = '0' + day.toString();
-
-        var maxDate = year + '-' + month + '-' + day + "T" + hours + ":" + min;
-        console.log(maxDate);
-        $('#dato').attr('min', maxDate);
-    });
-</script>
+    

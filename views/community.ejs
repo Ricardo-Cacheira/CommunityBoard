@@ -2,29 +2,105 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.js"></script>
-    <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">    
-    <link rel="stylesheet" href="/css/main.css">
+    <%- include('head'); %>
     <link rel="stylesheet" href="/css/community.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="/js/socket.io.js"></script>
+    <script>
+        var socket = io.connect();
+        var commid = <%= community %>;
+    </script>
+
     <title><%= communityName %></title>
 </head>
 
 <body>
 
-<%- include('nav', communityList); %>
-
-<%- include('sidebar', community, belongs, role, requests, communityName, members, comEvents, userId); %>
-
-<% if (belongs){%>
-<%- include('feed', {feed, community}); %>
-<% }else{%>
-<%- include('request', {community});%>
-<% }%>
+    <div id="app">
+            <%- include('nav', communityList); %>
+            
+            <% if (belongs){%>
+            <%- include('feed', {feed, community}); %>
+            <% }else{%>
+            <%- include('request', {community});%>
+            <% }%>
+            
+            <%- include('sidebar', community, belongs, role, requests, communityName, members, comEvents, userId); %>
+            
+    </div>
 <script src="/js/main.js"></script>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+            data: {
+                feed: [
+                <% for (let i = 0; i < feed.length; i++) { %>
+                <% var element = feed[i]%>
+                { userName: "<%= element.userName %>", firstName: "<%= element.firstName %>", lastName: "<%= element.lastName %>", date: "<%= element.date %>", end: "<%= element.end %>", content: "<%= element.content %>", id: "<%= element.id %>", accepted: "<%= element.accepted %>"}<% if(i != feed.length-1){ %>,<% } %>
+                <% } %>
+                ]
+            },
+        mounted: function () {}
+    });
+</script>
+
+<script>
+socket.on('post', function (data) {
+    // console.log("data: "+data);
+    console.log("data.cid: " + data.cid + "| commid: "+ commid);
+    if(data.cid == commid)
+    {
+        console.log(data);
+        app.feed.unshift({ userName: data.userName, firstName: data.firstName, lastName: data.lastName, date: data.date, end: data.end, content: data.content, id: data.id, accepted:data.accepted});
+        // app.comments.unshift({ userName: "fake", date: "fake", text: "fake", id: "fake"});
+    }
+    // socket.emit('my other event', { my: 'data' });
+});
+</script>
+
+<script>
+    $('#newp').click(function() {
+    if($('textarea#contentt').val() == '' || $('input#dato').val() == '')
+    {
+        alert("empty");
+    }else
+    {
+        var text = $('textarea#contentt').val();
+        var enddate =  $('input#dato').val();
+        console.log(enddate);
+        var community = <%= community %>;
+        postit(community, text, enddate);
+        $('textarea#contentt').val('');
+        $('input#dato').val('');
+        window.location.href = '#';
+    }
+    });
+</script>
+
+
+<script>
+        $(function () {
+            var dtToday = new Date();
+    
+            var month = dtToday.getMonth() + 1;
+            var day = dtToday.getDate();
+            var year = dtToday.getFullYear();
+            var hours = dtToday.getHours();
+            var min = dtToday.getMinutes();
+            if (month < 10)
+                month = '0' + month.toString();
+            if (day < 10)
+                day = '0' + day.toString();
+    
+            var maxDate = year + '-' + month + '-' + day + "T" + hours + ":" + min;
+            console.log(maxDate);
+            $('#dato').attr('min', maxDate);
+        });
+    </script>
+
 </body>
 
 </html>

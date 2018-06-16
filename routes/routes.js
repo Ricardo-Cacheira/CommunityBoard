@@ -142,11 +142,25 @@ router.post('/insertAcceptedEvent', authenticationMiddleware(), function (req, r
   var iduser = reqs.iduser;
   var idevent = reqs.idevent;
 
+  let check = 'Select * from users_has_events where users_id = ? AND events_id = ?'
   let acceptEvent = 'INSERT INTO users_has_events (users_id, events_id) VALUES (?, ?);';
   let vals = [iduser, idevent]
-  con.query(acceptEvent, vals, function (err, result) {
-    if (err) throw err;
-    res.redirect('/todo');
+
+
+  con.query(check, vals, function (err, result, fields) {
+    if (err) {
+      throw err;
+    } else {
+      if (result.length > 0) {
+        console.log("Already added");
+        res.send(false);
+      } else {
+        con.query(acceptEvent, vals, function (err, result) {
+          if (err) throw err;
+          res.redirect('/todo');
+        });
+      }
+    }
   });
 });
 
@@ -273,20 +287,30 @@ router.post("/chooseUser", function (req, res) {
 
 router.post("/newp", authenticationMiddleware(), function (req, res) {
   let community = req.body.comID;
-  console.log(community);
-  let newp =
-    'INSERT into posts (`users_id`, `content`, `date`, end, `communities_id`) VALUES ("' +
-    req.user +
-    '", "' +
-    req.body.content +
-    '", NOW(), "' + req.body.dato + '", "' +
-    community +
-    '")';
-  con.query(newp, function (err, result, fields) {
+  var post;
+  // console.log(community);
+  let newp = 'INSERT into posts (`users_id`, `content`, `date`, end, `communities_id`) VALUES ( ?, ?, NOW(), ?, ?)';
+  var vals = [req.user, req.body.content, req.body.end, community];
+  con.query(newp, vals, function (err, result, fields) {
     if (err) throw err;
     console.log("You posted something");
+
+    let ret = `
+    SELECT users.firstName, users.lastName, users.userName, users.userScore, users.Birthday, users.Photo, posts.content,(SELECT DATE_FORMAT(posts.date, "%H:%i - %d/%m/%Y")) AS 'date',(SELECT DATE_FORMAT(posts.end, "%H:%i - %d/%m/%Y")) AS 'end', posts.id,
+    (SELECT accepts.users_id FROM accepts where users_id = ? AND posts_id = posts.id) AS accepted
+    FROM posts
+    INNER JOIN  users ON posts.users_id = users.id
+    Where posts.id = ?
+    `;
+    var val = [req.user, result.insertId];
+    con.query(ret, val, function (err, result2, fields) {
+      if (err) throw err;
+      post = result2[0];
+      req.app.io.emit("post", { userName: post.userName, firstName: post.firstName, lastName: post.lastName, date: post.date, end: post.end, content: post.content, id: post.id, accepted: "", cid: community});
+    });
   });
-  res.redirect("/feed/" + community);
+  res.send(true);
+  // res.redirect("/feed/" + community);
 });
 
 router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
@@ -300,7 +324,7 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
     (SELECT accepts.users_id FROM accepts where users_id = ? AND posts_id = posts.id) AS accepted
     FROM posts
     INNER JOIN  users ON posts.users_id = users.id
-    Where communities_id = ?
+    Where communities_id = ? AND end > NOW()
     ORDER BY posts.end ASC;
     `;
   let vals = [req.user, community];
@@ -392,6 +416,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
     INNER JOIN  users ON posts.users_id = users.id
     Where posts.id = ?;
     `;
+    console.log(postId);
   con.query(SELECT_posts, postId, function (err, result, fields) {
     if (err) throw err;
 
@@ -399,7 +424,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
     let page_title = post.content;
     let community = post.communities_id;
     let SELECT_comments = `
-    SELECT text,(SELECT DATE_FORMAT(date, "%d/%m/%Y")) AS 'date',users.userName, comments.id
+    SELECT text,(SELECT DATE_FORMAT(date, "%H:%I - %d/%m/%Y")) AS 'date',users.userName, comments.id
     FROM comments
     INNER JOIN  users ON comments.users_id = users.id
     Where posts_id = ?
@@ -514,13 +539,27 @@ router.get("/test", function (req, res) {
 
 router.post("/newc", authenticationMiddleware(), function (req, res) {
   let post = req.body.postID;
+  let comment;
 
-  let newc =
-    'INSERT into comments (`text`, `date`, `users_id`, `posts_id`) VALUES (?, NOW(), ?, ?)';
+  let newc = 'INSERT into comments (`text`, `date`, `users_id`, `posts_id`) VALUES (?, NOW(), ?, ?)';
   let vals = [req.body.content, req.user, post];
   con.query(newc, vals, function (err, result, fields) {
     if (err) throw err;
-    console.log("You commented something");
+    comment_id = result.insertId;
+    console.log("You commented something" , result.insertId);
+    
+    let ret = `
+    SELECT users.userName as uName, (SELECT DATE_FORMAT(date, "%H:%i - %d/%m/%Y")) as 'date', text, posts_id
+    FROM comments as c
+    INNER JOIN users on users.id = c.users_id
+    WHERE c.id = ?;
+    `;
+    con.query(ret, result.insertId, function (err, result2, fields) {
+      if (err) throw err;
+      comment = result2[0];
+      console.log("uname", result2[0].uName);
+      req.app.io.emit("comment", {uName: comment.uName, date: comment.date,comm: comment.text, id: post});
+    });
   });
   req.app.io.emit("comment", { uName: "", date: "", comm: req.body.content, id: "" });
   res.send(true);
