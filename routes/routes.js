@@ -2,6 +2,9 @@ const router = require("express").Router();
 const mysql = require("mysql");
 const parser = require("body-parser");
 var bcrypt = require("bcrypt");
+var multer = require('multer');
+var path = require('path'); 
+
 const saltRounds = 10;
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
@@ -39,6 +42,7 @@ const options = {
   database: "bdnetwork"
 };
 
+
 var sessionStore = new MySQLStore(options);
 
 router.use(
@@ -55,11 +59,49 @@ router.use(passport.session());
 router.use(parser.urlencoded({
   extended: true
 }));
+router.use(parser.json());
+
+var storage = multer.diskStorage({
+  destination: function(req, file, callback) {
+      callback(null, 'public/uploadimages')
+  },
+  filename: function(req, file, callback) {
+      callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+  }
+})
 
 // #region render views
 router.get("/", authenticationMiddleware(), function (req, res) {
   res.redirect('/profile');
 });
+
+router.post('/imginsert',multer({
+  storage: storage,
+  fileFilter: function(req, file, callback) {
+      var ext = path.extname(file.originalname)
+      if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') 
+                  {
+          return callback(res.end('Only images are allowed'), null)
+      }
+      callback(null, true)
+  }
+}).single('file'), function(req, res) {
+/*img is the name that you define in the html input type="file" name="img" */       
+
+      console.log(req.file)
+      var vals = ["\\uploadimages\\"+req.file.filename, req.user];
+
+      var query = con.query(`UPDATE users SET photo = ? WHERE id= '?'`, vals, function(err, rows)      
+      {                                                      
+        if (err)
+           throw err;
+       res.redirect('/profile');
+      });
+
+      console.log(JSON.stringify(req.file));
+      console.log(req.file);
+  });
+
 
 //get personal events
 router.get("/todo", authenticationMiddleware(), function (req, res) {
@@ -75,6 +117,18 @@ router.get("/todo", authenticationMiddleware(), function (req, res) {
     if (err) throw err;
     let events = result;
 
+    let notifs;
+    let getnot = `
+    SELECT posts_id as id
+    FROM notifications
+    WHERE users_id = ? AND highlight = 1 AND muted = 0
+    `;
+    var val = [req.user];
+    con.query(getnot, val, function (err, result2, fields) {
+      if (err) throw err;
+      notifs = result2;
+    });
+
     getCommunityList(req.user, function (err, result) {
       if (err) {
         res.send(500);
@@ -83,7 +137,8 @@ router.get("/todo", authenticationMiddleware(), function (req, res) {
         res.render("todo", {
           page_title,
           events,
-          communityList
+          communityList,
+          notifs
         });
       }
     });
@@ -166,17 +221,18 @@ router.post('/insertAcceptedEvent', authenticationMiddleware(), function (req, r
 
 //delete personal events -- todo (:)
 router.post('/deleteTodo', function (req, res) {
+
   var reqs = req.body;
-  var todoId = reqs.idtodo;
+  var todoId = Number(reqs.idtodo);
 
   var vals = [todoId, req.user];
   console.log(vals);
 
-  let deleteTodoOwner = 'DELETE FROM users_has_events WHERE events_id = ? AND users_id = ?;';
+  let deleteTodoOwner = `DELETE FROM users_has_events WHERE events_id = ? AND users_id = ?;`;
 
-  con.query(deleteTodoOwner, todoId, function (err, result) {
+  con.query(deleteTodoOwner, vals, function (err, result) {
     if (err) throw err;
-    res.redirect('/todo');
+    res.send(true);
   });
 });
 
@@ -198,13 +254,39 @@ router.get("/profile", authenticationMiddleware(), function (req, res) {
     con.query(selectPosts, vals, function (err, result) {
       let accepts = result;
 
+      let notifs;
+      let getnot = `
+      SELECT posts_id as id
+      FROM notifications
+      WHERE users_id = ? AND highlight = 1 AND muted = 0
+      `;
+      var val = [req.user];
+      con.query(getnot, val, function (err, result2, fields) {
+        if (err) throw err;
+        notifs = result2;
+      });
+
+      let info;
+      let getinfo = `
+      SELECT posts_id as id, posts.content
+      FROM notifications
+      INNER JOIN posts ON notifications.posts_id = posts.id
+      WHERE notifications.users_id = ? AND highlight = 1 AND muted = 0;
+      `;
+      con.query(getinfo, val, function (err, result3, fields) {
+        if (err) throw err;
+        info = result3;
+      });
+
       getCommunityList(req.user, function (err, result) {
         let communityList = result;
         res.render("profile", {
           page_title,
           userinfo,
           accepts,
-          communityList
+          communityList,
+          notifs,
+          info
         });
       });
     });
@@ -218,7 +300,7 @@ router.post('/updateUser', function (req, res) {
   var email = reqs.email;
   var firstName = reqs.firstname;
   var lastName = reqs.lastname;
-
+  console.log('hello?');
   getCommunityList(req.user, function (err, result) {
     let updateuser = `UPDATE users SET userName = '` + userName + `', email = '` + email + `', firstName = '` + firstName + `', lastName = '` + lastName + `' WHERE id= ?;`;
     let vals = [req.user];
@@ -306,7 +388,23 @@ router.post("/newp", authenticationMiddleware(), function (req, res) {
     con.query(ret, val, function (err, result2, fields) {
       if (err) throw err;
       post = result2[0];
-      req.app.io.emit("post", { userName: post.userName, firstName: post.firstName, lastName: post.lastName, date: post.date, end: post.end, content: post.content, id: post.id, accepted: "", cid: community});
+      req.app.io.emit("post", {
+        userName: post.userName,
+        firstName: post.firstName,
+        lastName: post.lastName,
+        date: post.date,
+        end: post.end,
+        content: post.content,
+        id: post.id,
+        accepted: "",
+        cid: community
+      });
+      let addNotifs = `INSERT INTO notifications (users_id, posts_id) VALUES (?, ?);`;
+      let not = [req.user, post.id];
+      con.query(addNotifs, not, function (err, result, fields) {
+        if (err) throw err;
+        console.log("notification record created");
+      });
     });
   });
   res.send(true);
@@ -382,6 +480,18 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
 
     });
 
+    let notifs;
+    let getnot = `
+    SELECT posts_id as id
+    FROM notifications
+    WHERE users_id = ? AND highlight = 1 AND muted = 0
+    `;
+    var val = [req.user];
+    con.query(getnot, val, function (err, result2, fields) {
+      if (err) throw err;
+      notifs = result2;
+    });
+
     getCommunityList(req.user, function (err, result) {
       if (err) {
         res.send(500);
@@ -399,6 +509,7 @@ router.get("/feed/:Community", authenticationMiddleware(), function (req, res) {
           members,
           comEvents,
           userId: req.user,
+          notifs
         });
       }
     });
@@ -416,7 +527,6 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
     INNER JOIN  users ON posts.users_id = users.id
     Where posts.id = ?;
     `;
-    console.log(postId);
   con.query(SELECT_posts, postId, function (err, result, fields) {
     if (err) throw err;
 
@@ -451,8 +561,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
           if (result.length > 0) {
             belongs = true;
             role = result[0].role;
-          } else {
-            ;
+          } else {;
             belongs = false;
           }
         });
@@ -496,6 +605,24 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
 
         });
 
+        let removeNot = `UPDATE notifications SET highlight= 0 WHERE posts_id = ? and users_id=?;`;
+        var rval = [postId, req.user];
+        con.query(removeNot, rval, function (err, result, fields) {
+          if (err) throw err;
+        });
+
+        let notifs;
+        let getnot = `
+        SELECT posts_id as id
+        FROM notifications
+        WHERE users_id = ? AND highlight = 1 AND muted = 0
+        `;
+        var val = [req.user];
+        con.query(getnot, val, function (err, result2, fields) {
+          if (err) throw err;
+          notifs = result2;
+        });
+
 
         getCommunityList(req.user, function (err, result) {
           if (err) {
@@ -517,7 +644,8 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
               communityName,
               members,
               userId,
-              comEvents
+              comEvents,
+              notifs
             });
           }
         });
@@ -544,8 +672,8 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
   con.query(newc, vals, function (err, result, fields) {
     if (err) throw err;
     comment_id = result.insertId;
-    console.log("You commented something" , result.insertId);
-    
+    console.log("You commented something", result.insertId);
+
     let ret = `
     SELECT users.userName as uName, (SELECT DATE_FORMAT(date, "%H:%i - %d/%m/%Y")) as 'date', text, posts_id
     FROM comments as c
@@ -556,12 +684,49 @@ router.post("/newc", authenticationMiddleware(), function (req, res) {
       if (err) throw err;
       comment = result2[0];
       console.log("uname", result2[0].uName);
-      req.app.io.emit("comment", {uName: comment.uName, date: comment.date,comm: comment.text, id: post});
+      req.app.io.emit("comment", {
+        uName: comment.uName,
+        date: comment.date,
+        comm: comment.text,
+        id: post
+      });
+
+      let idpost = Number(post);
+
+      let checkNotifs = `SELECT * FROM notifications WHERE users_id = ? AND posts_id = ?;`;
+      let addNotifs = `INSERT INTO notifications (users_id, posts_id) VALUES (?, ?);`;
+      let not = [req.user, idpost];
+      con.query(checkNotifs, not, function (err, result, fields) {
+        if (err) {
+          throw err;
+        } else {
+          if (result.length > 0) {
+            console.log("already has notification record");
+          } else {
+            con.query(addNotifs, not, function (err, result, fields) {
+              if (err) throw err;
+              console.log("notification record created");
+            });
+          }
+        }
+      });
+      let updateNotifs = `UPDATE notifications SET highlight = 1 WHERE users_id != ? AND posts_id = ?;`;
+      con.query(updateNotifs, not, function (err, result, fields) {
+        if (err) {
+          throw err;
+        }else{
+          req.app.io.emit("info", {
+            id: idpost, content: req.body.content
+          });
+
+          req.app.io.emit("notif", {
+            id: idpost
+          });
+        }
+      });
     });
   });
-  req.app.io.emit("comment", { uName: "", date: "", comm: req.body.content, id: "" });
   res.send(true);
-  // res.redirect("/post/" + post);
 });
 
 router.post("/accept", function (req, res) {
@@ -715,6 +880,17 @@ router.post("/demote", function (req, res) {
 
 router.get("/createCommunity", authenticationMiddleware(), function (req, res) {
   let page_title = "Create YOUR Community"
+  let notifs;
+  let getnot = `
+    SELECT posts_id as id
+    FROM notifications
+    WHERE users_id = ? AND highlight = 1 AND muted = 0
+    `;
+  var val = [req.user];
+  con.query(getnot, val, function (err, result2, fields) {
+    if (err) throw err;
+    notifs = result2;
+  });
   getCommunityList(req.user, function (err, result) {
     if (err) {
       res.send(500);
@@ -722,7 +898,8 @@ router.get("/createCommunity", authenticationMiddleware(), function (req, res) {
       let communityList = result;
       res.render("createCommunity", {
         page_title,
-        communityList
+        communityList,
+        notifs
       });
     }
   });

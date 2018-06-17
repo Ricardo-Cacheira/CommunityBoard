@@ -29,6 +29,31 @@ form#newcom input {
     border: none;
 }
 
+form#uploadpic {
+    position: fixed;
+    width: 15vw;
+    max-width: 15vw;
+    text-align: center;
+    bottom: 0;
+}
+
+form#uploadpic label{
+    cursor: pointer;
+}
+
+form#uploadpic input {
+    max-width: 12vw;
+    width: 100%;
+    font-size: 12px;
+    font-weight: 600;
+    border-style: none;
+    border-radius: 10px;
+    margin-top: 2vh;
+    padding: 2vh 0;
+    background-color: orange;
+    color: rgb(255, 255, 255);
+}
+
 form#update input {
     max-width: 60%;
     min-width: 60%;
@@ -80,8 +105,10 @@ input#hideshowinfo {
 
 
 div#userscore {
-    position: fixed;
+    position: absolute;
     width: 100%;
+    max-width: 50vw;
+    left: 25vw;
     bottom: 20vh;
     text-align: center;
     color: whitesmoke;
@@ -137,6 +164,23 @@ input#hideshowaccept{
     color: rgb(255, 255, 255);
 }
 
+input#hideshownotif{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    top: 52vh;
+    right: 0;
+    font-size: 14px;
+    font-weight: 500;
+    border-style: none;
+    border-radius: 10px;
+    margin: 1vh 1.5vw;
+    padding: 1vh 1vw;
+    border: 1px solid lightgray;
+    background-color: orange;
+    color: rgb(255, 255, 255);
+}
+
 button#usubmit, button#rsubmit {
     max-width: 22vw;
     width: 100%;
@@ -173,3 +217,29 @@ div#accepts {
     top: 15vh;
     right: 2vw;
 }
+
+div#notifications {
+    position: fixed;
+    max-width: 20vw;
+    width: 100%;
+    top: 60vh;
+    right: 2vw;
+    max-height: 40vh;
+    height: 100%;
+    z-index: 5;
+}
+
+div#notifications form{
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.post-info{
+    cursor: pointer;
+}
+
+#profilepic{
+    width: 10vw;
+    margin: 1vh 0 2.5vh 0;
+    border: 2px solid lightgray;
+  }

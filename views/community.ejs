@@ -36,6 +36,13 @@
     var app = new Vue({
         el: '#app',
             data: {
+                notifications: [
+                    <% for (let i = 0; i < notifs.length; i++) { %>
+                    <% var p = notifs[i]%>
+                    <%= p.id %><% if(i != notifs.length-1){ %>,<% } %>
+                    <% } %>
+                ],
+                notifs: <%= notifs.length %>,
                 feed: [
                 <% for (let i = 0; i < feed.length; i++) { %>
                 <% var element = feed[i]%>
@@ -55,9 +62,16 @@ socket.on('post', function (data) {
     {
         console.log(data);
         app.feed.unshift({ userName: data.userName, firstName: data.firstName, lastName: data.lastName, date: data.date, end: data.end, content: data.content, id: data.id, accepted:data.accepted});
-        // app.comments.unshift({ userName: "fake", date: "fake", text: "fake", id: "fake"});
     }
-    // socket.emit('my other event', { my: 'data' });
+});
+
+socket.on('notif', function (data) {
+    if(!app.notifications.includes(data.id))
+    {
+        console.log(data);
+        app.notifications.unshift(data.id);
+        app.notifs += 1;
+    }
 });
 </script>
 

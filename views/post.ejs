@@ -6,10 +6,6 @@
     <%- include('head'); %>
 
     <link rel="stylesheet" href="/css/community.css">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="/js/socket.io.js"></script>
     <script>
         var socket = io.connect();
         var postid = <%= postId %>;
@@ -42,7 +38,13 @@
     var app = new Vue({
         el: '#app',
             data: {
-                title: "somtin",
+                notifications: [
+                    <% for (let i = 0; i < notifs.length; i++) { %>
+                    <% var p = notifs[i]%>
+                    <%= p.id %><% if(i != notifs.length-1){ %>,<% } %>
+                    <% } %>
+                ],
+                notifs: <%= notifs.length %>,
                 comments: [
                 <% for (let i = 0; i < comments.length; i++) { %>
                 <% var element = comments[i]%>
@@ -56,15 +58,18 @@
 
 <script>
 socket.on('comment', function (data) {
-    // console.log("data: "+data);
-    console.log("data.id: " + data.id + "| postid: "+ postid);
     if(data.id == postid)
     {
-        console.log(data);
         app.comments.unshift({ userName: data.uName, date: data.date, text: data.comm, id: data.id});
-        // app.comments.unshift({ userName: "fake", date: "fake", text: "fake", id: "fake"});
     }
-    // socket.emit('my other event', { my: 'data' });
+});
+
+socket.on('notif', function (data) {
+    if(!app.notifications.includes(data.id))
+    {
+        app.notifications.unshift(data.id);
+        app.notifs += 1;
+    }
 });
 </script>
 

@@ -4,26 +4,52 @@
 <head>
     <%- include('head'); %>
     <link rel="stylesheet" href="/css/profile.css">
-    <title>Register</title>
+    <title>Create Community</title>
 </head>
 
 <body>
+    <div id="app">
+        <%- include('nav', communityList); %>
 
-    <%- include('nav', communityList); %>
-
-        <div id="createcom">
-            <div id="formcom">
-                <form method="POST" action="/insertCommunity" id="newcom">
-                    <h3>Create a new Community</h3>
-                    <input type="text" required name="CName" id="CName" placeholder="Name">
-                    <hr>
-                    <input type="text" name="Address" id="Address" placeholder="Address">
+            <div id="createcom">
+                <div id="formcom">
+                    <form method="POST" action="/insertCommunity" id="newcom">
+                        <h3>Create a new Community</h3>
+                        <input type="text" required name="CName" id="CName" placeholder="Name">
+                        <hr>
+                        <input type="text" name="Address" id="Address" placeholder="Address">
+                        <button type="submit" id="rsubmit"> Register </button>
+                    </form>
+                </div>
             </div>
-            <button type="submit" id="rsubmit"> Register </button>
-            </form>
-        </div>
+    </div>
 
-        <script src="/js/main.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                notifications: [
+                    <% for (let i = 0; i < notifs.length; i++) { %>
+                    <% var p = notifs[i]%>
+                    <%= p.id %><% if(i != notifs.length-1){ %>,<% } %>
+                    <% } %>
+                ],
+                notifs: <%= notifs.length %>,
+            },
+            mounted: function () {}
+        });
+    </script>
+
+<script>
+socket.on('notif', function (data) {
+    if(!app.notifications.includes(data.id))
+    {
+        app.notifications.unshift(data.id);
+        app.notifs += 1;
+    }
+});
+</script>
 </body>
 
 </html>
