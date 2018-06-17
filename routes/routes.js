@@ -424,7 +424,7 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
     let page_title = post.content;
     let community = post.communities_id;
     let SELECT_comments = `
-    SELECT text,(SELECT DATE_FORMAT(date, "%H:%I - %d/%m/%Y")) AS 'date',users.userName, comments.id
+    SELECT text,(SELECT DATE_FORMAT(date, "%d/%m/%Y - %H:%I")) AS 'date',users.userName, comments.id
     FROM comments
     INNER JOIN  users ON comments.users_id = users.id
     Where posts_id = ?
@@ -443,7 +443,6 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
       `;
 
       con.query(SELECTAccepts, req.params.idp, function (err, result3, fiels) {
-        // console.log('Result 3 ' + JSON.stringify(result3));
         var accepts = result3;
 
         let check = "SELECT * FROM communities_has_users where users_id = ? AND communities_id = ?;";
@@ -472,7 +471,6 @@ router.get("/post/:idp", authenticationMiddleware(), function (req, res) {
         let cominfo = `select * FROM communities Where id = ?;`;
 
         con.query(cominfo, community, function (err, result, fields) {
-          // console.log(result);
           communityName = result[0].cName;
         });
 

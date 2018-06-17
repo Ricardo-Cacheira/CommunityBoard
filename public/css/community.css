@@ -1,5 +1,5 @@
 #sidebar{
-  background-color: rgb(31, 30, 30);
+  background-color: rgb(29, 29, 29);
   color: white;
   min-height: 93vh;
   max-height: 93vh;
@@ -80,7 +80,7 @@ button#submit {
   background-color: #f1eeee;
   min-height: 30vh;
   width: 60vw;
-  margin-bottom: 1vh;
+  margin-bottom: 4vh;
   position: relative;
   border: 2px solid rgb(206, 204, 204);
   border-radius: 5px;

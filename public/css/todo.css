@@ -72,14 +72,14 @@ button#esubmit {
 }
 
 .event-date {
-    color: grey;
+    color: rgb(116, 116, 116);
     font-size: 18px;
     margin-left: 6vw;
 }
 
 .event-info {
     margin-left: 3vw;
-    color: rgb(117, 117, 117);
+    color: rgb(66, 66, 66);
 }
 
 #events {
