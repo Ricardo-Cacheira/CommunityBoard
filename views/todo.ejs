@@ -4,46 +4,51 @@
 <head>
     <%- include('head'); %>
     <link rel="stylesheet" type="text/css" media="screen" href="/css/todo.css" />
+    <script>
+        var socket = io.connect();
+    </script>
     <title><%= page_title %></title>
 </head>
 
 <body>
-    <%- include('nav'); %>
-        <div class="wrap">
-        </div>
-
-        <div id="inserttodo">
-            <form method="POST" action="/insertTodo" id="todo">
-                <h3>Insert To-Do Event</h2>
-                    <input type="text" name="description" id="description" placeholder="Your To-Do description">
-                    <hr> Due date:
-                    <input type="datetime-local" name="date" id="date" />
-                    <button type="submit" id="esubmit"> Insert Event </button>
-            </form>
-        </div>
-
-        <div id="events">
-            <ul>
-                <% for (let i = 0; i < events.length; i++) { %>
-                    <% var element = events[i]%>
-                        <li id="event">
-                            <article class="event-content">
-                                <p class="event-date">
-                                    <%= element.date %>
-                                </p>
-                                <hr>
-                                <p class="event-info">
-                                    <%= element.description %>
-                                </p>
-                            </article>
-                            <div id="deletetodo" onClick="deleteTodo(<%= element.id %>)"> DELETE</div>
-                        </li>
-                        <br>
-                        <hr id="line">
-
-                        <% } %>
-            </ul>
-        </div>
+    <div id="app">
+        <%- include('nav'); %>
+            <div class="wrap">
+            </div>
+    
+            <div id="inserttodo">
+                <form method="POST" action="/insertTodo" id="todo">
+                    <h3>Insert To-Do Event</h2>
+                        <input type="text" name="description" id="description" placeholder="Your To-Do description">
+                        <hr> Due date:
+                        <input type="datetime-local" name="date" id="date" />
+                        <button type="submit" id="esubmit"> Insert Event </button>
+                </form>
+            </div>
+    
+            <div id="events">
+                <ul>
+                    <% for (let i = 0; i < events.length; i++) { %>
+                        <% var element = events[i]%>
+                            <li id="event">
+                                <article class="event-content">
+                                    <p class="event-date">
+                                        <%= element.date %>
+                                    </p>
+                                    <hr>
+                                    <p class="event-info">
+                                        <%= element.description %>
+                                    </p>
+                                </article>
+                                <div id="deletetodo" onClick="deleteTodo(<%= element.id %>)"> DELETE</div>
+                            </li>
+                            <br>
+                            <hr id="line">
+    
+                            <% } %>
+                </ul>
+            </div>
+    </div>
 
         <script src="/js/main.js"></script>
         <script>
@@ -64,6 +69,31 @@
                 console.log(maxDate);
                 $('#date').attr('min', maxDate);
             });
+        </script>
+        <script>
+            var app = new Vue({
+                el: '#app',
+                    data: {
+                        notifications: [
+                    <% for (let i = 0; i < notifs.length; i++) { %>
+                    <% var p = notifs[i]%>
+                    <%= p.id %><% if(i != notifs.length-1){ %>,<% } %>
+                    <% } %>
+                ],
+                notifs: <%= notifs.length %>
+                    },
+                mounted: function () {}
+            });
+        </script>
+
+        <script>
+        socket.on('notif', function (data) {
+            if(!app.notifications.includes(data.id))
+            {
+                app.notifications.unshift(data.id);
+                app.notifs += 1;
+            }
+        });
         </script>
 </body>
 

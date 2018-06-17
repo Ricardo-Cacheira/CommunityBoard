@@ -35,7 +35,7 @@ DROP TABLE IF EXISTS `bdnetwork`.`events` ;
 CREATE TABLE IF NOT EXISTS `bdnetwork`.`events` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `description` VARCHAR(255) NOT NULL,
-  `date` DATE NOT NULL,
+  `date` DATETIME NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -70,9 +70,10 @@ DROP TABLE IF EXISTS `bdnetwork`.`comments` ;
 CREATE TABLE IF NOT EXISTS `bdnetwork`.`comments` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `text` VARCHAR(255) NOT NULL,
-  `date` DATE NOT NULL,
+  `date` DATETIME NOT NULL,
   `users_id` INT NOT NULL,
   `posts_id` INT NOT NULL,
+  `comments_id` INT,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_comments_users1`
     FOREIGN KEY (`users_id`)
@@ -83,14 +84,18 @@ CREATE TABLE IF NOT EXISTS `bdnetwork`.`comments` (
     FOREIGN KEY (`posts_id`)
     REFERENCES `bdnetwork`.`posts` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_comments_comments1`
+    FOREIGN KEY (`comments_id`)
+    REFERENCES `bdnetwork`.`comments` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 DROP TABLE IF EXISTS `bdnetwork`.`accepts` ;
 
 CREATE TABLE IF NOT EXISTS `bdnetwork`.`accepts` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `date` DATE NOT NULL,
   `accepted` INT NOT NULL DEFAULT 0,
   `users_id` INT NOT NULL,
@@ -225,6 +230,7 @@ CREATE TABLE IF NOT EXISTS `bdnetwork`.`communities_has_events` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+DROP TABLE IF EXISTS `bdnetwork`.`requests` ;
 CREATE TABLE IF NOT EXISTS `bdnetwork`.`requests` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `communities_id` INT NOT NULL,
@@ -237,6 +243,25 @@ CREATE TABLE IF NOT EXISTS `bdnetwork`.`requests` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_requests_users`
+    FOREIGN KEY (`users_id`)
+    REFERENCES `bdnetwork`.`users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+DROP TABLE IF EXISTS `bdnetwork`.`notifications`;
+CREATE TABLE IF NOT EXISTS `bdnetwork`.`notifications` (
+  `posts_id` INT NOT NULL AUTO_INCREMENT,
+  `users_id` INT NOT NULL,
+  `highlight` INT(1) NOT NULL DEFAULT 0,
+  `muted` INT(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`posts_id`, `users_id`),
+  CONSTRAINT `fk_posts_has_users_posts1`
+    FOREIGN KEY (`posts_id`)
+    REFERENCES `bdnetwork`.`posts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_posts_has_users_users1`
     FOREIGN KEY (`users_id`)
     REFERENCES `bdnetwork`.`users` (`id`)
     ON DELETE NO ACTION

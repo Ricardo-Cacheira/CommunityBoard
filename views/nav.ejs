@@ -17,7 +17,7 @@
             <a href="/todo">To-do List</a>
         </li>
         <li>
-            <a id="profile" href="/profile">Profile</a>
+            <a id="profile" href="/profile">Profile<span v-if="notifs != 0" id="notifs">{{notifs}}</span></a>
         </li>
         <div id="namebar">
         <img class="profile-picnav circular--square" src="/img/logo.jpg" />

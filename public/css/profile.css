@@ -137,6 +137,23 @@ input#hideshowaccept{
     color: rgb(255, 255, 255);
 }
 
+input#hideshownotif{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    top: 30vh;
+    right: 0;
+    font-size: 14px;
+    font-weight: 500;
+    border-style: none;
+    border-radius: 10px;
+    margin: 1vh 1.5vw;
+    padding: 1vh 1vw;
+    border: 1px solid lightgray;
+    background-color: orange;
+    color: rgb(255, 255, 255);
+}
+
 button#usubmit, button#rsubmit {
     max-width: 22vw;
     width: 100%;
@@ -172,4 +189,21 @@ div#accepts {
     width: 100%;
     top: 15vh;
     right: 2vw;
+}
+
+div#notifications {
+    position: fixed;
+    max-width: 40vw;
+    width: 100%;
+    top: 40vh;
+    right: 2vw;
+    max-height: 40vh;
+    height: 100%;
+    overflow: scroll;
+    overflow-x: hidden;
+    z-index: 5;
+}
+
+.post-info{
+    cursor: pointer;
 }
