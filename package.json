@@ -25,7 +25,7 @@
     "compression": "^1.7.2",
     "connect-redis": "^3.3.3",
     "cookie-parser": "^1.4.3",
-    "dot": "^1.1.2",
+    "dot": "^1.1.3",
     "ejs": "^2.5.9",
     "express": "^4.16.3",
     "express-auth-route": "^1.1.0",
